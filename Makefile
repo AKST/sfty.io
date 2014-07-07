@@ -7,3 +7,5 @@ build:
 	bower install
 	grunt build
 
+ls:
+	tree -I 'vendor|node_modules' 
