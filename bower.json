@@ -1,0 +1,21 @@
+{
+  "name": "cp3602",
+  "version": "0.0.0",
+  "authors": [
+    "Angus Thomsen <aksthomsen@gmail.com>",
+    "John Trembath <fudgebucket@gmail.com>"
+  ],
+  "description": "project management project",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "ember": "~1.5.1"
+  }
+}
