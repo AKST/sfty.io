@@ -1,12 +1,18 @@
-var http = require('http');
+var express = require('express'),
+    connect = require('connect');
 
-var server;
+function startApp() {
+  var app   = express(),
+      port  = process.env.PORT || 3000,
+      files = __dirname+'./../../public';
 
-server = http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-});
+  app.use(connect.logger());
+  app.use(connect.compress());
+  app.use(connect.json());
+  app.use(connect.query());
 
-server.listen(8080, '127.0.0.1');
+  app.use('/', connect.static(files));
+  app.listen(port);
+}
 
-console.log('Server running at http://127.0.0.1:8080/');
+startApp();

@@ -5,197 +5,154 @@ module.exports = function(grunt) {
     'assets/vendor/bootstrap/dist/js/bootstrap.js',
     'assets/vendor/handlebars/handlebars.js',
     'assets/vendor/ember/ember.js',
+    'public/temp/templates.js',
   ]; 
 
-  var paths = libs;
+  var src = [
+    'src/client/*.js',
+    'src/client/**/*.js',
+  ];
+
+  var paths = libs.concat(src);
 
   grunt.initConfig({ 
-    // LINTING
+
+
     jshint: {
-      node: {
-        src: [ 
-          'src/server/*.js',
-          'src/server/**/*.js'
-        ],
-        options: {
-          curly: false,
-          eqeqeq: true,
-          immed: true,
-          latedef: true,
-          newcap: true,
-          noarg: true,
-          sub: true,
-          undef: true,
-          boss: true,
-          eqnull: true,
-          browser: true,
-          globals: {
-            process: true,
-            module: true,
-            exports: true,
-            require: true,
-            console: true,
-            __dirname: true
-          }
-        }
-      },
-      nodeTests: {
-        src: [
-          'test/server/*.js',
-          'test/server/**/*.js'
-        ],
-        options: {
-          curly: false,
-          eqeqeq: true,
-          immed: true,
-          latedef: true,
-          newcap: true,
-          noarg: true,
-          sub: true,
-          undef: true,
-          boss: true,
-          eqnull: true,
-          browser: true,
-          globals: {
-            assert: true,
-            process: true,
-            describe: true,
-            it: true,
-            require: true,
-            console: true
-          }
-        }
-      },
-      browser: {
-        src: [
-          'src/client/*.js',
-          'src/client/**/*.js'
-        ],
+      src: ['src/*.js', 'src/**/*.js', 'test/*.js', 
+            'test/**/*.js'],
+      options: {
+        curly: false,
+        eqeqeq: true,
+        immed: true,
+        latedef: true,
+        newcap: true,
+        noarg: true,
+        sub: true,
+        undef: true,
+        boss: true,
+        eqnull: true,
+        browser: true,
         globals: {
+          Ember: true,
+          process: true,
+          it: true,
+          describe: true,
+          assert: true,
+          Sfty: true,
+          module: true,
+          exports: true,
+          require: true,
           window: true,
           alert: true,
-          console: true
+          console: true,
+          __dirname: true
         }
       }
     },
-    // TESTS
-    // jasmine: {
-    //   main: {
-    //     src: 'static/js/test.js',
-    //     options: {
-    //       specs: 'assets/js/test/*.js',
-    //       helpers: 'assets/js/test/*Helper.js'
-    //     }
-    //   }
-    // },
-    // mochacov: {
-    //   all: ['test/*.js']
-    // },
 
-    // FILE WATCHING
+
     watch: {
       sass: {
-        files: [
-          'Gruntfile.js', 
-          'assets/sass/**/*.sass',
-          'assets/sass/**/*.scss',
-        ],
-        tasks: [
-          'cssmin'
-        ]
+        files: ['Gruntfile.js', 'assets/sass/**/*.s*ss',
+                'assets/sass/*.scss'],
+        tasks: ['sass', 'clean:css', 'cssmin', 'clean:after']
       },
       node: {
-        files: [
-          'Gruntfile.js', 
-          'src/server/**/*.js',
-        ],
-        tasks: [
-          'jshint:node',
-          'jshint:nodeTests',
-        ]
+        files: ['Gruntfile.js', 'src/server/**/*.js'],
+        tasks: ['jshint']
       },
       browserjs: {
-        files: [
-          'Gruntfile.js', 
-          'src/client/**/*.js',
-        ],
-        tasks: [
-          'jshint:browser',
-          'clean:jsBefore',
-          'uglify:dev',
-        ]
+        files: ['Gruntfile.js', 'src/client/**/*.js'],
+        tasks: ['jshint', 'clean:js', 'uglify:dev']
+      },
+      templates: {
+        files: ['Gruntfile.js', 'assets/templates/**/*.hbs',
+                'assets/templates/*.hbs'],
+        tasks: ['emberTemplates', 'uglify:dev', 
+                'clean:after']
       },
     },
+
+
     uglify: {
       dev: {
-        options: {
-          beautify: true,
-          mangle: false
-        },
-        files: {
-          'static/js/main.js': paths 
-        }
+        options: { beautify: true, mangle: false },
+        files: { 'public/js/main.js': paths }
       },
       production: {
-        options: {
-          beautify: false,
-          mangle: false
-        },
-        files: {
-          'static/js/main.js': paths 
-        }
+        options: { beautify: false, mangle: false },
+        files: { 'public/js/main.js': paths }
       },
     },
+
+
+    emberTemplates: {
+      options: {
+        templateName: function (sourceFile) {
+          return sourceFile.replace(
+            /assets\/templates\//, ''
+          );
+        }
+      },
+      'public/temp/templates.js': 'assets/templates/**/*.hbs'
+    },
+
+
+    sass: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'assets/sass',
+          src: ['*.s*ss'],
+          dest: '../public/temp',
+          ext: '.css'
+        }] 
+      }
+    },
+
+
     cssmin: {
-      'static/css/main.min.css': [
-        'assets/vendor/bootstrap/dist/css/bootstrap.css'
+      'public/css/main.min.css': [
+        'assets/vendor/bootstrap/dist/css/bootstrap.css',
+        'public/temp/*.css'
       ]
     },
+
+
     clean: {
-      before: [
-        'static/css',
-        'static/js' 
-      ],
-      jsBeforeTest: [
-        'static/js/test.js'
-      ],
-      jsBefore: [
-        'static/js' 
-      ],
-      cssBefore: [
-        'static/css'
-      ],
-      after: [
-        'static/temp'
-      ]
+      before: ['public/css', 'public/js'],
+      js: ['public/js'],
+      css: ['public/css'],
+      after: ['public/temp']
     }
+
+
   });
 
 
-  grunt.loadNpmTasks('grunt-compile-handlebars');
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.loadNpmTasks('grunt-mocha-cov');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-ember-templates');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
 
   grunt.registerTask('default', 'watch');
-  grunt.registerTask('test', ['jshint', 'mochacov', 'jasmine']);
+  grunt.registerTask('test', ['jshint']);
 
   grunt.registerTask('build', [
-    'clean:before', 'less', 'cssmin', 'uglify', 'clean:after'
+    'clean:before', 'cssmin', 'uglify', 'clean:after'
   ]);
 
   grunt.registerTask('first_build', [
-    'less', 'cssmin', 'uglify', 'clean:after'
+    'cssmin', 'uglify', 'clean:after'
   ]);
 
   grunt.registerTask('heroku:production', [
-    'less', 'cssmin', 'uglify', 'clean:after'
+    'cssmin', 'uglify', 'clean:after'
   ]);
 
 };

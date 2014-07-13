@@ -1,3 +1,6 @@
-static
+public/css
+public/js
+public/temp
 assets/vendor
 node_modules
+.sass-cache
