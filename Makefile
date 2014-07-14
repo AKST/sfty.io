@@ -3,6 +3,8 @@ BOOTROOT=./assets/vendor/bootstrap-sass-official/assets
 init:
 	npm install -g bower
 	npm install -g grunt-cli
+	sudo gem install sass
+	sudo gem install compass
 
 dependencies: init
 	npm install
@@ -16,4 +18,5 @@ build: dependencies place-assets
 	grunt build
 
 ls:
-	tree -I 'vendor|node_modules' 
+	tree -I 'public|vendor|node_modules' 
+

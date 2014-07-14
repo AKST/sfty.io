@@ -1,14 +1,21 @@
 module.exports = function(grunt) {
 
+  /**
+   * Order of library dependencies
+   */
   var libs = [
     'assets/vendor/jquery/dist/jquery.js',
-    'assets/vendor/bootstrap/dist/js/bootstrap.js',
+    'assets/vendor/bootstrap-sass-official/assets/'+
+      'javascripts/bootstrap.js',
     'assets/vendor/handlebars/handlebars.js',
     'assets/vendor/ember/ember.js',
     'assets/vendor/ember-data/ember-data.js',
     'public/temp/templates.js',
   ];
 
+  /**
+   * Order of source dependencies
+   */
   var src = [
     'src/client/index.js',
     'src/client/models/*.js',
@@ -16,16 +23,24 @@ module.exports = function(grunt) {
     'src/client/routes.js',
   ];
 
+  /**
+   * all client side source
+   */
   var paths = libs.concat(src);
 
+  /**
+   * configuration for grunt
+   */
   grunt.initConfig({
 
-
+    /**
+     * Looks for common source of errors
+     */
     jshint: {
       server: {
         src: [
-          'src/server/**/*/js', 
-          'src/server/*.js', 
+          'src/server/**/*/js',
+          'src/server/*.js',
           'Gruntfile.js'
         ],
         options: {
@@ -40,7 +55,9 @@ module.exports = function(grunt) {
       }
     },
 
-
+    /**
+     * Automatically builds project
+     */
     watch: {
       sass: {
         files: ['Gruntfile.js', 'assets/sass/**/*.s*ss',
@@ -72,7 +89,9 @@ module.exports = function(grunt) {
       },
     },
 
-
+    /**
+     * Clumps all javascript into single file
+     */
     uglify: {
       dev: {
         options: { beautify: true, mangle: false },
@@ -84,7 +103,9 @@ module.exports = function(grunt) {
       },
     },
 
-
+    /**
+     * compiles templates down into javascript
+     */
     emberTemplates: {
       options: {
         templateName: function (sourceFile) {
@@ -96,7 +117,9 @@ module.exports = function(grunt) {
       'public/temp/templates.js': 'assets/templates/**/*.hbs'
     },
 
-
+    /**
+     * Compiles sass in css to public/temp
+     */
     sass: {
       dist: {
         files: [{
@@ -109,15 +132,18 @@ module.exports = function(grunt) {
       }
     },
 
-
+    /**
+     * Minifies css into public/css
+     */
     cssmin: {
       'public/css/main.min.css': [
-        'assets/vendor/bootstrap/dist/css/bootstrap.css',
         'public/temp/*.css'
       ]
     },
 
-
+    /**
+     * removes files before and after builds
+     */
     clean: {
       before: ['public/css', 'public/js'],
       js: ['public/js'],
@@ -125,9 +151,7 @@ module.exports = function(grunt) {
       after: ['public/temp']
     }
 
-
   });
-
 
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-ember-templates');
@@ -137,20 +161,26 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
-
+  /**
+   * is the default behaviour
+   */
   grunt.registerTask('default', 'watch');
+
+  /**
+   * will run when running tests
+   */
   grunt.registerTask('test', ['jshint']);
 
+  /**
+   * will build project once off
+   */
   grunt.registerTask('build', [
-    'clean:before', 'cssmin', 'uglify', 'clean:after'
-  ]);
-
-  grunt.registerTask('first_build', [
-    'cssmin', 'uglify', 'clean:after'
-  ]);
-
-  grunt.registerTask('heroku:production', [
-    'cssmin', 'uglify', 'clean:after'
+    'clean:before',
+    'sass',
+    'cssmin',
+    'emberTemplates',
+    'uglify:production',
+    'clean:after'
   ]);
 
 };
