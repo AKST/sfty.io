@@ -6,4 +6,3 @@ Sfty.Store = DS.Store.extend({
   adapter: 'DS.FixtureAdapter'
 });
 
-console.log('test');

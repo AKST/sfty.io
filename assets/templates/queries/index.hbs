@@ -1,0 +1,20 @@
+<ul id="query-list">
+  {{#each itemController="query"}}
+    <li {{bind-attr class="isCompleted:complete isEditing:editing"}}>
+
+      {{#if isEditing}}
+        {{edit-query 
+            class="edit" 
+            value=title 
+            focus-out="acceptChanges"
+            insert-newline="acceptChanges"}}
+
+      {{else}}
+        {{input type="checkbox" checked=isCompleted class="toggle"}}
+        <label {{action "editQuery" on="doubleClick"}}>{{title}}</label>
+        <button {{action "removeQuery"}} class="destroy"></button>
+
+      {{/if}}
+    </li>
+  {{/each}}
+</ul>

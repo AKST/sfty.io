@@ -1,14 +1,25 @@
-//@import "bootstrap"
+@import "bootstrap"
 
 $font-stack:    Helvetica, sans-serif
 $primary-color: #333
+
+p, li, input, label, span
+  font-size: 14px
+  line-height: 1.75em
+
+h1
+  font-weight: 700
 
 body
   font: $font-stack
   color: $primary-color
 
+#app
+  @extend .container
+
 #query-list
   li.complete
     label
       text-decoration: line-through
+
 

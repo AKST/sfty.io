@@ -20,6 +20,7 @@ module.exports = function(grunt) {
     'src/client/index.js',
     'src/client/models/*.js',
     'src/client/controllers/*.js',
+    'src/client/views/*.js',
     'src/client/routes.js',
   ];
 
@@ -40,8 +41,18 @@ module.exports = function(grunt) {
       serverJs: './src/server/{,*/}*.js',
       sass: './assets/sass/{,*/}*.{sass,scss}', 
       templates: './assets/templates/{,*/}*.hbs',
-      bootsass: './assets/vendor/bootstrap-sass-official'+
-        '/assets/stylesheets',
+      bootsass: './assets/vendor/bootstrap-sass-official/assets/stylesheets',
+      temp: {
+        dir: './public/temp',
+        css: '<%= project.temp.dir %>/{,*/}*.css',
+      },
+      dist: {
+        dir: './public',
+        css: '<%= project.dist.dir %>/css/main.min.css',
+      },
+      assets: {
+        dir: './assets',
+      }
     },
 
     /**
@@ -74,7 +85,7 @@ module.exports = function(grunt) {
         tasks: [
           'sass', 
           'clean:css', 
-          'cssmin', 
+          'cssmin:dev', 
           'jshint',
           'clean:js',
           'emberTemplates',
@@ -84,7 +95,12 @@ module.exports = function(grunt) {
       },
       sass: {
         files: '<%= project.sass %>',
-        tasks: ['sass', 'clean:css', 'cssmin', 'clean:after']
+        tasks: [
+          'sass', 
+          'clean:css', 
+          'cssmin:dev', 
+          'clean:after'
+        ]
       },
       node: {
         files: '<%= project.serverJs %>',
@@ -134,7 +150,7 @@ module.exports = function(grunt) {
             .replace(/.\/assets\/templates\//, '');
         }
       },
-      'public/temp/templates.js': '<%= project.templates %>'
+      '<%= project.temp.dir %>/templates.js': '<%= project.templates %>'
     },
 
     /**
@@ -146,12 +162,13 @@ module.exports = function(grunt) {
           expand: true,
           cwd: 'assets/sass',
           src: '{,*/}*.{sass,scss}',
-          dest: './public/temp',
+          dest: '<%= project.temp.dir %>',
           ext: '.css'
         }],
         options: {
           style: 'expanded',
           loadPath: [
+            '<%= project.bootsass %>/mixins',
             '<%= project.bootsass %>' 
           ]
         }
@@ -162,9 +179,14 @@ module.exports = function(grunt) {
      * Minifies css into public/css
      */
     cssmin: {
-      'public/css/main.min.css': [
-        'public/temp/*.css'
-      ]
+      dev: {
+        expand: true,
+        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+      },
+      production: {
+        expand: false,
+        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+      }
     },
 
     /**
@@ -174,7 +196,7 @@ module.exports = function(grunt) {
       before: 'public/{css,js}',
       js: 'public/js',
       css: 'public/css',
-      after: 'public/temp'
+      after: 'public/other'
     }
 
   });
@@ -203,7 +225,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean:before',
     'sass',
-    'cssmin',
+    'cssmin:production',
     'emberTemplates',
     'uglify:production',
     'clean:after'
