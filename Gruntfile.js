@@ -16,7 +16,7 @@ module.exports = function(grunt) {
   /**
    * Order of source dependencies
    */
-  var src = [
+  var browserSrc = [
     'src/client/index.js',
     'src/client/models/*.js',
     'src/client/controllers/*.js',
@@ -26,12 +26,23 @@ module.exports = function(grunt) {
   /**
    * all client side source
    */
-  var paths = libs.concat(src);
+  var paths = libs.concat(browserSrc);
 
   /**
    * configuration for grunt
    */
   grunt.initConfig({
+
+    pkg: grunt.file.readJSON('package.json'),
+
+    project: {
+      clientJs: browserSrc,
+      serverJs: './src/server/{,*/}*.js',
+      sass: './assets/sass/{,*/}*.{sass,scss}', 
+      templates: './assets/templates/{,*/}*.hbs',
+      bootsass: './assets/vendor/bootstrap-sass-official'+
+        '/assets/stylesheets',
+    },
 
     /**
      * Looks for common source of errors
@@ -39,8 +50,7 @@ module.exports = function(grunt) {
     jshint: {
       server: {
         src: [
-          'src/server/**/*/js',
-          'src/server/*.js',
+          '<%= project.serverJs %>',
           'Gruntfile.js'
         ],
         options: {
@@ -48,7 +58,7 @@ module.exports = function(grunt) {
         }
       },
       browser: {
-        src: ['src/client/**/*/js', 'src/client/*.js'],
+        src: '<%= project.clientJs %>',
         options: {
           jshintrc: './src/client/.jshintrc'
         }
@@ -59,17 +69,29 @@ module.exports = function(grunt) {
      * Automatically builds project
      */
     watch: {
+      main: {
+        files: 'Gruntfile.js',
+        tasks: [
+          'sass', 
+          'clean:css', 
+          'cssmin', 
+          'jshint',
+          'clean:js',
+          'emberTemplates',
+          'uglify:dev',
+          'clean:after'
+        ]
+      },
       sass: {
-        files: ['Gruntfile.js', 'assets/sass/**/*.s*ss',
-                'assets/sass/*.scss'],
+        files: '<%= project.sass %>',
         tasks: ['sass', 'clean:css', 'cssmin', 'clean:after']
       },
       node: {
-        files: ['Gruntfile.js', 'src/server/**/*.js'],
+        files: '<%= project.serverJs %>',
         tasks: ['jshint']
       },
       browserjs: {
-        files: ['Gruntfile.js', 'src/client/**/*.js'],
+        files: '<%= project.clientJs %>',
         tasks: [
           'jshint',
           'clean:js',
@@ -79,8 +101,7 @@ module.exports = function(grunt) {
         ]
       },
       templates: {
-        files: ['Gruntfile.js', 'assets/templates/**/*.hbs',
-                'assets/templates/*.hbs'],
+        files: '<%= project.templates %>',
         tasks: [
           'emberTemplates',
           'uglify:dev',
@@ -109,12 +130,11 @@ module.exports = function(grunt) {
     emberTemplates: {
       options: {
         templateName: function (sourceFile) {
-          return sourceFile.replace(
-            /assets\/templates\//, ''
-          );
+          return sourceFile
+            .replace(/.\/assets\/templates\//, '');
         }
       },
-      'public/temp/templates.js': 'assets/templates/**/*.hbs'
+      'public/temp/templates.js': '<%= project.templates %>'
     },
 
     /**
@@ -125,10 +145,16 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'assets/sass',
-          src: ['*.sass', '**/*.sass'],
+          src: '{,*/}*.{sass,scss}',
           dest: './public/temp',
           ext: '.css'
-        }]
+        }],
+        options: {
+          style: 'expanded',
+          loadPath: [
+            '<%= project.bootsass %>' 
+          ]
+        }
       }
     },
 
@@ -145,10 +171,10 @@ module.exports = function(grunt) {
      * removes files before and after builds
      */
     clean: {
-      before: ['public/css', 'public/js'],
-      js: ['public/js'],
-      css: ['public/css'],
-      after: ['public/temp']
+      before: 'public/{css,js}',
+      js: 'public/js',
+      css: 'public/css',
+      after: 'public/temp'
     }
 
   });

@@ -1,0 +1,22 @@
+<section id="app">
+  <h1>Sfty.io</h1>
+
+  <h2>Create a Query</h2>
+  {{input
+      type="text"
+      id="new-title"
+      placeholder="your title"
+      value=newTitle
+      action="createQuery"}}
+
+  <h2>Previous Queries</h2>
+  <ul id="query-list">
+    {{#each}}
+      <li {{bind-attr class="isComplete:complete"}}>
+        <input type="checkbox" class="toggle">
+        <label>{{title}}</label>
+        <button class="destroy"></button>
+      </li>
+    {{/each}}
+  </ul>
+</section>
