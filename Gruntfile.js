@@ -5,48 +5,37 @@ module.exports = function(grunt) {
     'assets/vendor/bootstrap/dist/js/bootstrap.js',
     'assets/vendor/handlebars/handlebars.js',
     'assets/vendor/ember/ember.js',
+    'assets/vendor/ember-data/ember-data.js',
     'public/temp/templates.js',
-  ]; 
+  ];
 
   var src = [
-    'src/client/*.js',
-    'src/client/**/*.js',
+    'src/client/index.js',
+    'src/client/models/*.js',
+    'src/client/controllers/*.js',
+    'src/client/routes.js',
   ];
 
   var paths = libs.concat(src);
 
-  grunt.initConfig({ 
+  grunt.initConfig({
 
 
     jshint: {
-      src: ['src/*.js', 'src/**/*.js', 'test/*.js', 
-            'test/**/*.js'],
-      options: {
-        curly: false,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {
-          Ember: true,
-          process: true,
-          it: true,
-          describe: true,
-          assert: true,
-          Sfty: true,
-          module: true,
-          exports: true,
-          require: true,
-          window: true,
-          alert: true,
-          console: true,
-          __dirname: true
+      server: {
+        src: [
+          'src/server/**/*/js', 
+          'src/server/*.js', 
+          'Gruntfile.js'
+        ],
+        options: {
+          jshintrc: './src/server/.jshintrc'
+        }
+      },
+      browser: {
+        src: ['src/client/**/*/js', 'src/client/*.js'],
+        options: {
+          jshintrc: './src/client/.jshintrc'
         }
       }
     },
@@ -64,13 +53,22 @@ module.exports = function(grunt) {
       },
       browserjs: {
         files: ['Gruntfile.js', 'src/client/**/*.js'],
-        tasks: ['jshint', 'clean:js', 'uglify:dev']
+        tasks: [
+          'jshint',
+          'clean:js',
+          'emberTemplates',
+          'uglify:dev',
+          'clean:after'
+        ]
       },
       templates: {
         files: ['Gruntfile.js', 'assets/templates/**/*.hbs',
                 'assets/templates/*.hbs'],
-        tasks: ['emberTemplates', 'uglify:dev', 
-                'clean:after']
+        tasks: [
+          'emberTemplates',
+          'uglify:dev',
+          'clean:after'
+        ]
       },
     },
 
@@ -104,10 +102,10 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'assets/sass',
-          src: ['*.s*ss'],
-          dest: '../public/temp',
+          src: ['*.sass', '**/*.sass'],
+          dest: './public/temp',
           ext: '.css'
-        }] 
+        }]
       }
     },
 

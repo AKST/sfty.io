@@ -1,6 +1,7 @@
 public/css
 public/js
 public/temp
+public/fonts
 assets/vendor
 node_modules
 .sass-cache

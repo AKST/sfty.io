@@ -1,6 +1,8 @@
 window.Sfty = Ember.Application.create();
 
-Sfty.Router.map(function () {
-  this.resource('index',  { path: '/' });
+Sfty.ApplicationAdapter = DS.FixtureAdapter;
+
+Sfty.Store = DS.Store.extend({
+  adapter: 'DS.FixtureAdapter'
 });
 
