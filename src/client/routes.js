@@ -7,28 +7,27 @@ Sfty.Router.map(function () {
 });
 
 
-Sfty.QueriesActiveRoute = Ember.Route.extend({
-  model: function () {
-    return this.store.filter('query', function (query) {
-      return !query.get('isCompleted');
-    });
-  },
-
+Sfty.RenderIndex = Ember.Mixin.create({
   renderTemplate: function (controller) {
     this.render('queries/index', { controller: controller });
   }
 });
 
 
-Sfty.QueriesCompleteRoute = Ember.Route.extend({
+Sfty.QueriesActiveRoute = Ember.Route.extend(Sfty.RenderIndex, {
+  model: function () {
+    return this.store.filter('query', function (query) {
+      return !query.get('isCompleted');
+    });
+  }
+});
+
+
+Sfty.QueriesCompleteRoute = Ember.Route.extend(Sfty.RenderIndex, {
   model: function () {
     return this.store.filter('query', function (query) {
       return query.get('isCompleted');
     });
-  },
-
-  renderTemplate: function (controller) {
-    this.render('queries/index', { controller: controller });
   }
 });
 

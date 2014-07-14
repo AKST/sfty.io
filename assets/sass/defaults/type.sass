@@ -1,21 +1,24 @@
-@import "bootstrap"
+@import "bootstrap/variables"
+@import "bootstrap/mixins"
+@import "bootstrap/type"
 
-$font-stack:    Helvetica, sans-serif
+$font-stack: Helvetica, sans-serif
 $primary-color: #333
 
+*
+  font-family: $font-stack
+  color: $primary-color
+
+
 p, li, input, label, span
-  font-size: 14px
+  font-size: 16px
   line-height: 1.75em
+  font-weight: 500
+  ::first-letter
+    text-transform: Uppercase
 
 h1
   font-weight: 700
-
-body
-  font: $font-stack
-  color: $primary-color
-
-#app
-  @extend .container
 
 #query-list
   li.complete

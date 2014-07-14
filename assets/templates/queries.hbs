@@ -1,18 +1,21 @@
 <section id="app">
-  <h1>Sfty.io</h1>
 
-  <h2>Create a Query</h2>
-  {{input 
-      type="text" 
-      id="new-title" 
-      placeholder="your title"
-      value=newTitle 
-      action="createQuery"}}
-
-  <h2>Queries</h2>
-
+  <header id="header">
+    <h1>Sfty.io</h1>
+  <header>
 
   <section id="main">
+
+    <h2>Create a Query</h2>
+    {{input 
+        type="text" 
+        id="new-title" 
+        placeholder="your title"
+        value=newTitle 
+        action="createQuery"}}
+
+    <h2>Queries</h2>
+
     {{outlet}} 
     {{input type="checkbox" id="toggle-all" checked=allAreDone}}
   </section>
@@ -29,7 +32,7 @@
       <li>{{#link-to "queries.complete" activeClass="selected"}}Completed{{/link-to}}</li>
     </ul>
     {{#if hasCompleted}}
-      <button id="clear-completed" {{action "clearCompleted"}}>
+      <button id="clear-completed" class="round" {{action "clearCompleted"}}>
         Clear completed ({{completed}})
       </button>
     {{/if}}
