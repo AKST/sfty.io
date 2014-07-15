@@ -2,36 +2,16 @@
  * @jsx React.DOM 
  */
 
-Sfty.MultiButton = React.createClass({
-
-  render: function () {
-    var options = this.props.data.map(function (data) {
-      return (
-        <li><a data-id={data.id}>{data.name}</a></li>
-      );
-    });
-
-    return (
-      <div class="multiselect">
-        <button type="button" data-toggle="dropdown"> 
-          Action <span class="caret"></span>
-        </button>
-        <ul role="menu">
-          {options}
-        </ul>
-      </div>
-    );
-  }
-});
-
 Sfty.App = React.createClass({
   render: function () {
     var Btn = Sfty.MultiButton;
     return (
       <div id="app">
         <h1>{this.props.data.name}</h1>
-        <Btn data={this.props.data.graphs} />
-        <Btn data={this.props.data.aspects} />
+        <Btn title="Graphs" data={this.props.data.graphs} />
+        <br />
+        <Btn title="Comparison" data={this.props.data.aspects} />
+        <br />
       </div>
     );
   }

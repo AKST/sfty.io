@@ -1,24 +1,17 @@
-@import "bootstrap/variables"
-@import "bootstrap/mixins"
-@import "bootstrap/type"
-
-$font-stack:    Helvetica, sans-serif
+$font-stack: Helvetica, sans-serif
 $primary-color: #333
 
-*
-  font: $font-stack
+#app *
+  font-family: $font-stack
   color: $primary-color
+  ::first-letter
+    text-transform: Uppercase
 
-p, li, a, input, label, span
+p, li, input, label, span
   font-size: 14px
-  line-height: 1.75em
+  line-height: 1.8em
+  font-weight: 500
 
 h1
   font-weight: 700
-
-#query-list
-  li.complete
-    label
-      text-decoration: line-through
-
 
