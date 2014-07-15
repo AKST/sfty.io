@@ -15,9 +15,13 @@
     "tests"
   ],
   "dependencies": {
-    "ember": "1.6.0",
-    "ember-data": "1.0.0-beta.7",
     "bootstrap-sass-official": "~3.2.0",
-    "react": "~0.10.0"
+    "react": "~0.10.0",
+    "underscore": "~1.6.0",
+    "Backbone.localStorage": "~1.1.9",
+    "backbone": "~1.1.2",
+    "class-extender": "~1.0.7",
+    "mocha": "~1.20.1",
+    "chai": "~1.9.1"
   }
 }

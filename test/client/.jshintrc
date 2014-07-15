@@ -17,6 +17,12 @@
     "Backbone",
     "ClassExtender",
     "$",
-    "_"
+    "_",
+    "describe",
+    "it",
+    "expect",
+    "mocha",
+    "chai",
+    "assert"
   ]
 }

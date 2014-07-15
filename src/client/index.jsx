@@ -1,11 +1,22 @@
-/** @jsx React.DOM */
+/** 
+ * @jsx React.DOM 
+ */
 
-var App = React.createClass({
+Sfty.App = React.createClass({
   render: function () {
     return (
-      <section id="app">
-        <h1>Sfty.io</h1>
-      </section>
+      <div id="app">
+        <h1>{this.props.name}</h1>
+      </div>
     );
   }
 });
+
+
+$('body').ready(function () {
+  var body = $('body')[0],
+      App  = Sfty.App;
+
+  React.renderComponent(App(Sfty.Config), body);
+});
+

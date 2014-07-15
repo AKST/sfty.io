@@ -8,16 +8,40 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     project: {
-      clientJs: [
-        'src/client/index.jsx',
+      clientJsWithoutInit: [
+        'src/client/namespace.js',
+        'src/client/util/*.{js,jsx}',
         'src/client/models/*.{js,jsx}',
+        'src/client/collections/*.{js,jsx}',
         'src/client/controllers/*.{js,jsx}',
         'src/client/views/*.{js,jsx}',
       ],
+      clientJs: [
+        '<%= project.clientJsWithoutInit %>',
+        'src/client/index.jsx'
+      ],
       clientLibsJs: [
-        'assets/vendor/react/react.min.js',
+        'assets/vendor/class-extender/index.js',
+        'assets/vendor/react/react.js',
         'assets/vendor/jquery/dist/jquery.js',
-        'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+        'assets/vendor/underscore/underscore.js',
+        'assets/vendor/backbone/backbone.js',
+        'assets/vendor/backbone.localStorage/'+
+          'backbone.localStorage.js',
+        'assets/vendor/bootstrap-sass-official/assets/'+
+          'javascripts/bootstrap.js',
+      ],
+      testJs: 'test/client/{,*/}*.js',
+      testLib: [
+        'assets/vendor/mocha/mocha.js',
+        'assets/vendor/chai/chai.js',
+      ],
+      allTestJs: [
+        '<%= project.clientLibsJs %>',
+        '<%= project.clientJsWithoutInit %>',
+        '<%= project.testLib %>',
+        'test/client/init.js', 
+        '<%= project.testJs %>' 
       ],
       allClientJs: [
         '<%= project.clientLibsJs %>',
@@ -25,7 +49,8 @@ module.exports = function(grunt) {
       ],
       serverJs: './src/server/{,*/}*.js',
       sass: './assets/sass/{,*/}*.{sass,scss}', 
-      bootsass: './assets/vendor/bootstrap-sass-official/assets/stylesheets',
+        bootsass: './assets/vendor/bootstrap-sass-official/'+
+          'assets/stylesheets',
       temp: {
         dir: './public/temp',
         css: '<%= project.temp.dir %>/{,*/}*.css',
@@ -35,6 +60,7 @@ module.exports = function(grunt) {
         dir: './public',
         css: '<%= project.dist.dir %>/css/main.min.css',
         js: '<%= project.dist.dir %>/js/main.js',
+        testJs: '<%= project.dist.dir %>/js/test.js',
       },
       assets: {
         dir: './assets',
@@ -72,7 +98,10 @@ module.exports = function(grunt) {
         tasks: ['jshint']
       },
       browserjs: {
-        files: '<%= project.clientJs %>',
+        files: [
+          '<%= project.clientJs %>',
+          '<%= project.allTestJs %>',
+        ],
         tasks: [
           'jshint',
           'clean:js',
@@ -110,7 +139,10 @@ module.exports = function(grunt) {
     uglify: {
       dev: {
         options: { beautify: true, mangle: false },
-        files: { '<%= project.dist.js %>': '<%= project.allClientJs %>' }
+        files: { 
+          '<%= project.dist.js %>': '<%= project.allClientJs %>', 
+          '<%= project.dist.testJs %>': '<%= project.allTestJs %>' 
+        }
       },
       production: {
         options: { beautify: false, mangle: false },
@@ -157,11 +189,18 @@ module.exports = function(grunt) {
     cssmin: {
       dev: {
         expand: true,
-        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+        files: { 
+          '<%= project.dist.css %>': '<%= project.temp.css %>',
+          '<%= project.dist.dir %>/css/mocha.css': 'assets/vendor/mocha/mocha.css',
+        }
       },
       production: {
         expand: false,
-        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+        files: { 
+          '<%= project.dist.css %>': [
+            '<%= project.temp.css %>'
+          ] 
+        }
       }
     },
 
