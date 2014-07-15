@@ -75,10 +75,10 @@ module.exports = function(grunt) {
         files: 'Gruntfile.js',
         tasks: [
           'sass', 
-          'clean:css', 
+          //'clean:css', 
           'cssmin:dev', 
           'jshint',
-          'clean:js',
+          //'clean:js',
           'react',
           'uglify:dev',
           'clean:after'
@@ -88,7 +88,7 @@ module.exports = function(grunt) {
         files: '<%= project.sass %>',
         tasks: [
           'sass', 
-          'clean:css', 
+          //'clean:css', 
           'cssmin:dev', 
           'clean:after'
         ]
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'jshint',
-          'clean:js',
+          //'clean:js',
           'react',
           'uglify:dev',
           'clean:after'
