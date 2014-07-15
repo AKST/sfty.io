@@ -49,7 +49,7 @@ module.exports = function(grunt) {
       ],
       serverJs: './src/server/{,*/}*.js',
       sass: './assets/sass/{,*/}*.{sass,scss}', 
-        bootsass: './assets/vendor/bootstrap-sass-official/'+
+      bootsass: './assets/vendor/bootstrap-sass-official/'+
           'assets/stylesheets',
       temp: {
         dir: './public/temp',
