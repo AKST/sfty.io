@@ -1,35 +1,6 @@
 module.exports = function(grunt) {
 
   /**
-   * Order of library dependencies
-   */
-  var libs = [
-    'assets/vendor/jquery/dist/jquery.js',
-    'assets/vendor/bootstrap-sass-official/assets/'+
-      'javascripts/bootstrap.js',
-    'assets/vendor/handlebars/handlebars.js',
-    'assets/vendor/ember/ember.js',
-    'assets/vendor/ember-data/ember-data.js',
-    'public/temp/templates.js',
-  ];
-
-  /**
-   * Order of source dependencies
-   */
-  var browserSrc = [
-    'src/client/index.js',
-    'src/client/models/*.js',
-    'src/client/controllers/*.js',
-    'src/client/views/*.js',
-    'src/client/routes.js',
-  ];
-
-  /**
-   * all client side source
-   */
-  var paths = libs.concat(browserSrc);
-
-  /**
    * configuration for grunt
    */
   grunt.initConfig({
@@ -37,21 +8,78 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     project: {
-      clientJs: browserSrc,
+      clientJs: [
+        'src/client/index.jsx',
+        'src/client/models/*.{js,jsx}',
+        'src/client/controllers/*.{js,jsx}',
+        'src/client/views/*.{js,jsx}',
+      ],
+      clientLibsJs: [
+        'assets/vendor/react/react.min.js',
+        'assets/vendor/jquery/dist/jquery.js',
+        'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+      ],
+      allClientJs: [
+        '<%= project.clientLibsJs %>',
+        '<%= project.temp.js %>',
+      ],
       serverJs: './src/server/{,*/}*.js',
       sass: './assets/sass/{,*/}*.{sass,scss}', 
-      templates: './assets/templates/{,*/}*.hbs',
       bootsass: './assets/vendor/bootstrap-sass-official/assets/stylesheets',
       temp: {
         dir: './public/temp',
         css: '<%= project.temp.dir %>/{,*/}*.css',
+        js: '<%= project.temp.dir %>/js/temp.js',
       },
       dist: {
         dir: './public',
         css: '<%= project.dist.dir %>/css/main.min.css',
+        js: '<%= project.dist.dir %>/js/main.js',
       },
       assets: {
         dir: './assets',
+      }
+    },
+
+    /**
+     * Automatically builds project
+     */
+    watch: {
+      main: {
+        files: 'Gruntfile.js',
+        tasks: [
+          'sass', 
+          'clean:css', 
+          'cssmin:dev', 
+          'jshint',
+          'clean:js',
+          'react',
+          'uglify:dev',
+          'clean:after'
+        ]
+      },
+      sass: {
+        files: '<%= project.sass %>',
+        tasks: [
+          'sass', 
+          'clean:css', 
+          'cssmin:dev', 
+          'clean:after'
+        ]
+      },
+      node: {
+        files: '<%= project.serverJs %>',
+        tasks: ['jshint']
+      },
+      browserjs: {
+        files: '<%= project.clientJs %>',
+        tasks: [
+          'jshint',
+          'clean:js',
+          'react',
+          'uglify:dev',
+          'clean:after'
+        ]
       }
     },
 
@@ -77,80 +105,28 @@ module.exports = function(grunt) {
     },
 
     /**
-     * Automatically builds project
-     */
-    watch: {
-      main: {
-        files: 'Gruntfile.js',
-        tasks: [
-          'sass', 
-          'clean:css', 
-          'cssmin:dev', 
-          'jshint',
-          'clean:js',
-          'emberTemplates',
-          'uglify:dev',
-          'clean:after'
-        ]
-      },
-      sass: {
-        files: '<%= project.sass %>',
-        tasks: [
-          'sass', 
-          'clean:css', 
-          'cssmin:dev', 
-          'clean:after'
-        ]
-      },
-      node: {
-        files: '<%= project.serverJs %>',
-        tasks: ['jshint']
-      },
-      browserjs: {
-        files: '<%= project.clientJs %>',
-        tasks: [
-          'jshint',
-          'clean:js',
-          'emberTemplates',
-          'uglify:dev',
-          'clean:after'
-        ]
-      },
-      templates: {
-        files: '<%= project.templates %>',
-        tasks: [
-          'emberTemplates',
-          'uglify:dev',
-          'clean:after'
-        ]
-      },
-    },
-
-    /**
      * Clumps all javascript into single file
      */
     uglify: {
       dev: {
         options: { beautify: true, mangle: false },
-        files: { 'public/js/main.js': paths }
+        files: { '<%= project.dist.js %>': '<%= project.allClientJs %>' }
       },
       production: {
         options: { beautify: false, mangle: false },
-        files: { 'public/js/main.js': paths }
+        files: { '<%= project.dist.js %>': '<%= project.allClientJs %>' }
       },
     },
 
     /**
-     * compiles templates down into javascript
+     * Compiles react
      */
-    emberTemplates: {
-      options: {
-        templateName: function (sourceFile) {
-          return sourceFile
-            .replace(/.\/assets\/templates\//, '');
+    react: {
+      output: {
+        files: {
+          '<%= project.temp.js %>': '<%= project.clientJs %>'
         }
-      },
-      '<%= project.temp.dir %>/templates.js': '<%= project.templates %>'
+      }
     },
 
     /**
@@ -193,10 +169,13 @@ module.exports = function(grunt) {
      * removes files before and after builds
      */
     clean: {
-      before: 'public/{css,js}',
-      js: 'public/js',
-      css: 'public/css',
-      after: 'public/other'
+      before: [
+        '<%= project.dist.js %>',
+        '<%= project.dist.css %>',
+      ],
+      js: '<%= project.dist.js %>',
+      css: '<%= project.dist.css %>',
+      after: '<%= project.temp.dir %>'
     }
 
   });
@@ -205,7 +184,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ember-templates');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-jsxhint');
+  grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
@@ -226,7 +206,6 @@ module.exports = function(grunt) {
     'clean:before',
     'sass',
     'cssmin:production',
-    'emberTemplates',
     'uglify:production',
     'clean:after'
   ]);

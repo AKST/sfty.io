@@ -10,7 +10,10 @@
   "boss": true,
   "eqnull": true,
   "predef": [
-    "Ember", "DS", "Sfty", "window",
-    "alert", "console"
+    "React", 
+    "Sfty", 
+    "window",
+    "alert", 
+    "console"
   ]
 }

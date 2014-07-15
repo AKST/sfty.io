@@ -18,7 +18,8 @@
     "grunt-contrib-clean": "~0.5.0",
     "grunt-mocha-cov": "^0.2.1",
     "grunt-contrib-jasmine": "^0.6.3",
-    "grunt-ember-templates": "^0.4.21"
+    "grunt-jsxhint": "0.0.3",
+    "grunt-react": "^0.8.2"
   },
   "dependencies": {
     "underscore": "~1.6.0",
