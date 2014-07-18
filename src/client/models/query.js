@@ -1,14 +1,18 @@
 
 Sfty.Constraint = (function () {
+
+  var predicate = Sfty.Util.Decrs.predicate,
+      isValue,
+      isKey;
   
-  var isValue = function (obj) {
+  isValue = function (obj) {
     if (typeof obj.id !== 'string') { 
       return false; 
     }
     return true;
   };
 
-  var isKey = function (key) {
+  isKey = function (key) {
     return typeof key === 'string'; 
   };
   
@@ -23,11 +27,11 @@ Sfty.Constraint = (function () {
       this.inclusive = !!inclusive;
     },
 
-    add: Sfty.Decrs.predicate(isValue, function (obj) {
+    add: predicate(isValue, function (obj) {
       this.values[obj.id] = obj;
     }),
 
-    remove: Sfty.Decrs.predicate(isKey, function (key) {
+    remove: predicate(isKey, function (key) {
       delete this.values[key];
     }),
 
@@ -47,7 +51,7 @@ Sfty.Constraint = (function () {
 Sfty.Query = (function () {
 
   // configuration object
-  var conf = Sfty.Config; 
+  var conf = Sfty.Util.Config; 
   
 
   return Backbone.Model.extend({

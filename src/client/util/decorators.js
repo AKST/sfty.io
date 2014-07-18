@@ -1,7 +1,7 @@
 /**
  * Function decorators
  */
-Sfty.Decrs = {
+Sfty.Util.Decrs = {
 
   /**
    * Invokes functions on params before

@@ -3,7 +3,7 @@
  * Configuration data for the applicaption 
  * that doesn't change.
  */
-Sfty.Config = (function () {
+Sfty.Util.Config = (function () {
 
   /**
    * wrapper for config data
@@ -17,7 +17,7 @@ Sfty.Config = (function () {
      */
     has: function (field) {
       return this.items
-        .map(Sfty.Fn.access('id'))
+        .map(Sfty.Util.Fn.access('id'))
         .indexOf(field) !== -1;   
     }
   });
@@ -25,6 +25,40 @@ Sfty.Config = (function () {
   return {
     name: 'Sfty.io',
 
+    ageSlider: {
+      range: {
+        min: 15, 
+        max: 75
+      },
+      step: 10,
+      margin: 10,
+      connect: true,
+    },
+
+    /**
+     * Gender
+     */
+    gender: [
+      { id: 'M', name: 'Male' },
+      { id: 'F', name: 'Female' }
+    ],
+
+    /**
+     * Workload
+     */
+    workloads: [
+      { id: 'full-time', name: 'Full time' },
+      { id: 'part-time', name: 'Part time' },
+    ],
+
+    fatalities: [
+      { id: true, name: 'Fatal' },
+      { id: false, name: 'Non-fatal' },
+    ],
+
+    /**
+     * The different types of graphs
+     */
     graphs: [
       {
         id: 'bar',
@@ -41,9 +75,13 @@ Sfty.Config = (function () {
       }
     ],
 
+    /**
+     * The different types of data available for
+     * the incident data
+     */
     aspects: [
       { 
-        id: 'type',
+        id: 'injury',
         name: 'type of injury' 
       }, { 
         id: 'activity',

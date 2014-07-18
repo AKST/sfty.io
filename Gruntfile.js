@@ -1,4 +1,17 @@
 module.exports = function(grunt) {
+  
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-jsxhint');
+  grunt.loadNpmTasks('grunt-react');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-mocha-test');
+
+
 
   /**
    * configuration for grunt
@@ -12,7 +25,7 @@ module.exports = function(grunt) {
         main: 'src/client/index.jsx',
         prepareTests: 'test/client/init.jsx',
         src: [
-          'src/client/namespace.js',
+          'src/client/__init__.js',
           'src/client/util/*.{js,jsx}',
           'src/client/models/*.{js,jsx}',
           'src/client/collections/*.{js,jsx}',
@@ -20,17 +33,15 @@ module.exports = function(grunt) {
           'src/client/views/*.{js,jsx}'
         ],
         testSrc: 'test/client/{,*/}*.js',
+        testRun: 'test/client/run.js',
         libraries: [
           'assets/vendor/jquery/dist/jquery.js',
           'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.js',
-
           'assets/vendor/react/react.js',
           'assets/vendor/react-bootstrap/react-bootstrap.js',
-
           'assets/vendor/underscore/underscore.js',
           'assets/vendor/backbone/backbone.js',
           'assets/vendor/backbone.localStorage/backbone.localStorage.js',
-
           'assets/vendor/class-extender/index.js',
         ],
         testLibraries: [
@@ -49,7 +60,8 @@ module.exports = function(grunt) {
           '<%= proj.browserJs.reactSrcOut %>',
           '<%= proj.browserJs.testLibraries %>',
           '<%= proj.browserJs.prepareTests %>',
-          '<%= proj.browserJs.testSrc %>'
+          '<%= proj.browserJs.testSrc %>',
+          '<%= proj.browserJs.testRun %>',
         ],
         srcOut: 'public/js/main.js',
         testOut: 'public/js/test.js',
@@ -89,7 +101,9 @@ module.exports = function(grunt) {
           'jshint',
           'react',
           'uglify:dev',
-          //'clean:after'
+          'connect',
+          'mocha',
+          'mochaTest',
         ]
       },
       sass: {
@@ -102,7 +116,7 @@ module.exports = function(grunt) {
       },
       node: {
         files: '<%= proj.serverJs %>',
-        tasks: ['jshint']
+        tasks: ['jshint', 'mochaTest']
       },
       browserjs: {
         files: [
@@ -116,7 +130,9 @@ module.exports = function(grunt) {
           //'clean:js',
           'react',
           'uglify:dev',
-          'clean:after'
+          'clean:after',
+          'connect',
+          'mocha',
         ]
       }
     },
@@ -155,7 +171,7 @@ module.exports = function(grunt) {
     },
 
     /**
-     * Compiles react
+     * Compiles react jsx files
      */
     react: {
       output: {
@@ -181,6 +197,40 @@ module.exports = function(grunt) {
         options: { beautify: false, mangle: false },
         files: { 
           '<%= proj.browserJs.srcOut %>': '<%= proj.browserJs.srcFiles %>',
+        }
+      },
+    },
+
+    /**
+     * Server Tests
+     * https://github.com/pghalliday/grunt-mocha-test
+     */
+    mochaTest: {
+      server: {
+        src: 'test/server/{,*/}*.js',
+      },
+    },
+
+    connect: {
+      test: {
+        options: {
+          base: 'public',
+          timeout: 10000,
+          port: 8080,
+          reporter: 'Nyan'
+        }
+      }
+    },
+
+    /**
+     * Client Tests
+     * https://github.com/kmiyashiro/grunt-mocha
+     */
+    mocha: {
+      client: {
+        options: { 
+          urls: ['http://0.0.0.0:8080/test.html'],
+          log: true, 
         }
       },
     },
@@ -224,15 +274,6 @@ module.exports = function(grunt) {
     }
 
   });
-
-  grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-ember-templates');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-jsxhint');
-  grunt.loadNpmTasks('grunt-react');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-clean');
 
   /**
    * is the default behaviour

@@ -1,4 +1,4 @@
-Sfty.Fn = {
+Sfty.Util.Fn = {
 
   invoke: function (arg, fn) {
     return fn(arg);
