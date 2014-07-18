@@ -5,6 +5,7 @@ init:
 	npm install -g grunt-cli
 	sudo gem install sass
 	sudo gem install compass
+	grunt build
 
 dependencies: init
 	npm install
@@ -16,6 +17,11 @@ place-assets:
 
 build: dependencies place-assets
 	grunt build
+
+deploy: init
+	mkdir -p deploy
+	cp -r . deploy/.
+	rm deploy/public/test.html
 
 ls:
 	tree -I 'public|vendor|node_modules' 

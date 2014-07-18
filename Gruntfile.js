@@ -283,15 +283,19 @@ module.exports = function(grunt) {
   /**
    * will run when running tests
    */
-  grunt.registerTask('test', ['jshint']);
+  grunt.registerTask('test', [
+    'jshint',
+    'mocha',
+    'mochaTest',
+  ]);
 
   /**
    * will build project once off
    */
   grunt.registerTask('build', [
-    'clean:before',
     'sass',
     'cssmin:production',
+    'react',
     'uglify:production',
     'clean:after'
   ]);
