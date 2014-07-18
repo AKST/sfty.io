@@ -23,9 +23,6 @@ deploy: build
 	cp -r . deploy/.
 	rm deploy/public/test.html
 
-ls:
-	tree -I 'public|vendor|node_modules' 
-
 test:
 	grunt test
 
