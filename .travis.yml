@@ -3,7 +3,9 @@ rvm: ruby-head
 gemfile:
   - sass
 install:
-  - npm install
+  - npm install -g bower
+  - npm install -g grunt-cli
+  - npm install --dev
   - bower install
   - make place-assets
   - grunt build
