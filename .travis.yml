@@ -1,4 +1,7 @@
+rvm: ruby-head
 language: node_js
+gemfile:
+  - sass
 install:
   - make build
 script:

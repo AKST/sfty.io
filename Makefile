@@ -4,7 +4,6 @@ init:
 	npm install -g bower
 	npm install -g grunt-cli
 	sudo gem install sass
-	sudo gem install compass
 	grunt build
 
 dependencies: init
