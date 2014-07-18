@@ -1,13 +1,8 @@
-@import "bootstrap/variables"
-@import "bootstrap/mixins"
-@import "bootstrap/grid"
 
-
-
-div#app 
+div#app
   @extend .container
 
-.btn span.caret
-  margin-left: 5px
-
+div.btn-group
+  + div.btn-group
+    margin-left: 10px
 

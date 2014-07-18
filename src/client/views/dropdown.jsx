@@ -2,29 +2,29 @@
  * @jsx React.DOM 
  */
 
-Sfty.MultiButton = React.createClass({
+/**
+ * Properties
+ * + title: (text of button)
+ * + style: (buttons style)
+ * + options: (list of options)
+ *   - option.id
+ *   - option.name
+ */
+Sfty.DropDown = React.createClass({
 
-  mainClass: "btn-group",
-  btnClass: "btn btn-default drop-down-toggle",
-  listClass: "dropdown-menu",
+  style: function () {
+    return this.props.style || 'default';
+  },
 
   render: function () {
-    var options = this.props.data.map(function (data) {
-      return (
-        <li key={data.id}><a href="#">{data.name}</a></li>
-      );
-    });
-
+    var DropdownButton = ReactBootstrap.DropdownButton,
+        MenuItem = ReactBootstrap.MenuItem;
     return (
-      <div className={this.mainClass}>
-        <button type="button" data-toggle="dropdown" className={this.btnClass}> 
-          {this.props.title} 
-          <span className="caret"></span>
-        </button>
-        <ul role="menu" className={this.listClass}>
-          {options}
-        </ul>
-      </div>
+      <DropdownButton title={this.props.title} bsStyle={this.style()}>
+        {this.props.options.map(function (option) {
+          return <MenuItem key={option.id}>{option.name}</MenuItem>; 
+        })}
+      </DropdownButton>
     );
   }
 });

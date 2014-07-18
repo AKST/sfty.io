@@ -21,13 +21,17 @@ module.exports = function(grunt) {
         ],
         testSrc: 'test/client/{,*/}*.js',
         libraries: [
-          'assets/vendor/class-extender/index.js',
-          'assets/vendor/react/react.js',
           'assets/vendor/jquery/dist/jquery.js',
+          'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+
+          'assets/vendor/react/react.js',
+          'assets/vendor/react-bootstrap/react-bootstrap.js',
+
           'assets/vendor/underscore/underscore.js',
           'assets/vendor/backbone/backbone.js',
           'assets/vendor/backbone.localStorage/backbone.localStorage.js',
-          'assets/vendor/bootstrap/dist/js/bootstrap.js',
+
+          'assets/vendor/class-extender/index.js',
         ],
         testLibraries: [
           'assets/vendor/mocha/mocha.js',

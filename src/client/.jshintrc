@@ -16,6 +16,7 @@
     "console",
     "Backbone",
     "ClassExtender",
+    "ReactBootstrap",
     "$",
     "_"
   ]
