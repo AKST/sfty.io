@@ -3,7 +3,6 @@ BOOTROOT=./assets/vendor/bootstrap-sass-official/assets
 init:
 	npm install -g bower
 	npm install -g grunt-cli
-	sudo gem install sass
 	grunt build
 
 dependencies: init

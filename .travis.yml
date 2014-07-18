@@ -1,8 +1,11 @@
-rvm: ruby-head
 language: node_js
+rvm: ruby-head
 gemfile:
   - sass
 install:
-  - make build
+  - npm install
+  - bower install
+  - make place-assets
+  - grunt build
 script:
   - make test
