@@ -10,14 +10,11 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.11",
-    "grunt-contrib-jshint": "~0.8.0",
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-cssmin": "~0.8.0",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-mocha-cov": "^0.2.1",
-    "grunt-contrib-jasmine": "^0.6.3",
     "grunt-jsxhint": "0.0.3",
     "grunt-react": "^0.8.2",
     "grunt-mocha": "^0.4.11",
@@ -29,8 +26,7 @@
     "connect": "^2.14.5",
     "async": "^0.9.0",
     "express": "^4.5.1",
-    "mongodb": "^1.4.7",
-    "monk": "^0.9.0"
+    "mongodb": "^1.4.7"
   },
   "engines": {
     "node": ">=0.10"
