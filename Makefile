@@ -18,7 +18,7 @@ place-assets:
 build: dependencies place-assets
 	grunt build
 
-deploy: init
+deploy: build
 	mkdir -p deploy
 	cp -r . deploy/.
 	rm deploy/public/test.html
@@ -26,3 +26,7 @@ deploy: init
 ls:
 	tree -I 'public|vendor|node_modules' 
 
+test:
+	grunt test
+
+.PHONY: test
