@@ -2,9 +2,11 @@ language: node_js
 rvm: ruby-head
 gemfile:
   - sass
-install:
+before_install:
   - npm install -g bower
   - npm install -g grunt-cli
+install:
+  - npm install
   - npm install --dev
   - bower install
   - make place-assets
