@@ -4,15 +4,15 @@
  * that doesn't change.
  */
 Sfty.Config = (function () {
+  var Field, config;
 
   /**
    * wrapper for config data
    */
-  var Field = ClassExtender.extend({
+  Field = ClassExtender.extend({
     init: function (config) {
-      this.data = config.data; 
-      for (var key in config.meta) {
-        this[key] = config.meta[key];
+      for (var key in config) {
+        this[key] = config[key];
       }
     },
 
@@ -26,7 +26,7 @@ Sfty.Config = (function () {
     }
   });
 
-  return {
+  config = {
     title: 'Sfty.io',
 
     fieldGroups: {
@@ -47,55 +47,22 @@ Sfty.Config = (function () {
     groupOrder: ['visualisation', 'incident', 'profile'], 
 
     __fields: {
-      fields: [
-        'age', 
-        'gender', 
-        'workload', 
-        'fatality', 
-        'graph', 
-        'comparison',
-        'injury', 
-        'cause', 
-        'activity', 
-        'location', 
-        'occupation', 
-        'industry'
-      ],
-      data: {
-        age: {
-          range: { min: 15, max: 75 },
-          step: 10,
-          margin: 10,
-          connect: true,
-        },
-        gender: [
-          { id: 'M', name: 'Male' },
-          { id: 'F', name: 'Female' }
+      graph: {
+        group: 'visualisation',
+        title: 'graph',
+        type: 'staticSelect',
+        data: [
+          { id: 'bar', name: 'bar graph'}, 
+          { id: 'area', name: 'area graph' },
+          { id: 'pie', name: 'pie graph' },
+          { id: 'bell', name: 'bell curve' },
         ],
-        workload: [
-          { id: 'full-time', name: 'Full time' },
-          { id: 'part-time', name: 'Part time' },
-        ],
-        fatality: [
-          { id: true, name: 'Fatal' },
-          { id: false, name: 'Non-fatal' },
-        ],
-        graph: [
-          {
-            id: 'bar',
-            name: 'bar graph'
-          }, {
-            id: 'area',
-            name: 'area graph'
-          }, {
-            id: 'pie',
-            name: 'pie graph'
-          }, {
-            id: 'bell',
-            name: 'bell curve'
-          }
-        ],
-        comparison: [
+      },
+      comparison: {
+        group: 'visualisation',
+        title: 'comparison',
+        type: 'staticSelect',
+        data: [
           { id: 'injury', name: 'type of injury' }, 
           { id: 'activity', name: 'activity during injury' }, 
           { id: 'location', name: 'body location' }, 
@@ -107,102 +74,91 @@ Sfty.Config = (function () {
           { id: 'sex', name: 'sex of casualty' },
         ],
       },
-      metadata: {
-        graph: {
-          group: 'visualisation',
-          title: 'graph',
-          type: 'staticSelect',
-        },
-        comparison: {
-          group: 'visualisation',
-          title: 'comparison',
-          type: 'staticSelect',
-        },
 
-        fatality: {
-          group: 'incident',
-          title: 'fatal?',
-          type: 'toggle',
+      fatality: {
+        group: 'incident',
+        title: 'fatal?',
+        type: 'toggle',
+        data: [
+          { id: true, name: 'Fatal' },
+          { id: false, name: 'Non-fatal' },
+        ]
+      },
+      injury: {
+        group: 'incident',
+        url: '/rest/injuries',
+        title: 'injury type',
+        type: 'ajaxSelect',
+      },
+      cause: {
+        group: 'incident',
+        url: '/rest/causes',
+        title: 'cause',
+        type: 'ajaxSelect',
+      },
+      location: {
+        group: 'incident',
+        url: '/rest/locations',
+        title: 'body location of injury',
+        type: 'ajaxSelect',
+      },
+      activity: {
+        group: 'incident',
+        url: '/rest/activities',
+        title: 'activity before hand',
+        type: 'ajaxSelect',
+      },
+      
+      
+      workload: {
+        group: 'profile',
+        title: 'workload',
+        type: 'toggle',
+        data: [
+          { id: 'full-time', name: 'Full time' },
+          { id: 'part-time', name: 'Part time' },
+        ],
+      },
+      gender: {
+        group: 'profile',
+        title: 'gender',
+        type: 'toggle',
+        data: [
+          { id: 'M', name: 'Male' },
+          { id: 'F', name: 'Female' }
+        ],
+      },
+      age: {
+        group: 'profile',
+        title: 'age',
+        type: 'slide',
+        config: {
+          range: { min: 15, max: 75 },
+          step: 10,
+          margin: 10,
+          connect: true,
         },
-        injury: {
-          group: 'incident',
-          url: '/rest/injuries',
-          title: 'injury type',
-          type: 'ajaxSelect',
-        },
-        cause: {
-          group: 'incident',
-          url: '/rest/causes',
-          title: 'cause',
-          type: 'ajaxSelect',
-        },
-        location: {
-          group: 'incident',
-          url: '/rest/locations',
-          title: 'body location of injury',
-          type: 'ajaxSelect',
-        },
-        activity: {
-          group: 'incident',
-          url: '/rest/activities',
-          title: 'activity before hand',
-          type: 'ajaxSelect',
-        },
-        
-        
-        workload: {
-          group: 'profile',
-          title: 'workload',
-          type: 'toggle',
-        },
-        gender: {
-          group: 'profile',
-          title: 'gender',
-          type: 'toggle',
-        },
-        age: {
-          group: 'profile',
-          title: 'age',
-          type: 'slide',
-        },
-        industry: {
-          group: 'profile',
-          url: '/rest/industries',
-          title: 'body location of injury',
-          type: 'ajaxSelect',
-        },
-        occupation: {
-          group: 'profile',
-          url: '/rest/occupations',
-          title: 'occupation',
-          type: 'ajaxSelect',
-        },
+      },
+      industry: {
+        group: 'profile',
+        url: '/rest/industries',
+        title: 'body location of injury',
+        type: 'ajaxSelect',
+      },
+      occupation: {
+        group: 'profile',
+        url: '/rest/occupations',
+        title: 'occupation',
+        type: 'ajaxSelect',
       }
-    },
-
-    fieldList: function () {
-      return this.__fields.fields.map(function (key) {
-        return this.field(key);
-      }, this);
-    },
-
-    fields: function () {
-      var obj = {};
-      this.__fields.fields.forEach(function (key) {
-        obj[key] = this.field(key);
-      }, this);
-      return obj;
     },
 
     /**
      * returns a field object
      */
     field: function (field) {
-      if (_.contains(this.__fields.fields, field)) {
-        return new Field({
-          data: this.__fields.data[field],
-          meta: this.__fields.metadata[field]
-        });
+      if (field in this.__fields) {
+        return new Field(this.__fields[field]);
       }
       else {
         throw TypeError(field + " is not part of config");
@@ -210,5 +166,16 @@ Sfty.Config = (function () {
     }
   };
 
+  config.fields = (function () {
+    var obj = {};
+    _.keys(this.__fields).forEach(function (key) {
+      obj[key] = this.field(key);
+    }, this);
+    return obj;
+  }).call(config);
+
+  config.fieldList = _.values(config.fields);
+
+  return config;
 })();
 

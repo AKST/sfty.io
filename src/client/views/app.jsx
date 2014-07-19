@@ -22,13 +22,17 @@ Sfty.View.App = React.createClass({
 
 
   render: function () {
+    var Footer = Sfty.View.Footer;
     return (  
-      <div id="app">
-        <h1>{this.props.title}</h1>
-        {this.props.groups.map(function (group, index) {
-          group = _.defaults(group, { key: index });
-          return Sfty.View.InputGroup(group); 
-        }, this)}
+      <div id="outer-app">
+        <div id="app">
+          <h1>{this.props.title}</h1>
+          {this.props.groups.map(function (group, index) {
+            group = _.defaults(group, { key: index });
+            return Sfty.View.InputGroup(group); 
+          }, this)}
+        </div>
+        <Footer />
       </div>
     );
   }

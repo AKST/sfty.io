@@ -30,4 +30,5 @@ describe("Config", function () {
       assert(graphs.has('bell'), 'has bell');
     });
   });
+
 });

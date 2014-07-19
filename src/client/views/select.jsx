@@ -33,7 +33,7 @@ Sfty.View.Select =  React.createClass({
     Input = ReactBootstrap.Input;
 
     return (
-      <div> 
+      <section className="query-field"> 
         <label htmlFor={id}>
           <b>{this.props.title}</b>
         </label>
@@ -47,7 +47,7 @@ Sfty.View.Select =  React.createClass({
             );
           })}
         </Input>
-      </div>
+      </section>
     );
   }
 });
@@ -83,13 +83,9 @@ Sfty.View.AJaxSelect = React.createClass({
   },
 
   render: function () {
-    return (
-      <div>
-        {Sfty.View.Select({
+    return Sfty.View.Select({
           title: this.props.title,
           data: this.state.data
-        })}
-      </div>
-    );
+    });
   }
 });

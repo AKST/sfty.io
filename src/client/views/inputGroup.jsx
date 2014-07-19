@@ -10,25 +10,26 @@ Sfty.View.InputGroup = React.createClass({
       fieldTypes: {
         staticSelect: Sfty.View.Select, 
         ajaxSelect: Sfty.View.AJaxSelect, 
-        toggle: React.DOM.div, 
+        toggle: Sfty.View.GroupButton, 
         slide: React.DOM.div, 
       }
     };
   },
 
   render: function () {
-    var Header, groupInfo; 
+    var Header, groupInfo, name; 
     
     Header = Sfty.View.Type.UnderlinedHeader;
+    name = "query-input-group";
 
     return (
-      <div id={this.props.group.id}>
+      <section id={this.props.group.id} className={name}>
         <Header size="2" title={this.props.group.title} />
         {this.props.fields.map(function (field, index) {
           field = _.defaults(field, { key: index });
           return this.props.fieldTypes[field.type](field);
         }, this)}
-      </div>
+      </section>
     );
   }
 

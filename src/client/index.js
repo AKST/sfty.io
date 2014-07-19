@@ -18,7 +18,7 @@ $('body').ready(function () {
   React.renderComponent(Sfty.View.App({
     title: Sfty.Config.title,
     groups: _
-     .chain(Sfty.Config.fields())
+     .chain(Sfty.Config.fields)
      .groupBy('group')
      .pairs()
      .sortBy(groupOrder)
