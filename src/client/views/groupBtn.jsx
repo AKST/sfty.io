@@ -40,6 +40,7 @@ Sfty.View.GroupButton = React.createClass({
 
             var config = { 
               bsStyle: active ? 'primary' : 'default', 
+              active: active,
               key: field.id, 
               style: style,
               onClick: this.onClick.bind(this, field.id)

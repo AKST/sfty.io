@@ -5,6 +5,7 @@ gemfile:
 before_install:
   - npm install -g bower
   - npm install -g grunt-cli
+  - gem install sass
 install:
   - npm install
   - npm install --dev
