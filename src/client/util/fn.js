@@ -1,5 +1,9 @@
 Sfty.Util.Fn = {
 
+  bind: function (context, fn) {
+    return fn.bind(context);
+  },
+
   invoke: function (arg, fn) {
     return fn(arg);
   },
