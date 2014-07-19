@@ -22,10 +22,11 @@ module.exports = function(grunt) {
 
     proj: {
       browserJs: {
-        main: 'src/client/index.jsx',
+        main: 'src/client/index.js',
         prepareTests: 'test/client/init.jsx',
         src: [
           'src/client/__init__.js',
+          'src/client/config.js',
           'src/client/util/*.{js,jsx}',
           'src/client/models/*.{js,jsx}',
           'src/client/collections/*.{js,jsx}',

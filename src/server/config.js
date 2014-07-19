@@ -4,7 +4,7 @@
 
 exports.dbCollections = {
   incidents: 'incidents',
-  injuries: 'injuriestypes',
+  injuries: 'injurytypes',
   activities: 'injuryactivities',
   causes: 'injurycauses',
   locations: 'injurylocations',
