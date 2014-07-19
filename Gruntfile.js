@@ -8,6 +8,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-mocha-test');
 
@@ -36,10 +37,11 @@ module.exports = function(grunt) {
         testSrc: 'test/client/{,*/}*.js',
         testRun: 'test/client/run.js',
         libraries: [
-          'assets/vendor/jquery/dist/jquery.js',
-          'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.js',
-          'assets/vendor/react/react.js',
-          'assets/vendor/react-bootstrap/react-bootstrap.js',
+          'assets/vendor/jquery/dist/jquery.min.js',
+          'node_modules/mori/mori.js',
+          'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.min.js',
+          'assets/vendor/react/react.min.js',
+          'assets/vendor/react-bootstrap/react-bootstrap.min.js',
           'assets/vendor/underscore/underscore.js',
           'assets/vendor/backbone/backbone.js',
           'assets/vendor/backbone.localStorage/backbone.localStorage.js',
@@ -52,12 +54,10 @@ module.exports = function(grunt) {
         reactSrcOut: 'temp/react-out.js',
         reactMainOut: 'temp/react-main.js',
         srcFiles: [
-          '<%= proj.browserJs.libraries %>',
           '<%= proj.browserJs.reactSrcOut %>',
           '<%= proj.browserJs.reactMainOut %>',
         ],  
         testFiles: [
-          '<%= proj.browserJs.libraries %>',
           '<%= proj.browserJs.reactSrcOut %>',
           '<%= proj.browserJs.testLibraries %>',
           '<%= proj.browserJs.prepareTests %>',
@@ -102,6 +102,7 @@ module.exports = function(grunt) {
           'jshint',
           'react',
           'uglify:dev',
+          'concat:dev',
           'connect',
           'mocha',
           'mochaTest',
@@ -131,6 +132,7 @@ module.exports = function(grunt) {
           //'clean:js',
           'react',
           'uglify:dev',
+          'concat:dev',
           'clean:after',
           'connect',
           'mocha',
@@ -198,6 +200,32 @@ module.exports = function(grunt) {
         options: { beautify: false, mangle: false },
         files: { 
           '<%= proj.browserJs.srcOut %>': '<%= proj.browserJs.srcFiles %>',
+        }
+      },
+    },
+
+    /**
+     * Clumps all javascript into single file
+     */
+    concat: {
+      dev: {
+        files: { 
+          '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.srcFiles %>'
+          ],
+          '<%= proj.browserJs.testOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.testFiles %>'
+          ],
+        }
+      },
+      production: {
+        files: { 
+          '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.srcFiles %>'
+          ],
         }
       },
     },
@@ -299,6 +327,7 @@ module.exports = function(grunt) {
     'cssmin:production',
     'react',
     'uglify:production',
+    'concat:production',
     'clean:after'
   ]);
 
