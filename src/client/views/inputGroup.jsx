@@ -17,13 +17,12 @@ Sfty.View.InputGroup = React.createClass({
   },
 
   render: function () {
-    var Header, groupInfo, name; 
+    var Header, groupInfo; 
     
     Header = Sfty.View.Type.UnderlinedHeader;
-    name = "query-input-group";
 
     return (
-      <section id={this.props.group.id} className={name}>
+      <section id={this.props.group.id} className="query-input-group">
         <Header size="2" title={this.props.group.title} />
         {this.props.fields.map(function (field, index) {
           field = _.defaults(field, { key: index });
