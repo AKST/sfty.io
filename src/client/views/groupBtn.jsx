@@ -37,6 +37,7 @@ Sfty.View.GroupButton = React.createClass({
         <ButtonGroup justified id={uid}>
           {this.props.data.map(function (field) {
             var active = !mori.has_key(this.state.disabled, field.id);
+
             var config = { 
               bsStyle: active ? 'primary' : 'default', 
               key: field.id, 
