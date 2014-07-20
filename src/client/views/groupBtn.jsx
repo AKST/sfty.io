@@ -5,6 +5,14 @@
 
 Sfty.View.GroupButton = React.createClass({
 
+  getDefaultProps: function () {
+    return {
+      id: Sfty.Util.Rand.uid(),
+      data: [],
+      title: 'Untitled'
+    };
+  },
+
   getInitialState: function () {
     return { disabled: mori.set([]) };
   },
@@ -23,7 +31,6 @@ Sfty.View.GroupButton = React.createClass({
 
     ButtonGroup = ReactBootstrap.ButtonGroup;
     Button = ReactBootstrap.Button;
-    uid = Sfty.Util.Rand.uid();
 
     style = {
       width: Math.floor(100 / this.props.data.length)+"%"
@@ -31,16 +38,15 @@ Sfty.View.GroupButton = React.createClass({
 
     return (
       <section className="query-field">
-        <label htmlFor={uid}>
+        <label htmlFor={this.props.uid}>
           <b>{this.props.title}</b>
         </label>
-        <ButtonGroup justified id={uid}>
+        <ButtonGroup justified id={this.props.uid}>
           {this.props.data.map(function (field) {
             var active = !mori.has_key(this.state.disabled, field.id);
 
-            var config = { 
+            var config = {
               bsStyle: active ? 'primary' : 'default', 
-              active: active,
               key: field.id, 
               style: style,
               onClick: this.onClick.bind(this, field.id)

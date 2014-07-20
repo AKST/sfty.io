@@ -29,23 +29,24 @@ module.exports = function(grunt) {
           'src/client/__init__.js',
           'src/client/config.js',
           'src/client/util/*.{js,jsx}',
-          'src/client/models/*.{js,jsx}',
-          'src/client/collections/*.{js,jsx}',
-          'src/client/controllers/*.{js,jsx}',
+          //'src/client/models/*.{js,jsx}',
           'src/client/views/*.{js,jsx}'
         ],
         testSrc: 'test/client/{,*/}*.js',
         testRun: 'test/client/run.js',
         libraries: [
           'assets/vendor/jquery/dist/jquery.min.js',
-          'node_modules/mori/mori.js',
+          'assets/vendor/sifter/sifter.min.js',
+          'assets/vendor/microplugin/src/microplugin.js',
+          'assets/vendor/selectize/dist/js/selectize.min.js',
+
           'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.min.js',
-          'assets/vendor/react/react.min.js',
+          'assets/vendor/react/react.js',
           'assets/vendor/react-bootstrap/react-bootstrap.min.js',
           'assets/vendor/underscore/underscore.js',
-          'assets/vendor/backbone/backbone.js',
-          'assets/vendor/backbone.localStorage/backbone.localStorage.js',
           'assets/vendor/class-extender/index.js',
+
+          'node_modules/mori/mori.js',
         ],
         testLibraries: [
           'assets/vendor/mocha/mocha.js',
@@ -78,7 +79,11 @@ module.exports = function(grunt) {
         out: 'temp/css/main.css'
       },
       css: {
-        main: '<%= proj.sass.out %>',
+        main: [
+          'assets/vendor/selectize/dist/css/selectize.css',
+          'assets/vendor/selectize/dist/css/selectize.bootstrap3.css',
+          '<%= proj.sass.out %>',
+        ],
         test: 'assets/vendor/mocha/mocha.css',
         mainOut: 'public/css/main.min.css',
         testOut: 'public/css/mocha.css'

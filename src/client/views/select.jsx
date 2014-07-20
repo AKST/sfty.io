@@ -3,42 +3,36 @@
  */
 
 /**
- * Creates a input[type=select] tag with
- * all the data in this.props.options as
- * choices.
- *
- * Properties
- * + title: (text of button)
- * + data: (list of options)
- *   - option.id
- *   - option.name
+ * Needs a reload funciton implemented
  */
-Sfty.View.Select =  React.createClass({
-  
-  placeholder: function () {
-    var firstLetter, isVowel, vowels, determiner; 
+Sfty.View.Mixin.Selectize = {
 
-    firstLetter = this.props.title[0];
-    vowels = ['a', 'i', 'u', 'e', 'o'];
-    isVowel = _.contains(vowels, firstLetter);
-    determiner = isVowel ? 'an' : 'a';
-
-    return 'Select '+determiner+' '+this.props.title;
+  __selectize_object: function () {
+    return $('#'+this.props.id);
   },
 
+  selectize: function () {
+    var obj = this.__selectize_object();
+    obj.selectize(this.selectizeOptions || {});
+  },
+
+};
+
+Sfty.View.SimpleSelect =  React.createClass({
+
+
   render: function () {
-    var id, Input;
-    
-    id = Sfty.Util.Rand.uid('dropdown');
+    var Input;
+
     Input = ReactBootstrap.Input;
 
     return (
       <section className="query-field"> 
-        <label htmlFor={id}>
+        <label htmlFor={this.props.id}>
           <b>{this.props.title}</b>
         </label>
-        <Input type="select" id={id}>
-          <option>{this.placeholder()}</option>
+        <select id={this.props.id}>
+          <option></option>
           {this.props.data.map(function (item) {
             return (
               <option value={item.id} key={item.id}>
@@ -46,18 +40,49 @@ Sfty.View.Select =  React.createClass({
               </option>
             );
           })}
-        </Input>
+        </select>
       </section>
     );
   }
+
 });
 
-/**
- * Properties 
- * - url
- * - title
- */
+
+
+Sfty.View.Select =  React.createClass({
+
+  mixins: [Sfty.View.Mixin.Selectize],
+
+  getDefaultProps: function () {
+    return {
+      id: Sfty.Util.Rand.uid('dropdown'),
+      title: 'Untitled',
+      data: []
+    };
+  },
+
+  componentDidMount: function () {
+    this.selectize();
+  },
+
+  render: function () {
+    return Sfty.View.SimpleSelect(this.props);
+  }
+
+});
+
+
 Sfty.View.AJaxSelect = React.createClass({
+
+  mixins: [Sfty.View.Mixin.Selectize],
+
+  getDefaultProps: function () {
+    return {
+      id: Sfty.Util.Rand.uid('dropdown'),
+      title: 'Untitled',
+    };
+  },
+
   getInitialState: function () {
     return { data: [] };
   },
@@ -66,12 +91,15 @@ Sfty.View.AJaxSelect = React.createClass({
    * Updates state
    */
   fetchSuccess: function (data) {
-    this.setState({ data: _.sortBy(data, function (obj) {
+    var sorted = _.sortBy(data, function (obj) {
       return obj.name.charCodeAt(0);  
-    })});
+    });
+    this.setState({ data: sorted });
+    this.selectize();
   },
 
   componentDidMount: function () {
+    $('#'+this.props.id).hide();
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -83,9 +111,11 @@ Sfty.View.AJaxSelect = React.createClass({
   },
 
   render: function () {
-    return Sfty.View.Select({
-          title: this.props.title,
-          data: this.state.data
+    return Sfty.View.SimpleSelect({
+      id: this.props.id,
+      title: this.props.title,
+      data: this.state.data
     });
   }
+  
 });

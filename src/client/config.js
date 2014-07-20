@@ -34,9 +34,9 @@ Sfty.Config = (function () {
         id: 'visualisation',
         title: 'Type of Visualisation'
       },
-      incident: {
-        id: 'incident',
-        title: 'Nature of Incidient'
+      injury: {
+        id: 'injury',
+        title: 'Nature of Injury'
       },
       profile: {
         id: 'profile', 
@@ -44,7 +44,7 @@ Sfty.Config = (function () {
       },
     },
 
-    groupOrder: ['visualisation', 'incident', 'profile'], 
+    groupOrder: ['visualisation', 'injury', 'profile'], 
 
     __fields: {
       graph: {
@@ -76,8 +76,8 @@ Sfty.Config = (function () {
       },
 
       fatality: {
-        group: 'incident',
-        title: 'fatal?',
+        group: 'injury',
+        title: 'Was the injury ...',
         type: 'toggle',
         data: [
           { id: true, name: 'Fatal' },
@@ -85,27 +85,27 @@ Sfty.Config = (function () {
         ]
       },
       injury: {
-        group: 'incident',
+        group: 'injury',
         url: '/rest/injuries',
         title: 'injury type',
         type: 'ajaxSelect',
       },
       cause: {
-        group: 'incident',
+        group: 'injury',
         url: '/rest/causes',
-        title: 'cause',
+        title: 'Cause of Injury',
         type: 'ajaxSelect',
       },
       location: {
-        group: 'incident',
+        group: 'injury',
         url: '/rest/locations',
-        title: 'body location of injury',
+        title: 'Body Location of Injury',
         type: 'ajaxSelect',
       },
       activity: {
-        group: 'incident',
+        group: 'injury',
         url: '/rest/activities',
-        title: 'activity before hand',
+        title: 'Activity taking place',
         type: 'ajaxSelect',
       },
       

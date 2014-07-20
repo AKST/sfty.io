@@ -22,18 +22,27 @@ Sfty.View.App = React.createClass({
 
 
   render: function () {
-    var Footer = Sfty.View.Footer;
-    return (  
-      <div id="outer-app">
-        <div id="app">
+    var Footer, Header; 
+    
+    Footer = Sfty.View.Footer;
+    Header = Sfty.View.Type.UnderlinedHeader;
+
+    return (
+      <section id="outer-app">
+        <section id="app">
           <h1>{this.props.title}</h1>
+
           {this.props.groups.map(function (group, index) {
             group = _.defaults(group, { key: index });
             return Sfty.View.InputGroup(group); 
           }, this)}
-        </div>
+
+          <a className="lanuch-query">
+            Run Query
+          </a>
+        </section>
         <Footer />
-      </div>
+      </section>
     );
   }
 
