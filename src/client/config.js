@@ -47,20 +47,9 @@ Sfty.Config = (function () {
     groupOrder: ['visualisation', 'injury', 'profile'], 
 
     __fields: {
-      graph: {
-        group: 'visualisation',
-        title: 'graph',
-        type: 'staticSelect',
-        data: [
-          { id: 'bar', name: 'bar graph'}, 
-          { id: 'area', name: 'area graph' },
-          { id: 'pie', name: 'pie graph' },
-          { id: 'bell', name: 'bell curve' },
-        ],
-      },
       comparison: {
         group: 'visualisation',
-        title: 'comparison',
+        title: 'Comparison Subject',
         type: 'staticSelect',
         data: [
           { id: 'injury', name: 'type of injury' }, 
@@ -72,6 +61,17 @@ Sfty.Config = (function () {
           { id: 'occupation', name: 'occupation of casualty' }, 
           { id: 'workload', name: 'workload of casualty' }, 
           { id: 'sex', name: 'sex of casualty' },
+        ],
+      },
+      graph: {
+        group: 'visualisation',
+        title: 'Visualisation Type',
+        type: 'staticSelect',
+        data: [
+          { id: 'pie', name: 'donut chart' },
+          { id: 'bar', name: 'bar graph' }, 
+          { id: 'area', name: 'area graph' },
+          { id: 'bell', name: 'bell curve' },
         ],
       },
 

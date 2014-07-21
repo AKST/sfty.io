@@ -11,7 +11,7 @@ Sfty.View.Type = {
 
       return (
         <div className="page-header">
-          <HTag>{this.props.title}</HTag>
+          <HTag>{this.props.text}</HTag>
         </div>
       );
     }

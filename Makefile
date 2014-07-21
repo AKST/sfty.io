@@ -11,8 +11,8 @@ dependencies: init
 	bower install
 
 place-assets:
-	mkdir -p public/fonts
-	cp ${BOOTROOT}/fonts/bootstrap/* public/fonts/.
+	mkdir -p public/css/bootstrap
+	cp -R ${BOOTROOT}/fonts/bootstrap public/css
 
 build: dependencies place-assets
 	grunt build

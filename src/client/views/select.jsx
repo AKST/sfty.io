@@ -11,15 +11,25 @@ Sfty.View.Mixin.Selectize = {
     return $('#'+this.props.id);
   },
 
+  __getOptions: function () {
+    return this.selectizeOptions ?
+      this.selectizeOptions() : {} ;
+  },
+
   selectize: function () {
     var obj = this.__selectize_object();
-    obj.selectize(this.selectizeOptions || {});
+    obj.selectize(this.__getOptions());
   },
 
 };
 
 Sfty.View.SimpleSelect =  React.createClass({
 
+  getDefaultProps: function () {
+    return {
+      update: function () {},
+    };
+  },
 
   render: function () {
     var Input;
@@ -52,6 +62,10 @@ Sfty.View.SimpleSelect =  React.createClass({
 Sfty.View.Select =  React.createClass({
 
   mixins: [Sfty.View.Mixin.Selectize],
+
+  selectizeOptions: function () {
+    return { onChange: this.props.update };
+  },
 
   getDefaultProps: function () {
     return {
