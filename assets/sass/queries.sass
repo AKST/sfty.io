@@ -6,20 +6,54 @@
 .page-header + .query-field
   margin-top: 5px
 
-.query-btn 
+
+.btn-query
+  &.t-bump
+    margin-top: 4em
+
+
+.btn-default
+  @extend .btn-query
+  color: $color-1
+  background-color: $color-0 
+  border-color: $color-2 
+
+  .btn-group &
+    &:hover, &:focus
+      background-color: $color-0 
+      color: $color-1
+      border-color: $color-2 
+
+
+.btn-primary 
+  @extend .btn-query
   color: $color-0
   background-color: $color-1 
   border-color: $color-2 
-  &:hover
+
+  .btn-group &
+    &:hover, &:focus
+      background-color: $color-1 
+      color: $color-0
+      border-color: $color-2 
+
+  &[disabled]
+    color: $color-3
+    font-style: italic
+    border-color: $color-4 
+  
+  &:hover, &:focus
     color: $color-2
     border-color: $color-2 
+
+  &:hover, &:focus, &[disabled]
     background-color: $color-0
+
 
 .lanuch-query
   @extend .btn 
   @extend .btn-primary
   @extend .btn-lg
-  @extend .query-btn
 
   display: block
   max-width: 150px

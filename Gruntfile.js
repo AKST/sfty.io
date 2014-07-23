@@ -108,9 +108,9 @@ module.exports = function(grunt) {
           'react',
           'uglify:dev',
           'concat:dev',
+          'mochaTest',
           'connect',
           'mocha',
-          'mochaTest',
         ]
       },
       sass: {

@@ -1,7 +1,6 @@
 
 /**
- * Configuration data for the applicaption 
- * that doesn't change.
+ * Configuration data for the application that doesn't change.
  */
 Sfty.Config = (function () {
   var Field, config;
@@ -27,6 +26,7 @@ Sfty.Config = (function () {
   });
 
   config = {
+
     title: 'Sfty.io',
 
     fieldGroups: {
@@ -56,11 +56,11 @@ Sfty.Config = (function () {
           { id: 'activity', name: 'activity during injury' }, 
           { id: 'location', name: 'body location' }, 
           { id: 'cause', name: 'cause of injury' }, 
-          { id: 'fatal', name: 'was injury the injury fatal' }, 
+          { id: 'fatality', name: 'was injury the injury fatal' }, 
           { id: 'industry', name: 'industry of casualty' }, 
           { id: 'occupation', name: 'occupation of casualty' }, 
           { id: 'workload', name: 'workload of casualty' }, 
-          { id: 'sex', name: 'sex of casualty' },
+          { id: 'gender', name: 'sex of casualty' },
         ],
       },
       graph: {
@@ -77,10 +77,10 @@ Sfty.Config = (function () {
 
       fatality: {
         group: 'injury',
-        title: 'Was the injury ...',
+        title: 'Was the injury fatal',
         type: 'toggle',
         data: [
-          { id: true, name: 'Fatal' },
+          { id: true, name: 'Fatality' },
           { id: false, name: 'Non-fatal' },
         ]
       },
@@ -163,7 +163,14 @@ Sfty.Config = (function () {
       else {
         throw TypeError(field + " is not part of config");
       }
-    }
+    },
+
+    index: function (field, id, prop) {
+      return _.find(this.fields[field].data, function (e) {
+        return e.id === id;
+      })[prop || "name"];  
+    },
+
   };
 
   config.fields = (function () {

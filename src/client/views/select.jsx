@@ -27,7 +27,7 @@ Sfty.View.SimpleSelect =  React.createClass({
 
   getDefaultProps: function () {
     return {
-      update: function () {},
+      onChange: function () {},
     };
   },
 
@@ -43,10 +43,10 @@ Sfty.View.SimpleSelect =  React.createClass({
         </label>
         <select id={this.props.id}>
           <option></option>
-          {this.props.data.map(function (item) {
+          {this.props.data.map(function (item, index) {
             return (
-              <option value={item.id} key={item.id}>
-                {Sfty.Str.captialize(item.name)}
+              <option value={item.id} key={index}>
+                {Sfty.Util.Str.captialize(item.name)}
               </option>
             );
           })}
@@ -64,7 +64,7 @@ Sfty.View.Select =  React.createClass({
   mixins: [Sfty.View.Mixin.Selectize],
 
   selectizeOptions: function () {
-    return { onChange: this.props.update };
+    return { onChange: this.props.onChange };
   },
 
   getDefaultProps: function () {

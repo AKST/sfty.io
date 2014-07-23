@@ -1,5 +1,5 @@
 
-Sfty.Str = {
+Sfty.Util.Str = {
 
   /**
    * capitalizes all words in a string

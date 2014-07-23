@@ -4,13 +4,7 @@
 
 
 /**
- *
- * State
- *  - graph (graph id)
- *  - comparison (comparison id)
- *  - constraint objects
- *      categoryName
- *      valueId
+ * Main View
  */
 Sfty.View.App = React.createClass({
 
@@ -22,9 +16,11 @@ Sfty.View.App = React.createClass({
 
   getInitialState: function () {
     return { 
-      comparison: null,
-      graph: null,
-      constraints: [],
+      queryData: {
+        graph: null,
+        comparison: null,
+        constraint: {},
+      },
     };
   },
 
@@ -36,22 +32,14 @@ Sfty.View.App = React.createClass({
     }.bind(this);
   },
 
-  addConstraint: function () {
-
-  },
-
+  /**
+   * Builds main view
+   */
   render: function () {
-    var Footer, Header, Select, Constrainer, 
-      graph, compare, allowConstraints; 
-    
-    Footer = Sfty.View.Footer;
-    Header = Sfty.View.Type.UnderlinedHeader;
-    Select = Sfty.View.Select;
-    Constrainer = Sfty.View.ConstraintSelector;
+    var Previewer, Builder; 
 
-    compare = Sfty.Config.field('comparison');
-    graph = Sfty.Config.field('graph');
-    allowConstraints = this.state.graph && this.state.comparison;
+    Builder = Sfty.View.QueryBuilder;
+    Previewer = Sfty.View.QueryPreviewer;
 
     return (
       <section id="outer-app">
@@ -59,20 +47,8 @@ Sfty.View.App = React.createClass({
           <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
 
           <section className="row">
-            <section className="col-md-6">
-              <Header size="3" text="Query Description"/> 
-              {/* picks graph */}
-              {Select(_.extend({ update: this.update('graph') }, graph))}
-
-              {/* picks comparison */}
-              {Select(_.extend({ update: this.update('comparison') }, compare))}
-
-              {/* adds a constraint */}
-              {allowConstraints ? <Constrainer update={this.update}/> : undefined}
-            </section>
-            <section className="col-md-6">
-              <Header size="3" text="Query State"/> 
-            </section>
+            <Builder className="col-md-6 col-sm-6" onChange={this.update('queryData')}/>
+            {Previewer(_.extend({ className: "col-md-6 col-sm-6" }, this.state.queryData))}
           </section>
 
           <a className="lanuch-query">
