@@ -1,5 +1,9 @@
 
-
+/**
+ * Based on the Optional type pattern, look up
+ *  - Haskells Maybe data type 
+ *  - Scalas & Javas Optional class
+ */
 Sfty.Util.Maybe = ClassExtender.extend({
 
   init: function (value) {

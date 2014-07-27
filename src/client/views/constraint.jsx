@@ -17,7 +17,7 @@ Sfty.View.ConstraintSelector = (function () {
     getDefaultProps: function () {
       return {
         title: "Add Constraint Type (Optional)",
-        data: Sfty.Config.field('comparison').data,
+        data: Sfty.Config.fields['comparison'].data,
         comparison: null,
       };
     },
@@ -50,8 +50,7 @@ Sfty.View.ConstraintSelector = (function () {
         update: function () {},
         catergory: null,
         fieldTypes: {
-          staticSelect: Sfty.View.Select, 
-          ajaxSelect: Sfty.View.AJaxSelect, 
+          select: Sfty.View.Select, 
           toggle: Sfty.View.GroupButton, 
           slide: React.DOM.div,
         }
@@ -59,20 +58,33 @@ Sfty.View.ConstraintSelector = (function () {
     },
 
     getCatergory: function () {
-      return Sfty.Config.field(this.props.catergory);
+      return Sfty.Config.fields[this.props.catergory];
     },
 
     /**
      * Properates change up to ConstraintSelector
      */
     onChange: function (value) {
-      var inputType = this.getCatergory().type;    
+      var update;    
 
-      if ('toggle' === inputType) {
-        this.props.update({
-          tempValue: value,
-          submittable: !!value.length
-        });
+      switch (this.getCatergory().type) {
+        case 'select': {
+          update = { 
+            tempValue: [Number(value)], 
+            submittable: !!value.length 
+          };
+          this.props.update(update);
+        } break;
+        case 'toggle': {
+          update = { 
+            tempValue: value, 
+            submittable: !!value.length 
+          };
+          this.props.update(update);
+        } break;
+        case 'slide': {
+
+        } break;
       }
     },
 
@@ -125,33 +137,44 @@ Sfty.View.ConstraintSelector = (function () {
     },
 
     update: function (options) {
+      console.log(options);
       this.setState(options);
     }, 
 
     onClick: function () {
       if (!!this.state.catergory) {
-        this.props.update({ catergory: this.state.catergory, value: this.state.tempValue });
-        this.setState({ catergory: null, tempValue: null, submittable: false });
+        this.props.update({ 
+          catergory: this.state.catergory, 
+          value: this.state.tempValue 
+        });
+        this.setState({
+          catergory: null,
+          submittable: false,
+          tempValue: null,
+        });
       }
       else {
-        this.setState({ catergory: this.state.tempValue, submittable: false });
+        this.setState({
+          catergory: this.state.tempValue, 
+          submittable: false 
+        });
       }
     },
   
     render: function () {
       return React.DOM.section({ className: 'row' }, [
-        // 9/12 grid divider
+
+        // 9/12 input
         React.DOM.section({ className: 'col-md-9 col-sm-9 col-xs-9' }, [
-          // renders input
           (!!this.state.catergory ? SelectValue : SelectCatergory)({
             update: this.update, 
             catergory: this.state.catergory,
             comparison: this.props.comparison,
           })
         ]),
-        // 3/12 grid divider
+
+        // 3/12 button 
         React.DOM.section({ className: 'col-md-3 col-sm-3 col-xs-3' }, [
-          // renders action button
           ReactBootstrap.Button({
             bsStyle: 'primary',
             className: 't-bump full-width', 
@@ -159,6 +182,7 @@ Sfty.View.ConstraintSelector = (function () {
             disabled: !this.state.submittable
           }, this.state.catergory === null ? "Select" : "Add")
         ]),
+
       ]);
     }
   

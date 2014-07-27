@@ -3,9 +3,10 @@
  */
 
 /**
- * Handles query builiding
+ * interface for builiding query
  */
 Sfty.View.QueryBuilder = React.createClass({
+
 
   getDefaultProps: function () {
     return {
@@ -13,6 +14,12 @@ Sfty.View.QueryBuilder = React.createClass({
     };
   },
 
+
+  /**
+   * constraints: a dictionary object that has keys
+   *   for the constraint parameter & the values as the
+   *   value of parameter.
+   */
   getInitialState: function () {
     return { 
       comparison: null,
@@ -21,11 +28,13 @@ Sfty.View.QueryBuilder = React.createClass({
     };
   },
 
+
   update: function (field) {
     return function (value) {
       this.__update(field, value);
     }.bind(this);
   },
+
 
   addConstraint: function (options) {
     var constraints; 
@@ -35,6 +44,7 @@ Sfty.View.QueryBuilder = React.createClass({
   
     this.__update('constraints', constraints);
   },
+
 
   __update: function (field, value) {
     var update, newState; 
@@ -50,32 +60,38 @@ Sfty.View.QueryBuilder = React.createClass({
     this.props.onChange(newState);
   },
 
+
   render: function () {
-    var Header, constraints; 
+    var Header, visualChoosen; 
 
     Header = Sfty.View.Type.UnderlinedHeader;
-    constraints = !!(this.state.graph && this.state.comparison);
+    visualChoosen = Boolean(this.state.graph && this.state.comparison);
 
     return (
       <section className={this.props.className}>
         <Header size="3" text="Query Description"/> 
         <section className="row">
           <section className="col-md-6">
+
             {Sfty.View.Select(_.extend({ 
               onChange: this.update('graph') 
-            }, Sfty.Config.field('graph')))}
+            }, Sfty.Config.fields['graph']))}
+          
           </section>
           <section className="col-md-6">
+            
             {Sfty.View.Select(_.extend({ 
               onChange: this.update('comparison') 
-            }, Sfty.Config.field('comparison')))}
+            }, Sfty.Config.fields['comparison']))}
+          
           </section>
         </section>
 
-        {constraints ? Sfty.View.ConstraintSelector({
+        {visualChoosen ? Sfty.View.ConstraintSelector({
           update: this.addConstraint, 
           comparison: this.state.comparison
         }) : null}
+        
       </section>
     );
   } 

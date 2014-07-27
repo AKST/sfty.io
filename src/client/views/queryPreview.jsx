@@ -2,6 +2,9 @@
  * @jsx React.DOM
  */
 
+/**
+ * Generates a preview for query
+ */
 Sfty.View.QueryPreviewer = React.createClass({
 
   getDefaultProps: function () {
@@ -13,19 +16,11 @@ Sfty.View.QueryPreviewer = React.createClass({
     };
   },
 
-  withField: function (field, op) {
-    var id = function (e) { return e; };
-    return new Sfty.Util.Maybe(field)
-      .map(op || id)
-      .map(Sfty.Util.Str.captialize)
-      .otherwise("Not selected");
-  },
-
   render: function () {
     var Header, lookup, makeList, listStyle, header;
    
     Header = Sfty.View.Type.UnderlinedHeader;
-    lookup = Sfty.Config.index.bind(Sfty.Config);
+    lookup = Sfty.Config.lookupId.bind(Sfty.Config);
 
     makeList = Sfty.View.mkList;
     header = Sfty.View.header;
@@ -43,7 +38,11 @@ Sfty.View.QueryPreviewer = React.createClass({
             <section>
               {header(Sfty.Config.fields[pair[0]].title, 4)}
               {makeList(pair[1], function (id) {
-                return lookup(pair[0], id);
+                return lookup({
+                  category: pair[0],
+                  property: "name",
+                  id: id 
+                });
               }, this)}
             </section>
           );

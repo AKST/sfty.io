@@ -3,7 +3,7 @@
  */
 
 /**
- * Needs a reload funciton implemented
+ * Adds selectize support to select component
  */
 Sfty.View.Mixin.Selectize = {
 
@@ -11,9 +11,17 @@ Sfty.View.Mixin.Selectize = {
     return $('#'+this.props.id);
   },
 
+  /**
+   * If selectizeOptions is implemented on the
+   * object implementing the Selectize mixin,
+   * that will be called, otherwise the options
+   * will just be an empty object.
+   */
   __getOptions: function () {
-    return this.selectizeOptions ?
-      this.selectizeOptions() : {} ;
+    var options = this.selectizeOptions ? 
+      this.selectizeOptions() : {};
+
+    return _.extend(options);
   },
 
   selectize: function () {
@@ -23,15 +31,30 @@ Sfty.View.Mixin.Selectize = {
 
 };
 
-Sfty.View.SimpleSelect =  React.createClass({
+
+Sfty.View.Select =  React.createClass({
+
+  mixins: [Sfty.View.Mixin.Selectize],
 
   getDefaultProps: function () {
     return {
-      onChange: function () {},
+      id: Sfty.Util.Rand.uid('dropdown'),
+      title: 'Untitled',
+      data: [],
     };
   },
 
-  render: function () {
+  selectizeOptions: function () {
+    return {
+      onChange: this.props.onChange
+    };
+  },
+
+  componentDidMount: function () {
+    this.selectize();
+  },
+
+  render: function () { 
     var Input;
 
     Input = ReactBootstrap.Input;
@@ -55,81 +78,4 @@ Sfty.View.SimpleSelect =  React.createClass({
     );
   }
 
-});
-
-
-
-Sfty.View.Select =  React.createClass({
-
-  mixins: [Sfty.View.Mixin.Selectize],
-
-  selectizeOptions: function () {
-    return { onChange: this.props.onChange };
-  },
-
-  getDefaultProps: function () {
-    return {
-      id: Sfty.Util.Rand.uid('dropdown'),
-      title: 'Untitled',
-      data: []
-    };
-  },
-
-  componentDidMount: function () {
-    this.selectize();
-  },
-
-  render: function () {
-    return Sfty.View.SimpleSelect(this.props);
-  }
-
-});
-
-
-Sfty.View.AJaxSelect = React.createClass({
-
-  mixins: [Sfty.View.Mixin.Selectize],
-
-  getDefaultProps: function () {
-    return {
-      id: Sfty.Util.Rand.uid('dropdown'),
-      title: 'Untitled',
-    };
-  },
-
-  getInitialState: function () {
-    return { data: [] };
-  },
-
-  /**
-   * Updates state
-   */
-  fetchSuccess: function (data) {
-    var sorted = _.sortBy(data, function (obj) {
-      return obj.name.charCodeAt(0);  
-    });
-    this.setState({ data: sorted });
-    this.selectize();
-  },
-
-  componentDidMount: function () {
-    $('#'+this.props.id).hide();
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      success: this.fetchSuccess,
-      error: function (_, code, err) {
-        console.err(code, err);
-      }
-    });
-  },
-
-  render: function () {
-    return Sfty.View.SimpleSelect({
-      id: this.props.id,
-      title: this.props.title,
-      data: this.state.data
-    });
-  }
-  
 });

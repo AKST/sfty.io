@@ -47,6 +47,8 @@ module.exports = function(grunt) {
           'assets/vendor/class-extender/index.js',
 
           'node_modules/mori/mori.js',
+          'node_modules/async/lib/async.js',
+          'node_modules/es6-promise/promise.js',
         ],
         testLibraries: [
           'assets/vendor/mocha/mocha.js',
@@ -312,7 +314,10 @@ module.exports = function(grunt) {
   /**
    * is the default behaviour
    */
-  grunt.registerTask('default', 'watch');
+  grunt.registerTask('default', [
+    'build',
+    'watch'
+  ]);
 
   /**
    * will run when running tests
