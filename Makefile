@@ -4,19 +4,25 @@ init:
 	npm install -g bower
 	npm install -g grunt-cli
 	sudo gem install sass
-	sudo gem install compass
+	grunt build
 
 dependencies: init
 	npm install
 	bower install
 
 place-assets:
-	mkdir -p public/fonts
-	cp ${BOOTROOT}/fonts/bootstrap/* public/fonts/.
+	mkdir -p public/css/bootstrap
+	cp -R ${BOOTROOT}/fonts/bootstrap public/css
 
 build: dependencies place-assets
 	grunt build
 
-ls:
-	tree -I 'public|vendor|node_modules' 
+deploy: build
+	mkdir -p deploy
+	cp -r . deploy/.
+	rm deploy/public/test.html
 
+test:
+	grunt test
+
+.PHONY: test

@@ -1,8 +1,26 @@
-window.Sfty = Ember.Application.create();
+$('body').ready(function () {
+  document.title = Sfty.Config.title.toLowerCase();
 
-Sfty.ApplicationAdapter = DS.FixtureAdapter;
+  // while initialisation is taking place
+  React.renderComponent(Sfty.View.App({
+    ready: false
+  }), document.body);
 
-Sfty.Store = DS.Store.extend({
-  adapter: 'DS.FixtureAdapter'
+  // initialisation promise
+  var init = Sfty.Config.init();
+
+  init.then(function () {
+    
+    // on success
+    React.renderComponent(Sfty.View.App({
+      ready: true
+    }), document.body);
+  
+  }, function (err) {
+  
+    // on failure
+    console.error(err.stack);
+  
+  });
 });
 

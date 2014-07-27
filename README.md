@@ -1,4 +1,4 @@
-# Untitled CP3046 Project
+# Untitled CP3046 Project ![ci](https://magnum.travis-ci.com/AKST/project-management.svg?token=qwEs2cF3FRPkzqLsZAfx)
 
 To get started go [here](https://github.com/AKST/cp3046/wiki/Getting-Started).
 

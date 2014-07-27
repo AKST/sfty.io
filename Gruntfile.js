@@ -1,33 +1,18 @@
 module.exports = function(grunt) {
+  
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-jsxhint');
+  grunt.loadNpmTasks('grunt-react');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
-  /**
-   * Order of library dependencies
-   */
-  var libs = [
-    'assets/vendor/jquery/dist/jquery.js',
-    'assets/vendor/bootstrap-sass-official/assets/'+
-      'javascripts/bootstrap.js',
-    'assets/vendor/handlebars/handlebars.js',
-    'assets/vendor/ember/ember.js',
-    'assets/vendor/ember-data/ember-data.js',
-    'public/temp/templates.js',
-  ];
 
-  /**
-   * Order of source dependencies
-   */
-  var browserSrc = [
-    'src/client/index.js',
-    'src/client/models/*.js',
-    'src/client/controllers/*.js',
-    'src/client/views/*.js',
-    'src/client/routes.js',
-  ];
-
-  /**
-   * all client side source
-   */
-  var paths = libs.concat(browserSrc);
 
   /**
    * configuration for grunt
@@ -36,44 +21,80 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    project: {
-      clientJs: browserSrc,
-      serverJs: './src/server/{,*/}*.js',
-      sass: './assets/sass/{,*/}*.{sass,scss}', 
-      templates: './assets/templates/{,*/}*.hbs',
-      bootsass: './assets/vendor/bootstrap-sass-official/assets/stylesheets',
-      temp: {
-        dir: './public/temp',
-        css: '<%= project.temp.dir %>/{,*/}*.css',
-      },
-      dist: {
-        dir: './public',
-        css: '<%= project.dist.dir %>/css/main.min.css',
-      },
-      assets: {
-        dir: './assets',
-      }
-    },
-
-    /**
-     * Looks for common source of errors
-     */
-    jshint: {
-      server: {
+    proj: {
+      browserJs: {
+        main: 'src/client/index.js',
+        prepareTests: 'test/client/init.jsx',
         src: [
-          '<%= project.serverJs %>',
-          'Gruntfile.js'
+          'src/client/__init__.js',
+          'src/client/config.js',
+          'src/client/util/*.{js,jsx}',
+          //'src/client/models/*.{js,jsx}',
+          'src/client/views/*.{js,jsx}'
         ],
-        options: {
-          jshintrc: './src/server/.jshintrc'
-        }
+        testSrc: 'test/client/{,*/}*.js',
+        testRun: 'test/client/run.js',
+        libraries: [
+          'assets/vendor/jquery/dist/jquery.min.js',
+          'assets/vendor/sifter/sifter.min.js',
+          'assets/vendor/microplugin/src/microplugin.js',
+          'assets/vendor/selectize/dist/js/selectize.min.js',
+
+          'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.min.js',
+          'assets/vendor/react/react.js',
+          'assets/vendor/react-bootstrap/react-bootstrap.min.js',
+          'assets/vendor/underscore/underscore.js',
+          'assets/vendor/class-extender/index.js',
+
+          'node_modules/mori/mori.js',
+          'node_modules/async/lib/async.js',
+          'node_modules/es6-promise/promise.js',
+        ],
+        testLibraries: [
+          'assets/vendor/mocha/mocha.js',
+          'assets/vendor/chai/chai.js',
+        ],
+        reactSrcOut: 'temp/react-out.js',
+        reactMainOut: 'temp/react-main.js',
+        srcFiles: [
+          '<%= proj.browserJs.reactSrcOut %>',
+          '<%= proj.browserJs.reactMainOut %>',
+        ],  
+        testFiles: [
+          '<%= proj.browserJs.reactSrcOut %>',
+          '<%= proj.browserJs.testLibraries %>',
+          '<%= proj.browserJs.prepareTests %>',
+          '<%= proj.browserJs.testSrc %>',
+          '<%= proj.browserJs.testRun %>',
+        ],
+        srcOut: 'public/js/main.js',
+        testOut: 'public/js/test.js',
       },
-      browser: {
-        src: '<%= project.clientJs %>',
-        options: {
-          jshintrc: './src/client/.jshintrc'
-        }
-      }
+      serverJs: 'src/server/{,*/}*.js',
+      sass: {
+        main: 'assets/sass/init.sass',
+        all: 'assets/sass/{,*/}*.{sass,scss}',
+        path: [
+          'assets/vendor/bootstrap-sass-official/assets/stylesheets/',
+          'assets/vendor/bootstrap-sass-official/assets/stylesheets/bootstrap',
+        ],
+        out: 'temp/css/main.css'
+      },
+      css: {
+        main: [
+          'assets/vendor/selectize/dist/css/selectize.css',
+          'assets/vendor/selectize/dist/css/selectize.bootstrap3.css',
+          '<%= proj.sass.out %>',
+        ],
+        test: 'assets/vendor/mocha/mocha.css',
+        mainOut: 'public/css/main.min.css',
+        testOut: 'public/css/mocha.css'
+      },
+      tempFiles: [
+        '<%= proj.sass.out %>',
+        '<%= proj.browserJs.reactSrcOut %>',
+        '<%= proj.browserJs.reactMainOut %>'
+      ]
     },
 
     /**
@@ -84,46 +105,91 @@ module.exports = function(grunt) {
         files: 'Gruntfile.js',
         tasks: [
           'sass', 
-          'clean:css', 
           'cssmin:dev', 
           'jshint',
-          'clean:js',
-          'emberTemplates',
+          'react',
           'uglify:dev',
-          'clean:after'
+          'concat:dev',
+          'mochaTest',
+          'connect',
+          'mocha',
         ]
       },
       sass: {
-        files: '<%= project.sass %>',
+        files: '<%= proj.sass.all %>',
         tasks: [
           'sass', 
-          'clean:css', 
           'cssmin:dev', 
-          'clean:after'
+          //'clean:after'
         ]
       },
       node: {
-        files: '<%= project.serverJs %>',
-        tasks: ['jshint']
+        files: '<%= proj.serverJs %>',
+        tasks: ['jshint', 'mochaTest']
       },
       browserjs: {
-        files: '<%= project.clientJs %>',
+        files: [
+          '<%= proj.browserJs.src %>',
+          '<%= proj.browserJs.testSrc %>',
+          '<%= proj.browserJs.main %>',
+          '<%= proj.browserJs.prepareTests %>',
+        ],
         tasks: [
           'jshint',
-          'clean:js',
-          'emberTemplates',
+          //'clean:js',
+          'react',
           'uglify:dev',
-          'clean:after'
+          'concat:dev',
+          'clean:after',
+          'connect',
+          'mocha',
         ]
+      }
+    },
+
+    /**
+     * Looks for common source of errors
+     */
+    jshint: {
+      server: {
+        src: [
+          '<%= proj.serverJs %>',
+          'Gruntfile.js'
+        ],
+        options: {
+          jshintrc: './src/server/.jshintrc'
+        }
       },
-      templates: {
-        files: '<%= project.templates %>',
-        tasks: [
-          'emberTemplates',
-          'uglify:dev',
-          'clean:after'
-        ]
+      browser: {
+        src: [
+          '<%= proj.browserJs.src %>',
+          '<%= proj.browserJs.main %>',
+        ],
+        options: {
+          jshintrc: './src/client/.jshintrc'
+        }
       },
+      test: {
+        src: [
+          '<%= proj.browserJs.testSrc %>',
+          '<%= proj.browserJs.prepareTests %>',
+        ],
+        options: {
+          jshintrc: './test/client/.jshintrc'
+        }      
+      }
+    },
+
+    /**
+     * Compiles react jsx files
+     */
+    react: {
+      output: {
+        files: {
+          '<%= proj.browserJs.reactSrcOut %>': '<%= proj.browserJs.src %>',
+          '<%= proj.browserJs.reactMainOut %>': '<%= proj.browserJs.main %>',
+        }
+      }
     },
 
     /**
@@ -132,25 +198,77 @@ module.exports = function(grunt) {
     uglify: {
       dev: {
         options: { beautify: true, mangle: false },
-        files: { 'public/js/main.js': paths }
+        files: { 
+          '<%= proj.browserJs.srcOut %>': '<%= proj.browserJs.srcFiles %>',
+          '<%= proj.browserJs.testOut %>': '<%= proj.browserJs.testFiles %>',
+        }
       },
       production: {
         options: { beautify: false, mangle: false },
-        files: { 'public/js/main.js': paths }
+        files: { 
+          '<%= proj.browserJs.srcOut %>': '<%= proj.browserJs.srcFiles %>',
+        }
       },
     },
 
     /**
-     * compiles templates down into javascript
+     * Clumps all javascript into single file
      */
-    emberTemplates: {
-      options: {
-        templateName: function (sourceFile) {
-          return sourceFile
-            .replace(/.\/assets\/templates\//, '');
+    concat: {
+      dev: {
+        files: { 
+          '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.srcFiles %>'
+          ],
+          '<%= proj.browserJs.testOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.testFiles %>'
+          ],
         }
       },
-      '<%= project.temp.dir %>/templates.js': '<%= project.templates %>'
+      production: {
+        files: { 
+          '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.libraries %>',
+            '<%= proj.browserJs.srcFiles %>'
+          ],
+        }
+      },
+    },
+
+    /**
+     * Server Tests
+     * https://github.com/pghalliday/grunt-mocha-test
+     */
+    mochaTest: {
+      server: {
+        src: 'test/server/{,*/}*.js',
+      },
+    },
+
+    connect: {
+      test: {
+        options: {
+          base: 'public',
+          timeout: 10000,
+          port: 8080,
+          reporter: 'Nyan'
+        }
+      }
+    },
+
+    /**
+     * Client Tests
+     * https://github.com/kmiyashiro/grunt-mocha
+     */
+    mocha: {
+      client: {
+        options: { 
+          urls: ['http://0.0.0.0:8080/test.html'],
+          log: true, 
+        }
+      },
     },
 
     /**
@@ -158,19 +276,11 @@ module.exports = function(grunt) {
      */
     sass: {
       dist: {
-        files: [{
-          expand: true,
-          cwd: 'assets/sass',
-          src: '{,*/}*.{sass,scss}',
-          dest: '<%= project.temp.dir %>',
-          ext: '.css'
-        }],
+        files: {
+          '<%= proj.sass.out %>': '<%= proj.sass.main %>'
+        },
         options: {
-          style: 'expanded',
-          loadPath: [
-            '<%= project.bootsass %>/mixins',
-            '<%= project.bootsass %>' 
-          ]
+          loadPath: '<%= proj.sass.path %>' 
         }
       }
     },
@@ -180,12 +290,15 @@ module.exports = function(grunt) {
      */
     cssmin: {
       dev: {
-        expand: true,
-        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+        files: { 
+          '<%= proj.css.mainOut %>': '<%= proj.css.main %>',
+          '<%= proj.css.testOut %>': '<%= proj.css.test %>',
+        }
       },
       production: {
-        expand: false,
-        files: { '<%= project.dist.css %>': ['<%= project.temp.css %>'] }
+        files: { 
+          '<%= proj.css.mainOut %>': '<%= proj.css.main %>'
+        }
       }
     },
 
@@ -193,41 +306,38 @@ module.exports = function(grunt) {
      * removes files before and after builds
      */
     clean: {
-      before: 'public/{css,js}',
-      js: 'public/js',
-      css: 'public/css',
-      after: 'public/other'
+      after: 'temp'
     }
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-ember-templates');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-
   /**
    * is the default behaviour
    */
-  grunt.registerTask('default', 'watch');
+  grunt.registerTask('default', [
+    'build',
+    'watch'
+  ]);
 
   /**
    * will run when running tests
    */
-  grunt.registerTask('test', ['jshint']);
+  grunt.registerTask('test', [
+    'jshint',
+    'mochaTest',
+    'connect',
+    'mocha',
+  ]);
 
   /**
    * will build project once off
    */
   grunt.registerTask('build', [
-    'clean:before',
     'sass',
     'cssmin:production',
-    'emberTemplates',
+    'react',
     'uglify:production',
+    'concat:production',
     'clean:after'
   ]);
 

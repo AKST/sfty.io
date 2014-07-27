@@ -14,13 +14,15 @@
     "window",
     "alert", 
     "console",
-    "mori",
     "Backbone",
     "ClassExtender",
-    "ReactBootstrap",
-    "Promise",
-    "async",
     "$",
-    "_"
+    "_",
+    "describe",
+    "it",
+    "expect",
+    "mocha",
+    "chai",
+    "assert"
   ]
 }
