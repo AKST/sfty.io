@@ -169,6 +169,9 @@ Sfty.Config = (function () {
     fields: null,
     fieldList: null,
 
+    /**
+     * Does stuff like async config loading
+     */
     init: function () {
       return new Promise(function (fulfil, reject) {
         var count, fields, fieldNames, totalFields;

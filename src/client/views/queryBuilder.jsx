@@ -37,24 +37,27 @@ Sfty.View.QueryBuilder = React.createClass({
 
 
   addConstraint: function (options) {
-    var constraints; 
+    var constraints = _.extend({}, this.state.constraints); 
+    var key = options.catergory;
 
-    constraints = _.extend({}, this.state.constraints); 
-    constraints[options.catergory] = options.value;
-  
+    if (options.additive && constraints[key] !== undefined) {
+      var combined = constraints[key].concat(options.value);
+      constraints[key] = _.uniq(combined);
+    }
+    else {
+      constraints[key] = options.value;
+    }
     this.__update('constraints', constraints);
   },
 
 
   __update: function (field, value) {
-    var update, newState; 
-
-    update = {};
+    var update = {};
     update[field] = value;
 
     this.setState(update);
 
-    newState = _.extend({}, this.state);
+    var newState = _.extend({}, this.state);
     newState[field] = value;
 
     this.props.onChange(newState);
@@ -62,10 +65,8 @@ Sfty.View.QueryBuilder = React.createClass({
 
 
   render: function () {
-    var Header, visualChoosen; 
-
-    Header = Sfty.View.Type.UnderlinedHeader;
-    visualChoosen = Boolean(this.state.graph && this.state.comparison);
+    var Header = Sfty.View.Type.UnderlinedHeader;
+    var visualChoosen = Boolean(this.state.graph && this.state.comparison);
 
     return (
       <section className={this.props.className}>

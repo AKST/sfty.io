@@ -7,12 +7,10 @@
  */
 Sfty.View.ConstraintSelector = (function () {
 
-  var SelectCatergory, SelectValue;
-  
   /**
    * Used to select type of constraint
    */
-  SelectCatergory = React.createClass({
+  var SelectCatergory = React.createClass({
 
     getDefaultProps: function () {
       return {
@@ -43,7 +41,7 @@ Sfty.View.ConstraintSelector = (function () {
   /**
    * Used to select value of constraint
    */
-  SelectValue = React.createClass({
+  var SelectValue = React.createClass({
 
     getDefaultProps: function () { 
       return {
@@ -71,14 +69,16 @@ Sfty.View.ConstraintSelector = (function () {
         case 'select': {
           update = { 
             tempValue: [Number(value)], 
-            submittable: !!value.length 
+            submittable: !!value.length,
+            additive: true,
           };
           this.props.update(update);
         } break;
         case 'toggle': {
           update = { 
             tempValue: value, 
-            submittable: !!value.length 
+            submittable: !!value.length,
+            additive: false,
           };
           this.props.update(update);
         } break;
@@ -132,12 +132,12 @@ Sfty.View.ConstraintSelector = (function () {
       return {
         catergory: null,
         submittable: false,
+        additive: false,
         tempValue: null,
       };
     },
 
     update: function (options) {
-      console.log(options);
       this.setState(options);
     }, 
 
@@ -145,12 +145,14 @@ Sfty.View.ConstraintSelector = (function () {
       if (!!this.state.catergory) {
         this.props.update({ 
           catergory: this.state.catergory, 
-          value: this.state.tempValue 
+          value: this.state.tempValue,
+          additive: this.state.additive
         });
         this.setState({
           catergory: null,
           submittable: false,
           tempValue: null,
+          additive: false,
         });
       }
       else {
@@ -162,14 +164,17 @@ Sfty.View.ConstraintSelector = (function () {
     },
   
     render: function () {
+      var catergoryPicked = !!this.state.catergory;
+      var disableButton = !this.state.submittable;
+
       return React.DOM.section({ className: 'row' }, [
 
         // 9/12 input
         React.DOM.section({ className: 'col-md-9 col-sm-9 col-xs-9' }, [
-          (!!this.state.catergory ? SelectValue : SelectCatergory)({
+          (catergoryPicked ? SelectValue : SelectCatergory)({
             update: this.update, 
             catergory: this.state.catergory,
-            comparison: this.props.comparison,
+            comparison: this.props.comparison
           })
         ]),
 
@@ -179,8 +184,8 @@ Sfty.View.ConstraintSelector = (function () {
             bsStyle: 'primary',
             className: 't-bump full-width', 
             onClick: this.onClick,
-            disabled: !this.state.submittable
-          }, this.state.catergory === null ? "Select" : "Add")
+            disabled: disableButton
+          }, !catergoryPicked ? "Select" : "Add")
         ]),
 
       ]);

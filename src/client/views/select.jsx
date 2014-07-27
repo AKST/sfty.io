@@ -45,8 +45,9 @@ Sfty.View.Select =  React.createClass({
   },
 
   selectizeOptions: function () {
+
     return {
-      onChange: this.props.onChange
+      onChange: this.props.onChange,
     };
   },
 
