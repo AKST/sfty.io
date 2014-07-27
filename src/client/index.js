@@ -1,5 +1,5 @@
 $('body').ready(function () {
-  document.title = Sfty.Config.title.toLowerCase();
+  document.title = Sfty.Config.title;
 
   // while initialisation is taking place
   React.renderComponent(Sfty.View.App({
