@@ -11,6 +11,23 @@ describe("Util", function () {
     });
   
   });
+
+
+  describe("String", function () {
+  
+    it('#generateUrlParams', function () {
+      var result = Sfty.Util.Str.generateUrlParams({
+        endpoint: '/test',
+        params: {
+          array: [1, 2, 3],
+          value: 4,
+        }
+      });
+      
+      assert(result, '/test?array=1,2,3&value=4'); 
+    });
+  
+  });
 });
 
 

@@ -21,13 +21,22 @@ describe("Config", function () {
   });
 
   describe("graph field", function () {
-    var graphs = Sfty.Config.field('graph');
 
-    it('should have bar, area, pie, bell', function () {
-      assert(graphs.has('bar'), 'has bar');
-      assert(graphs.has('pie'), 'has pie');
-      assert(graphs.has('area'), 'has area');
-      assert(graphs.has('bell'), 'has bell');
+    it('should have bar, area, pie, bell', function (done) {
+      Sfty.Config.init().then(function () {
+        var graphs = Sfty.Config.fields['graph'];
+        
+        assert(graphs.has('bar'), 'has bar');
+        assert(graphs.has('pie'), 'has pie');
+        assert(graphs.has('area'), 'has area');
+        assert(graphs.has('bell'), 'has bell');
+        
+        done();
+      }, function (err) {
+
+        done(err);
+      
+      });
     });
   });
 
