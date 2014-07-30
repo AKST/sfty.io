@@ -17,21 +17,20 @@ Sfty.View.App = React.createClass({
 
   getInitialState: function () {
     return { 
-      queryData: {
-        graph: null,
-        comparison: null,
-        constraints: {},
-      },
+      graph: null,
+      comparison: null,
+      constraints: {},
     };
   },
 
-  update: function (field) {
-    return function (value) {
-      console.log(value);
-      var update = {};
-      update[field] = value;
-      this.setState(update);
-    }.bind(this);
+  updateState: function (update) {
+    for (var key in update) {
+      if (!(key in this.state)) {
+        throw new Sfty.Err.UpdateError("Invalid field: "+key);
+      }
+    }
+
+    this.setState(update);
   },
 
   /**
@@ -57,18 +56,19 @@ Sfty.View.App = React.createClass({
       Previewer = Sfty.View.QueryPreviewer;
       GoButton = Sfty.View.GoButton;
 
+
       return (
         <section>
 
           <section className="row">
-            <Builder className="col-md-6 col-sm-6" onChange={this.update('queryData')}/>
+            <Builder className="col-md-6 col-sm-6" onChange={this.updateState}/>
             {Previewer(_.extend({ 
               className: "col-md-6 col-sm-6"
-            }, this.state.queryData))}
+            }, this.state))}
           </section>
 
           <GoButton 
-              data={this.state.queryData.constraints} 
+              data={this.state.constraints} 
               endpoint="/api/aggregate"
               callback={this.callback} />
         </section>

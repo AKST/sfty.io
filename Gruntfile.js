@@ -28,8 +28,8 @@ module.exports = function(grunt) {
         src: [
           'src/client/__init__.js',
           'src/client/config.js',
+          'src/client/errors/*.{js,jsx}',
           'src/client/util/*.{js,jsx}',
-          //'src/client/models/*.{js,jsx}',
           'src/client/views/*.{js,jsx}'
         ],
         testSrc: 'test/client/{,*/}*.js',
