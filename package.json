@@ -24,12 +24,13 @@
     "grunt-mocha-browser": "0.0.5"
   },
   "dependencies": {
-    "underscore": "~1.6.0",
-    "connect": "^2.14.5",
     "async": "^0.9.0",
+    "connect": "^2.14.5",
     "express": "^4.5.1",
     "mongodb": "^1.4.7",
-    "mori": "^0.2.9"
+    "mori": "^0.2.9",
+    "ramda": "^0.2.4",
+    "underscore": "~1.6.0"
   },
   "engines": {
     "node": ">=0.10"

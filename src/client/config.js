@@ -86,7 +86,7 @@ Sfty.Config = (function () {
       },
       injury: {
         group: 'injury',
-        url: '/rest/injuries',
+        url: '/data/injuries',
         title: 'injury type',
         type: 'select',
         loaded: false,
@@ -94,7 +94,7 @@ Sfty.Config = (function () {
       },
       cause: {
         group: 'injury',
-        url: '/rest/causes',
+        url: '/data/causes',
         title: 'Cause of Injury',
         type: 'select',
         loaded: false,
@@ -102,7 +102,7 @@ Sfty.Config = (function () {
       },
       location: {
         group: 'injury',
-        url: '/rest/locations',
+        url: '/data/locations',
         title: 'Body Location of Injury',
         type: 'select',
         loaded: false,
@@ -110,7 +110,7 @@ Sfty.Config = (function () {
       },
       activity: {
         group: 'injury',
-        url: '/rest/activities',
+        url: '/data/activities',
         title: 'Activity taking place',
         type: 'select',
         loaded: false,
@@ -149,7 +149,7 @@ Sfty.Config = (function () {
       },
       industry: {
         group: 'profile',
-        url: '/rest/industries',
+        url: '/data/industries',
         title: 'industry of casualty',
         type: 'select',
         loaded: false,
@@ -157,7 +157,7 @@ Sfty.Config = (function () {
       },
       occupation: {
         group: 'profile',
-        url: '/rest/occupations',
+        url: '/data/occupations',
         title: 'occupation',
         type: 'select',
         loaded: false,

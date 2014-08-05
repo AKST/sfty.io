@@ -1,18 +1,15 @@
 var express = require('express'),
-    config = require('./config'),
-    router = express.Router(),
-    genericGet = require('./routes/genericGet'); 
 
-var shortHand, endpoint, collectionName;
+    resources = require('./routes/resources'), 
+    aggregate = require('./routes/aggregate'); 
 
 
-// procedurally generate routes for resources
+var router = express.Router();
 
-for (shortHand in config.resourceCollections) {
-  collectionName = config.resourceCollections[shortHand];
-  endpoint = '/rest/' + shortHand;
-  router.get(endpoint, genericGet(collectionName));
-}
+
+resources(router, '/data');
+aggregate(router, '/api/aggregate');
+
 
 module.exports = router;
 

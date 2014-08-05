@@ -26,11 +26,30 @@ Sfty.View.App = React.createClass({
   updateState: function (update) {
     for (var key in update) {
       if (!(key in this.state)) {
-        throw new Sfty.Err.UpdateError("Invalid field: "+key);
+        throw new Sfty.Err.KeyError(key);
       }
     }
 
     this.setState(update);
+  },
+
+  removeConstraint: function (field, value) {
+    // shallow copy
+    var constraints = _.extend({}, this.state.constraints);
+
+    if (!(field in constraints)) {
+      throw new Sfty.Err.KeyError(field);
+    }
+
+    // remove value from field
+    constraints[field] = _.without(constraints[field], value);
+
+    // remove field if empty
+    if (constraints[field].length === 0) {
+      delete constraints[field];
+    }
+
+    this.setState({ constraints: constraints });
   },
 
   /**
@@ -62,8 +81,10 @@ Sfty.View.App = React.createClass({
 
           <section className="row">
             <Builder className="col-md-6 col-sm-6" onChange={this.updateState}/>
+
             {Previewer(_.extend({ 
-              className: "col-md-6 col-sm-6"
+              className: "col-md-6 col-sm-6",
+              removeConstraint: this.removeConstraint
             }, this.state))}
           </section>
 
