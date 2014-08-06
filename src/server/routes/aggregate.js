@@ -67,6 +67,9 @@ module.exports = function (router, prefix) {
     if (req.query[comparisonFieldKey] === undefined) {
       res.json(500, { message: 'you need to pick a comparison' });
     }
+    else if (!(req.query[comparisonFieldKey] in sanitizeLookup)) {
+      res.json(500, { message: 'invalid comparison' });
+    }
     else if (!_.every(_.keys(req.query), isValidConstraint)) {
       res.json(500, { message: 'included invalid constraint' });
     }
