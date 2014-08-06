@@ -65,13 +65,16 @@ module.exports = function (router, prefix) {
   // request validation
   router.use(prefix, function (req, res, next) {
     if (req.query[comparisonFieldKey] === undefined) {
-      res.json(500, { message: 'you need to pick a comparison' });
+      res.json(400, { message: 'you need to pick a comparison' });
     }
     else if (!(req.query[comparisonFieldKey] in sanitizeLookup)) {
-      res.json(500, { message: 'invalid comparison' });
+      res.json(400, { message: 'invalid comparison' });
     }
     else if (!_.every(_.keys(req.query), isValidConstraint)) {
-      res.json(500, { message: 'included invalid constraint' });
+      res.json(400, { message: 'included invalid constraint' });
+    }
+    else if (req.query[comparisonFieldKey] in req.query) {
+      res.json(400, { message: 'you cannot group by a constraint' });
     }
     else {
       next();
@@ -81,9 +84,15 @@ module.exports = function (router, prefix) {
 
   // sanitize query data for easier use in queries
   router.use(prefix, function (req, res, next) {
-    parseArguments(req.query);
-    sanitizeValues(req.query);
-    next();
+    try {
+      parseArguments(req.query);
+      sanitizeValues(req.query);
+      next();
+    } catch (e) {
+      console.error(req.query);
+      console.error(e);
+      req.json(400, "you provided terrible arguments, why...");
+    }
   });
 
   

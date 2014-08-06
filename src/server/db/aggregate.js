@@ -39,7 +39,9 @@ module.exports = exportObj = function (conf) {
 
   sort(query);
   group(query, comparison);
-  // contain(query, requirements);
+  contain(query, requirements);
+
+  console.log(JSON.stringify(query));
   
   //
   // collecting data on updates, and on end, 
@@ -87,7 +89,16 @@ exportObj._applyGrouping = group = function (dbQuery, comparison) {
 // Applies http query arguments to the db query
 //
 exportObj._applyConstraints = contain = function (dbQuery, httpQuery) {
-  var key, val, application, type, out;
+  var key, val, application, type, out, path;
+
+  var mongoIsHard = function (e, i, es) {
+    if (e !== _.last(es)) {
+      return [e, '$elemMatch'];
+    }
+    else {
+      return [e];
+    }
+  };
 
   for (key in httpQuery) {
     if (!(key in applications)) continue;
@@ -95,7 +106,13 @@ exportObj._applyConstraints = contain = function (dbQuery, httpQuery) {
     val = httpQuery[key];
     application = applications[key];
     type = application.type;
-    out = '2.$match.' + application.field;
+
+    //
+    // inserts $elemMatch's
+    //
+    path = _.flatten(application.field.split('.').map(mongoIsHard)).join('.');
+
+    out = '2.$match.' + path;
 
     if (type === 'in') {
       objectUtil.writeP(dbQuery, out, {
