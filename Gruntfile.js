@@ -71,6 +71,7 @@ module.exports = function(grunt) {
         testOut: 'public/js/test.js',
       },
       serverJs: 'src/server/{,*/}*.js',
+      serverTests: 'test/server/{,*/}*.js',
       sass: {
         main: 'assets/sass/init.sass',
         all: 'assets/sass/{,*/}*.{sass,scss}',
@@ -124,7 +125,10 @@ module.exports = function(grunt) {
         ]
       },
       node: {
-        files: '<%= proj.serverJs %>',
+        files: [
+          '<%= proj.serverTests %>',
+          '<%= proj.serverJs %>',
+        ],
         tasks: ['jshint', 'mochaTest']
       },
       browserjs: {
@@ -176,6 +180,14 @@ module.exports = function(grunt) {
         ],
         options: {
           jshintrc: './test/client/.jshintrc'
+        }      
+      },
+      serverTest: {
+        src: [
+          '<%= proj.serverTests %>',
+        ],
+        options: {
+          jshintrc: './test/server/.jshintrc'
         }      
       }
     },

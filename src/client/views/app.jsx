@@ -90,6 +90,7 @@ Sfty.View.App = React.createClass({
 
           <GoButton 
               data={this.state.constraints} 
+              comparison={this.state.comparison}
               endpoint="/api/aggregate"
               callback={this.callback} />
         </section>

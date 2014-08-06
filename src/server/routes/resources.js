@@ -15,11 +15,9 @@ module.exports = function (router, prefix) {
   // /data/causes
   // 
   for (shortHand in config.resourceCollections) {
-  
     collectionName = config.resourceCollections[shortHand];
     endpoint = prefix + '/' + shortHand;
     router.get(endpoint, genericGet(collectionName));
-  
   }
 
 };

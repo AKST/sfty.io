@@ -9,6 +9,7 @@ Sfty.View.GoButton = React.createClass({
       data: {},
       endpoint: '/',
       callback: function () {},
+      comparison: null,
       onFailure: console.error.bind(console)
     };
   },
@@ -30,7 +31,9 @@ Sfty.View.GoButton = React.createClass({
   getUrl: function () {
     return Sfty.Util.Str.generateUrlParams({
       endpoint: this.props.endpoint, 
-      params: this.props.data,
+      params: _.extend({
+        comparison: this.props.comparison 
+      }, this.props.data),
     });
   },
 
