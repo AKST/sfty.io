@@ -1,0 +1,17 @@
+{
+  "browser": false,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "boss": true,
+  "eqnull": true,
+  "predef": [
+    "describe", 
+    "it", 
+    "require"
+  ]
+}

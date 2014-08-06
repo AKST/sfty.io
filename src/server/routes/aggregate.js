@@ -58,11 +58,17 @@ var config = require('../config');
 //
 module.exports = function (router, prefix) {
 
+  var isValidConstraint = function (key) {
+    return key in sanitizeLookup || key === comparisonFieldKey; 
+  };
 
   // request validation
   router.use(prefix, function (req, res, next) {
     if (req.query[comparisonFieldKey] === undefined) {
       res.json(500, { message: 'you need to pick a comparison' });
+    }
+    else if (!_.every(_.keys(req.query), isValidConstraint)) {
+      res.json(500, { message: 'included invalid constraint' });
     }
     else {
       next();
