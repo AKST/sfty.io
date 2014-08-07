@@ -100,9 +100,7 @@ exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
       });
     }
     if (type === 'equal') {
-      objectUtil.writeP(dbQuery, out, {
-        $equal: val[0],
-      });
+      objectUtil.writeP(dbQuery, out, val[0]);
     }
     if (type === 'range') {
       objectUtil.writeP(dbQuery, out, {
