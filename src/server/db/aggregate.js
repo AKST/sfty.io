@@ -37,10 +37,11 @@ module.exports = exportObj = function (conf) {
   // - state the grouping, by grouping constraint
   // - apply a sort
 
-
   contain(0, query, requirements);
   group(1, query, comparison);
   sort(2, query);
+
+  query = query.filter(function (e) { return e !== null; });
 
   console.log(JSON.stringify(query));
   
@@ -61,30 +62,6 @@ module.exports = exportObj = function (conf) {
   });
 
 };
-
-
-// 
-// simple sorting
-//
-exportObj._applySort = sort = function (order, dbQuery) {
-  objectUtil.writeP(dbQuery, order+'.$sort', {
-    total: -1 
-  });
-};
-
-
-//
-// basic grouping
-//
-exportObj._applyGrouping = group = function (order, dbQuery, comparison) {
-  var fieldName = applications[comparison].field;
-
-  objectUtil.writeP(dbQuery, order+'.$group', {
-    _id: "$"+fieldName,
-    total: { $sum: 1 },
-  }); 
-};
-
 
 //
 // Applies http query arguments to the db query
@@ -111,9 +88,11 @@ exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
     //
     // inserts $elemMatch's
     //
-    //path = _.flatten(application.field.split('.').map(mongoIsHard)).join('.');
+    path = _.flatten(application.field.split('.').map(mongoIsHard)).join('.');
 
-    out = order+'.$match.' + application.field; //path;
+    out = order+'.$match.' + path;
+
+    console.log(out);
 
     if (type === 'in') {
       objectUtil.writeP(dbQuery, out, {
@@ -133,4 +112,30 @@ exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
     }
   }
 };
+
+
+
+// 
+// simple sorting
+//
+exportObj._applySort = sort = function (order, dbQuery) {
+  objectUtil.writeP(dbQuery, order+'.$sort', {
+    total: -1 
+  });
+};
+
+
+//
+// basic grouping
+//
+exportObj._applyGrouping = group = function (order, dbQuery, comparison) {
+  var fieldName = applications[comparison].field;
+
+  objectUtil.writeP(dbQuery, order+'.$group', {
+    _id: "$"+fieldName,
+    total: { $sum: 1 },
+  }); 
+};
+
+
 

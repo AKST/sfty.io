@@ -76,6 +76,9 @@ module.exports = function (router, prefix) {
     else if (req.query[comparisonFieldKey] in req.query) {
       res.json(400, { message: 'you cannot group by a constraint' });
     }
+    else if (_.keys(req.query) > 1) {
+      res.json(400);
+    }
     else {
       next();
     }
