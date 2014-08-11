@@ -38,11 +38,16 @@ Sfty.View.QueryPreviewer = React.createClass({
             <section>
               {header(Sfty.Config.fields[pair[0]].title, 4)}
               {makeList(pair[1], function (id) {
-                return lookup({
+                var text = lookup({
                   category: pair[0],
                   property: "name",
                   id: id 
                 });
+                return (
+                  <span>
+                    {text}
+                  </span>
+                );
               }, this)}
             </section>
           );
