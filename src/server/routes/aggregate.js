@@ -8,6 +8,8 @@ var comparisonFieldKey = 'comparison';
 // Is a stream that transform any elements that 
 // are not arrays in to single elements arrays.
 //
+// which is likely all elements...
+//
 var parseArguments = function (elems) {
   return _.keys(elems).forEach(function (key) {
     if (key === comparisonFieldKey) return;
@@ -29,7 +31,7 @@ var sanitizeLookup = {
   'fatality': boolParse,
   'occupation': intParse,
   'industry': intParse,
-  'injuries': id, // not all injury keys are ints
+  'injury': id, // not all injury keys are ints
   'location': intParse,
   'cause': intParse,
   'gender': id,
@@ -58,11 +60,16 @@ var config = require('../config');
 //
 module.exports = function (router, prefix) {
 
+  //
+  // predicate for detemining if a constraint is a valid constraint
+  //
   var isValidConstraint = function (key) {
     return key in sanitizeLookup || key === comparisonFieldKey; 
   };
 
+  //
   // request validation
+  //
   router.use(prefix, function (req, res, next) {
     if (req.query[comparisonFieldKey] === undefined) {
       res.json(400, { message: 'you need to pick a comparison' });
@@ -85,7 +92,9 @@ module.exports = function (router, prefix) {
   });
 
 
-  // sanitize query data for easier use in queries
+  //
+  // Sanitize the contrain values
+  //
   router.use(prefix, function (req, res, next) {
     try {
       parseArguments(req.query);
@@ -98,7 +107,9 @@ module.exports = function (router, prefix) {
     }
   });
 
-  
+  //
+  // perform the aggregation
+  //
   router.get(prefix, function (req, res) {
 
     dbAggregation({

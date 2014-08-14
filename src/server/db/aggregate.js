@@ -93,6 +93,7 @@ exportObj._constrain = constrain = function (httpQuery) {
   var outObject = {};
 
   for (var key in httpQuery) {
+    if (!httpQuery.hasOwnProperty(key)) continue;
     if (!(key in applications)) continue;
 
     val = httpQuery[key];

@@ -174,12 +174,10 @@ Sfty.Config = (function () {
      */
     init: function () {
       return new Promise(function (fulfil, reject) {
-        var count, fields, fieldNames, totalFields;
-
-        fields = {};
-        count  = 0;
-        fieldNames = _.keys(this.__fields);
-        totalFields = fieldNames.length;
+        var fields = {};
+        var count  = 0;
+        var fieldNames = _.keys(this.__fields);
+        var totalFields = fieldNames.length;
 
         fieldNames.forEach(function (fieldName) {
           this.__getField(fieldName).then(function (field) {
@@ -202,16 +200,16 @@ Sfty.Config = (function () {
      * Generates promise for field
      */
     __getField: function (fieldName) {
-      var field;
+      if (!(fieldName in this.__fields)) {
+        throw new TypeError(fieldName + " is not part of config");
+      }
 
-      if (fieldName in this.__fields) {
-        field = new Field(this.__fields[fieldName]);
-      }
-      else {
-        throw TypeError(fieldName + " is not part of config");
-      }
-      
+      var field = new Field(this.__fields[fieldName]);
+
       if (field.loaded !== undefined && field.loaded === false) {
+        //
+        // load the data if it's need and to be loaded.
+        //
         return new Promise(function (fulfil, reject) {
           var deferred = $.ajax({
             url: field.url
@@ -224,24 +222,37 @@ Sfty.Config = (function () {
         });
       }
       else {
+        //
+        // if the field does need to be requested then just resolve it.
+        //
         return Promise.resolve(field);
       }
     },
 
 
     /**
-     * Does an id lookup an object
+     * Does an `id` lookup of `category` then gets
+     * the `property` from it.
+     *
+     * lookupById :: Conf -> (Conf -> Map k v) -> k -> (v -> a) -> a
+     * lookupById conf getCategory index property =
+     *   let category = getCategory category
+     *       result = lookup category index
+     *   in  property result
+     *
+     * @param config (object)
+     *   category: String
+     *   id:       Number
+     *   property: String
      */
     lookupId: function (config) {
-      var name, id, prop;
+      var category = config.category;
+      var id       = config.id;
+      var property = config.property;
 
-      id = config.id;
-      prop = config.property;
-      name = config.category;
-
-      return _.find(this.fields[name].data, function (e) {
+      return _.find(this.fields[category].data, function (e) {
         return e.id === id;
-      })[prop];  
+      })[property];
     },
 
 

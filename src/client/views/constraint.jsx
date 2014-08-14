@@ -84,7 +84,7 @@ Sfty.View.ConstraintSelector = (function () {
           this.props.update(update);
         } break;
         case 'slide': {
-
+          throw new TypeError("TODO: Slider onChange is not implemented");
         } break;
       }
     },
@@ -128,6 +128,7 @@ Sfty.View.ConstraintSelector = (function () {
      * submittable: if the button is pressable 
      * catergory: the catergory of select
      * tempValue: the value between states
+     * additive: will append, instead of replace existing value
      */
     getInitialState: function () {
       return {
