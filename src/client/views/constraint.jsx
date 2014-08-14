@@ -67,8 +67,9 @@ Sfty.View.ConstraintSelector = (function () {
 
       switch (this.getCatergory().type) {
         case 'select': {
-          update = { 
-            tempValue: [Number(value)], 
+          update = {
+            // transform the number in to an integer if it is numeric.
+            tempValue: [$.isNumeric(value) ? parseInt(value, 10) : value],
             submittable: !!value.length,
             additive: true,
           };

@@ -37,7 +37,7 @@ module.exports = exportObj = function (conf) {
   // - apply a sort
 
   var query = [
-    { $project: project(requirements) },
+//    { $project: project(requirements) },
     { $match: constrain(requirements) },
     { $group: group(comparison) },
     { $sort: sort() }
@@ -66,7 +66,7 @@ module.exports = exportObj = function (conf) {
 };
 
 //
-//
+// relocates the fields for easier matching.
 //
 exportObj._project = project = function (httpQuery) {
   return {
