@@ -9,11 +9,8 @@
   "boss": true,
   "eqnull": true,
   "predef": [
-    "React", 
-    "Sfty", 
-    "window",
-    "alert", 
-    "console",
+    "Sfty",
+    "React",
     "mori",
     "Backbone",
     "ClassExtender",
@@ -21,6 +18,10 @@
     "Promise",
     "async",
     "$",
-    "_"
+    "_",
+
+    "alert",
+    "window",
+    "console"
   ]
 }

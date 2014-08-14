@@ -9,6 +9,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mocha');
   grunt.loadNpmTasks('grunt-mocha-test');
 
@@ -91,6 +92,7 @@ module.exports = function(grunt) {
         mainOut: 'public/css/main.min.css',
         testOut: 'public/css/mocha.css'
       },
+      fonts: 'assets/vendor/bootstrap-sass-official/assets/fonts/bootstrap',
       tempFiles: [
         '<%= proj.sass.out %>',
         '<%= proj.browserJs.reactSrcOut %>',
@@ -259,6 +261,9 @@ module.exports = function(grunt) {
       },
     },
 
+    /**
+     * Used to run
+     */
     connect: {
       test: {
         options: {
@@ -281,6 +286,21 @@ module.exports = function(grunt) {
           log: true, 
         }
       },
+    },
+
+    /**
+     * Used to carry fonts over
+     */
+    copy: {
+      dist: {
+        files: [{
+          flatten: true,
+          expand: true,
+          cwd: '<%= proj.fonts %>',
+          src: '*',
+          dest: 'public/fonts/bootstrap/'
+        }]
+      }
     },
 
     /**
@@ -345,6 +365,7 @@ module.exports = function(grunt) {
    * will build project once off
    */
   grunt.registerTask('build', [
+    'copy',
     'sass',
     'cssmin:production',
     'react',
@@ -353,4 +374,6 @@ module.exports = function(grunt) {
     'clean:after'
   ]);
 
+  grunt.registerTask('heroku', 'build');
+  grunt.registerTask('heroku:production', 'build');
 };

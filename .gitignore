@@ -1,7 +1,7 @@
 public/css
 public/js
 public/temp
-public/fonts
+public/fonts/bootstrap
 temp
 assets/vendor
 node_modules

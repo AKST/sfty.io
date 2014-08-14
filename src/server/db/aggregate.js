@@ -23,7 +23,7 @@ var applications = {
 
 var objectUtil = require('../util/obj');
 var config = require('../config');
-var exportObj, sort, group, contain;
+var exportObj, sort, group, contains;
 
 module.exports = exportObj = function (conf) {
 
@@ -31,15 +31,17 @@ module.exports = exportObj = function (conf) {
   var collection = conf.collection;
   var comparison = conf.comparison;
   var callback = conf.callback;
-  var query = [];
 
   // - apply the match requirements
   // - state the grouping, by grouping constraint
   // - apply a sort
 
-  contain(0, query, requirements);
-  group(1, query, comparison);
-  sort(2, query);
+  var query = [
+//    { $project: project(requirements) },
+    { $match: constrain(requirements) },
+    { $group: group(comparison) },
+    { $sort: sort() }
+  ];
 
   query = query.filter(function (e) { return e !== null; });
 
@@ -64,10 +66,20 @@ module.exports = exportObj = function (conf) {
 };
 
 //
+//
+//
+exportObj._project = project = function (httpQuery) {
+  return {
+
+  }
+};
+
+
+//
 // Applies http query arguments to the db query
 //
-exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
-  var key, val, application, type, out, path;
+exportObj._constrain = constrain = function (httpQuery) {
+  var val, application, type, out, path;
 
   var mongoIsHard = function (e, i, es) {
     if (e !== _.last(es)) {
@@ -78,7 +90,9 @@ exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
     }
   };
 
-  for (key in httpQuery) {
+  var outObject = {};
+
+  for (var key in httpQuery) {
     if (!(key in applications)) continue;
 
     val = httpQuery[key];
@@ -90,49 +104,50 @@ exportObj._applyConstraints = contain = function (order, dbQuery, httpQuery) {
     //
     path = _.flatten(application.field.split('.').map(mongoIsHard)).join('.');
 
-    out = order+'.$match.' + path;
+    out = path;
 
     console.log(out);
 
     if (type === 'in') {
-      objectUtil.writeP(dbQuery, out, {
+      objectUtil.writeP(outObject, out, {
         $in: val,
       });
     }
     if (type === 'equal') {
-      objectUtil.writeP(dbQuery, out, val[0]);
+      objectUtil.writeP(outObject, out, val[0]);
     }
     if (type === 'range') {
-      objectUtil.writeP(dbQuery, out, {
+      objectUtil.writeP(outObject, out, {
         start: { $gt: val[0] },
         end: { $lt: val[1] },
       });
     }
   }
-};
 
+  return outObject;
+};
 
 
 // 
 // simple sorting
 //
-exportObj._applySort = sort = function (order, dbQuery) {
-  objectUtil.writeP(dbQuery, order+'.$sort', {
-    total: -1 
-  });
+exportObj._sort = sort = function (direction) {
+  return {
+    total: direction || -1
+  };
 };
 
 
 //
 // basic grouping
 //
-exportObj._applyGrouping = group = function (order, dbQuery, comparison) {
+exportObj._group = group = function (comparison) {
   var fieldName = applications[comparison].field;
 
-  objectUtil.writeP(dbQuery, order+'.$group', {
+  return {
     _id: "$"+fieldName,
     total: { $sum: 1 },
-  }); 
+  };
 };
 
 
