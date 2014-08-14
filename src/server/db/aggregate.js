@@ -23,7 +23,7 @@ var applications = {
 
 var objectUtil = require('../util/obj');
 var config = require('../config');
-var exportObj, sort, group, contains;
+var exportObj, sort, group, constrain, project;
 
 module.exports = exportObj = function (conf) {
 
@@ -37,7 +37,7 @@ module.exports = exportObj = function (conf) {
   // - apply a sort
 
   var query = [
-//    { $project: project(requirements) },
+    { $project: project(requirements) },
     { $match: constrain(requirements) },
     { $group: group(comparison) },
     { $sort: sort() }
@@ -71,7 +71,7 @@ module.exports = exportObj = function (conf) {
 exportObj._project = project = function (httpQuery) {
   return {
 
-  }
+  };
 };
 
 
