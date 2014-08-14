@@ -60,7 +60,11 @@ module.exports = function(grunt) {
         srcFiles: [
           '<%= proj.browserJs.reactSrcOut %>',
           '<%= proj.browserJs.reactMainOut %>',
-        ],  
+        ],
+        noMain: [
+          '<%= proj.browserJs.libraries %>',
+          '<%= proj.browserJs.reactSrcOut %>',
+        ],
         testFiles: [
           '<%= proj.browserJs.reactSrcOut %>',
           '<%= proj.browserJs.testLibraries %>',
@@ -69,6 +73,7 @@ module.exports = function(grunt) {
           '<%= proj.browserJs.testRun %>',
         ],
         srcOut: 'public/js/main.js',
+        noMainOut: 'public/js/no_main.js',
         testOut: 'public/js/test.js',
       },
       serverJs: 'src/server/{,*/}*.js',
@@ -239,6 +244,7 @@ module.exports = function(grunt) {
             '<%= proj.browserJs.libraries %>',
             '<%= proj.browserJs.testFiles %>'
           ],
+          '<%= proj.browserJs.noMainOut %>': ['<%= proj.browserJs.noMain %>'],
         }
       },
       production: {
@@ -369,8 +375,8 @@ module.exports = function(grunt) {
     'sass',
     'cssmin:production',
     'react',
-    'uglify:production',
-    'concat:production',
+    'uglify',
+    'concat',
     'clean:after'
   ]);
 
