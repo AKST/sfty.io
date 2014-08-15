@@ -11,9 +11,10 @@ install:
   - npm install
   - bower install
   - make place-assets
-  - grunt build
+  - grunt travis
   - screen -d -m npm start
   - sleep 30
   - curl http://localhost:3000
+  - curl http://localhost:3000/js/test.js
 script:
   - make test
