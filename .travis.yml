@@ -13,5 +13,6 @@ install:
   - make place-assets
   - grunt build
 script:
-  - npm start
+  - screen -d -m npm start
+  - sleep 10
   - make test
