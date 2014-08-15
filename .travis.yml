@@ -3,7 +3,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install mongodb-org
   - sudo apt-get install screen
-  - screen -d -m npm mongod
+  - screen -d -m mongod
   - npm install -g bower
   - npm install -g grunt-cli
   - gem install sass
