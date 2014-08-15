@@ -34,7 +34,7 @@ describe("Util", function () {
     
     it("#something", function () {
 
-      throw new Sfty.Err.Todo("TODO");
+//      throw new Sfty.Err.Todo("TODO");
 
     });
   }); 

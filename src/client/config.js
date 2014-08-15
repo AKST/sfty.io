@@ -3,14 +3,14 @@
  * Configuration data for the application that doesn't change.
  */
 Sfty.Config = (function () {
-  var Field, config;
 
   /**
    * wrapper for config data
    */
-  Field = ClassExtender.extend({
+  var Field = ClassExtender.extend({
     init: function (config) {
       for (var key in config) {
+        if (!config.hasOwnProperty(key)) continue;
         this[key] = config[key];
       }
     },
@@ -25,7 +25,7 @@ Sfty.Config = (function () {
     }
   });
 
-  config = {
+  return {
 
     title: 'Sfty.io',
 
@@ -39,12 +39,12 @@ Sfty.Config = (function () {
         title: 'Nature of Injury'
       },
       profile: {
-        id: 'profile', 
+        id: 'profile',
         title: 'Causality Profile'
       },
     },
 
-    groupOrder: ['visualisation', 'injury', 'profile'], 
+    groupOrder: ['visualisation', 'injury', 'profile'],
 
     __fields: {
       comparison: {
@@ -52,14 +52,14 @@ Sfty.Config = (function () {
         title: 'Comparison Subject',
         type: 'select',
         data: [
-          { id: 'injury', name: 'type of injury' }, 
-          { id: 'activity', name: 'activity during injury' }, 
-          { id: 'location', name: 'body location' }, 
-          { id: 'cause', name: 'cause of injury' }, 
-          { id: 'fatality', name: 'was injury the injury fatal' }, 
-          { id: 'industry', name: 'industry of casualty' }, 
-          { id: 'occupation', name: 'occupation of casualty' }, 
-          { id: 'workload', name: 'workload of casualty' }, 
+          { id: 'injury', name: 'type of injury' },
+          { id: 'activity', name: 'activity during injury' },
+          { id: 'location', name: 'body location' },
+          { id: 'cause', name: 'cause of injury' },
+          { id: 'fatality', name: 'was injury the injury fatal' },
+          { id: 'industry', name: 'industry of casualty' },
+          { id: 'occupation', name: 'occupation of casualty' },
+          { id: 'workload', name: 'workload of casualty' },
           { id: 'gender', name: 'sex of casualty' },
         ],
       },
@@ -69,7 +69,7 @@ Sfty.Config = (function () {
         type: 'select',
         data: [
           { id: 'pie', name: 'donut chart' },
-          { id: 'bar', name: 'bar graph' }, 
+          { id: 'bar', name: 'bar graph' },
           { id: 'area', name: 'area graph' },
           { id: 'bell', name: 'bell curve' },
         ],
@@ -116,8 +116,8 @@ Sfty.Config = (function () {
         loaded: false,
         data: [],
       },
-      
-      
+
+
       workload: {
         group: 'profile',
         title: 'workload',
@@ -236,7 +236,7 @@ Sfty.Config = (function () {
      *
      * lookupById :: Conf -> (Conf -> Map k v) -> k -> (v -> a) -> a
      * lookupById conf getCategory index property =
-     *   let category = getCategory category
+     *   let category = getCategory conf
      *       result = lookup category index
      *   in  property result
      *
@@ -257,7 +257,5 @@ Sfty.Config = (function () {
 
 
   };
-
-  return config;
 })();
 
