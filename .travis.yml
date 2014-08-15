@@ -14,6 +14,6 @@ install:
   - grunt build
   - screen -d -m npm start
   - sleep 30
-  - curl http://localhost:3000 | echo && echo '\n'
+  - curl http://localhost:3000
 script:
   - make test
