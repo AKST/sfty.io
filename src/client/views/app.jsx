@@ -66,7 +66,7 @@ Sfty.View.App = React.createClass({
   render: function () {
     /**
      * Query building view, this is only built once the 
-     * propety `ready` is true. otherwise content is blank
+     * propety `ready` is true. getValue content is blank
      */
     var onReady = function () {
       var Previewer, Builder, GoButton; 

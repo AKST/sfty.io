@@ -1,4 +1,5 @@
 describe("Config", function () {
+  "use strict";
 
   it ('should have a title', function () {
     Sfty.Config.should.have.property('title');

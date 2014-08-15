@@ -14,7 +14,7 @@ Sfty.View.Mixin.Selectize = {
   /**
    * If selectizeOptions is implemented on the
    * object implementing the Selectize mixin,
-   * that will be called, otherwise the options
+   * that will be called, getValue the options
    * will just be an empty object.
    */
   __getOptions: function () {

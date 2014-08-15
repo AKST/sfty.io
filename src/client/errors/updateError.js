@@ -3,7 +3,18 @@ Sfty.Err.UpdateError = (function () {
     this.message = message;
   };
   
-  ErrorType.prototype = Error;
+  ErrorType.prototype =  new Error ();
+
+  return ErrorType;
+})();
+
+Sfty.Err.KeyError = (function () {
+  var ErrorType = function (key) {
+    this.message = "Invalid key: " + key;
+  };
+
+  ErrorType.prototype = new Sfty.Err.UpdateError();
+  ErrorType.prototype.constructor = ErrorType;
 
   return ErrorType;
 })();

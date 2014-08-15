@@ -41,11 +41,11 @@ Sfty.View.QueryBuilder = React.createClass({
     var key = options.catergory;
 
     if (options.additive && constraints[key] !== undefined) {
-      var combined = constraints[key].concat(options.value);
+      var combined = constraints[key].concat(options.__value);
       constraints[key] = _.uniq(combined);
     }
     else {
-      constraints[key] = options.value;
+      constraints[key] = options.__value;
     }
     this.__update('constraints', constraints);
   },

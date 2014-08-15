@@ -147,7 +147,7 @@ Sfty.View.ConstraintSelector = (function () {
       if (!!this.state.catergory) {
         this.props.update({ 
           catergory: this.state.catergory, 
-          value: this.state.tempValue,
+          __value: this.state.tempValue,
           additive: this.state.additive
         });
         this.setState({

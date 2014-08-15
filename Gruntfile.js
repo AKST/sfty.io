@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  "use strict";
   
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -147,7 +148,6 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'jshint',
-          //'clean:js',
           'react',
           'uglify:dev',
           'concat:dev',
