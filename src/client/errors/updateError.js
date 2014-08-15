@@ -3,7 +3,7 @@ Sfty.Err.UpdateError = (function () {
     this.message = message;
   };
   
-  ErrorType.prototype =  new Error ();
+  ErrorType.prototype = new Error();
 
   return ErrorType;
 })();
