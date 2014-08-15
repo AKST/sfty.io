@@ -347,7 +347,9 @@ module.exports = function(grunt) {
      * removes files before and after builds
      */
     clean: {
-      after: 'temp'
+      after: 'temp',
+      css: 'public/css',
+      js: 'public/js'
     }
 
   });

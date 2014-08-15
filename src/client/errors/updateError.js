@@ -4,6 +4,7 @@ Sfty.Err.UpdateError = (function () {
   };
   
   ErrorType.prototype = new Error();
+  ErrorType.prototype.constructor = ErrorType;
 
   return ErrorType;
 })();
