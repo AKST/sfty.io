@@ -13,8 +13,7 @@ install:
   - make place-assets
   - grunt travis
   - screen -d -m npm start
-  - sleep 30
+  - sleep 5
   - curl http://localhost:3000
-  - curl http://localhost:3000/js/test.js
 script:
   - make test
