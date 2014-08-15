@@ -244,7 +244,7 @@ module.exports = function(grunt) {
             '<%= proj.browserJs.es6PromisePolyfill %>',
             '<%= proj.browserJs.es5Polyfill %>',
             '<%= proj.browserJs.libraries %>',
-            '<%= proj.browserJs.testFiles %>'
+            '<%= proj.browserJs.testOut %>'
           ],
           '<%= proj.browserJs.noMainOut %>': [
             '<%= proj.browserJs.es6PromisePolyfill %>',
@@ -379,7 +379,6 @@ module.exports = function(grunt) {
     'react',
     'uglify:production',
     'concat:production',
-    'clean:after'
   ]);
 
   /**
@@ -392,7 +391,6 @@ module.exports = function(grunt) {
     'react',
     'uglify:dev',
     'concat:dev',
-    'clean:after'
   ]);
 
   grunt.registerTask('heroku', 'build');
