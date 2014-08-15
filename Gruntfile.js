@@ -302,6 +302,12 @@ module.exports = function(grunt) {
           cwd: '<%= proj.fonts %>',
           src: '*',
           dest: 'public/fonts/bootstrap/'
+        }, {
+          flatten: true,
+          expand: true,
+          cwd: 'assets/vendor/mocha/',
+          src: 'mocha.css',
+          dest: 'public/css/'
         }]
       }
     },
@@ -373,6 +379,19 @@ module.exports = function(grunt) {
     'react',
     'uglify:production',
     'concat:production',
+    'clean:after'
+  ]);
+
+  /**
+   * will build project once off
+   */
+  grunt.registerTask('travis', [
+    'copy',
+    'sass',
+    'cssmin:dev',
+    'react',
+    'uglify:dev',
+    'concat:dev',
     'clean:after'
   ]);
 
