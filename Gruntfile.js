@@ -301,6 +301,12 @@ module.exports = function(grunt) {
           expand: true,
           cwd: '<%= proj.fonts %>',
           src: '*',
+          dest: 'public/css/bootstrap/'
+        }, {
+          flatten: true,
+          expand: true,
+          cwd: '<%= proj.fonts %>',
+          src: '*',
           dest: 'public/fonts/bootstrap/'
         }, {
           flatten: true,
