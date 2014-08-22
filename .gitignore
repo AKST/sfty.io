@@ -7,3 +7,4 @@ assets/vendor
 node_modules
 .sass-cache
 Chart.js-master
+Chart.js.legend.master

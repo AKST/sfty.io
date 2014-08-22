@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Bar Chart example</title>
+		<script src="../js/no_main.js"></script>
+		<script src="Chart.js"></script>
+		<script src="jquery-2.1.1.min.js"></script>
+	</head>
+	<body>
+		<!-- Instantiate a canvas first -->
+		<div>
+			<canvas id="aggregateChart" width="800" height="800"></canvas>
+			<div id="aggregateLegend"><h1>Title</h1></div>
+		</div>
+		
+
+		<script>
+		//Get the context of the canvas element we want to select
+		var ctx = document.getElementById("aggregateChart").getContext("2d");
+		var div = document.getElementById("aggregateLegend");
+		
+		var init = Sfty.Config.init().then(function () {
+			$.getJSON("http://localhost:3000/api/aggregate?comparison=cause", function(data){
+
+				var colors = ["#FF5A5E", "#FFC870", "#5AD3D1", "#CD5C5C", "#BDB76B", "#6B8E23", "#008000", "#008B8B", "#6A5ACD"];
+
+				var mydata = data.map(function (x, i){
+					return {
+						value: x.total,
+						label: Sfty.Config.lookupId(
+						{
+							id: x._id,
+							category: "cause",
+							property: "name"
+						})
+					}
+				});
+
+				var barlabels = _.pluck(mydata, 'label');
+				var bardatavalues = _.pluck(mydata, 'value');
+
+				var barChart = {
+				    labels: barlabels,
+				    datasets: [
+				        {
+				            label: "My First dataset",
+				            fillColor: "blue",
+				            strokeColor: "rgba(220,220,220,0.8)",
+				            highlightFill: "rgba(220,220,220,0.75)",
+				            highlightStroke: "rgba(220,220,220,1)",
+				            data: bardatavalues
+				        }
+				    ]
+				};
+
+				
+				var options = {
+				    //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+				    scaleBeginAtZero : true,
+
+				    //Boolean - Whether grid lines are shown across the chart
+				    scaleShowGridLines : true,
+
+				    //String - Colour of the grid lines
+				    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+				    //Number - Width of the grid lines
+				    scaleGridLineWidth : 1,
+
+				    //Boolean - If there is a stroke on each bar
+				    barShowStroke : true,
+
+				    //Number - Pixel width of the bar stroke
+				    barStrokeWidth : 2,
+
+				    //Number - Spacing between each of the X value sets
+				    barValueSpacing : 5,
+
+				    //Number - Spacing between data sets within X values
+				    barDatasetSpacing : 1,
+
+				    //String - A legend template
+				    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+				}
+
+				/*
+				For a pie chart, you must pass in an array of objects with a value and a color property. The value attribute should be a number, Chart.js will total all of the numbers and calculate the relative proportion of each. The color attribute should be a string. Similar to CSS, for this string you can use HEX notation, RGB, RGBA or HSL.
+				
+				The type of chart you want to draw. This case it is a bar chart
+				*/
+				var myBarChart = new Chart(ctx).Bar(barChart, options);
+
+			});
+		});
+
+		</script>
+	</body>
+</html>
