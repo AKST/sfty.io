@@ -32,20 +32,19 @@ module.exports = exportObj = function (conf) {
   var comparison = conf.comparison;
   var callback = conf.callback;
 
+  // - relocate fields to simpify matching
   // - apply the match requirements
   // - state the grouping, by grouping constraint
   // - apply a sort
 
   var query = [
-//    { $project: project(requirements) },
+    { $project: project(requirements, comparison) },
     { $match: constrain(requirements) },
     { $group: group(comparison) },
     { $sort: sort() }
   ];
 
   query = query.filter(function (e) { return e !== null; });
-
-  console.log(JSON.stringify(query));
   
   //
   // collecting data on updates, and on end, 
@@ -68,10 +67,19 @@ module.exports = exportObj = function (conf) {
 //
 // relocates the fields for easier matching.
 //
-exportObj._project = project = function (httpQuery) {
-  return {
+exportObj._project = project = function (httpQuery, comparison) {
+  var application, key, app;
 
-  };
+  var projection = {};
+
+  for (application in applications) {
+    if (!applications.hasOwnProperty(application)) continue;
+    if (httpQuery.hasOwnProperty(application) || application === comparison) {
+      projection[application] = "$"+applications[application].field;
+    }
+  }
+
+  return projection;
 };
 
 
@@ -80,15 +88,6 @@ exportObj._project = project = function (httpQuery) {
 //
 exportObj._constrain = constrain = function (httpQuery) {
   var val, application, type, out, path;
-
-  var mongoIsHard = function (e, i, es) {
-    if (e !== _.last(es)) {
-      return [e, '$elemMatch'];
-    }
-    else {
-      return [e];
-    }
-  };
 
   var outObject = {};
 
@@ -100,25 +99,18 @@ exportObj._constrain = constrain = function (httpQuery) {
     application = applications[key];
     type = application.type;
 
-    //
-    // inserts $elemMatch's
-    //
-    path = _.flatten(application.field.split('.').map(mongoIsHard)).join('.');
-
-    out = path;
-
     console.log(out);
 
     if (type === 'in') {
-      objectUtil.writeP(outObject, out, {
+      objectUtil.writeP(outObject, key, {
         $in: val,
       });
     }
     if (type === 'equal') {
-      objectUtil.writeP(outObject, out, val[0]);
+      objectUtil.writeP(outObject, key, val[0]);
     }
     if (type === 'range') {
-      objectUtil.writeP(outObject, out, {
+      objectUtil.writeP(outObject, key, {
         start: { $gt: val[0] },
         end: { $lt: val[1] },
       });
@@ -143,10 +135,8 @@ exportObj._sort = sort = function (direction) {
 // basic grouping
 //
 exportObj._group = group = function (comparison) {
-  var fieldName = applications[comparison].field;
-
   return {
-    _id: "$"+fieldName,
+    _id: "$"+comparison,
     total: { $sum: 1 },
   };
 };

@@ -348,6 +348,7 @@ module.exports = function(grunt) {
      */
     clean: {
       after: 'temp',
+      fonts: 'public/fonts',
       css: 'public/css',
       js: 'public/js'
     }
