@@ -1,5 +1,9 @@
 language: node_js
 before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install mongodb-org
+  - sudo apt-get install screen
+  - screen -d -m mongod
   - npm install -g bower
   - npm install -g grunt-cli
   - gem install sass
@@ -7,6 +11,9 @@ install:
   - npm install
   - bower install
   - make place-assets
-  - grunt build
+  - grunt travis
+  - screen -d -m npm start
+  - sleep 5
+  - curl http://localhost:3000
 script:
   - make test

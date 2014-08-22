@@ -1,29 +1,31 @@
 describe("Config", function () {
+  "use strict";
 
   it ('should have a title', function () {
-    Sfty.Config.should.have.property('title');    
+    Sfty.Config.should.have.property('title');
   });
 
   it ('should have fields', function () {
-    Sfty.Config.should.have.property('fields');    
+    Sfty.Config.should.have.property('fields');
   }); 
 
   it ('should have fieldList', function () {
-    Sfty.Config.should.have.property('fields');    
+    Sfty.Config.should.have.property('fields');
   }); 
 
   it ('should have fieldGroups', function () {
-    Sfty.Config.should.have.property('fieldGroups');    
+    Sfty.Config.should.have.property('fieldGroups');
   });
 
   it ('should have a groupOrder', function () {
-    Sfty.Config.should.have.property('groupOrder');    
+    Sfty.Config.should.have.property('groupOrder');
   });
 
   describe("graph field", function () {
 
     it('should have bar, area, pie, bell', function (done) {
       Sfty.Config.init().then(function () {
+
         var graphs = Sfty.Config.fields['graph'];
         
         assert(graphs.has('bar'), 'has bar');
@@ -32,6 +34,7 @@ describe("Config", function () {
         assert(graphs.has('bell'), 'has bell');
         
         done();
+
       }, function (err) {
 
         done(err);

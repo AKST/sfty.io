@@ -3,7 +3,8 @@ Sfty.Err.Todo = (function () {
     this.msg = msg;
   };
 
-  ErrorType.prototype = Error;
+  ErrorType.prototype = new Error();
+  ErrorType.prototype.constructor = ErrorType;
 
   return ErrorType;
 }());

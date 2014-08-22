@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  "use strict";
   
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -7,10 +8,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-mocha-test');
 
 
@@ -24,6 +24,8 @@ module.exports = function(grunt) {
 
     proj: {
       browserJs: {
+        es5Polyfill: 'assets/vendor/es5-shim/es5-shim.min.js',
+        es6PromisePolyfill: 'assets/vendor/es6-promise/promise.js',
         main: 'src/client/index.js',
         prepareTests: 'test/client/init.jsx',
         src: [
@@ -36,6 +38,7 @@ module.exports = function(grunt) {
         testSrc: 'test/client/{,*/}*.js',
         testRun: 'test/client/run.js',
         libraries: [
+          'assets/vendor/es6-promise/promise.js',
           'assets/vendor/jquery/dist/jquery.min.js',
           'assets/vendor/sifter/sifter.min.js',
           'assets/vendor/microplugin/src/microplugin.js',
@@ -49,7 +52,6 @@ module.exports = function(grunt) {
 
           'node_modules/mori/mori.js',
           'node_modules/async/lib/async.js',
-          'node_modules/es6-promise/promise.js',
         ],
         testLibraries: [
           'assets/vendor/mocha/mocha.js',
@@ -119,8 +121,7 @@ module.exports = function(grunt) {
           'uglify:dev',
           'concat:dev',
           'mochaTest',
-          'connect',
-          'mocha',
+          'mocha_phantomjs',
         ]
       },
       sass: {
@@ -147,13 +148,11 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'jshint',
-          //'clean:js',
           'react',
           'uglify:dev',
           'concat:dev',
           'clean:after',
-          'connect',
-          'mocha',
+          'mocha_phantomjs',
         ]
       }
     },
@@ -237,19 +236,26 @@ module.exports = function(grunt) {
       dev: {
         files: { 
           '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.es6PromisePolyfill %>',
             '<%= proj.browserJs.libraries %>',
             '<%= proj.browserJs.srcFiles %>'
           ],
           '<%= proj.browserJs.testOut %>': [
+            '<%= proj.browserJs.es6PromisePolyfill %>',
+            '<%= proj.browserJs.es5Polyfill %>',
             '<%= proj.browserJs.libraries %>',
-            '<%= proj.browserJs.testFiles %>'
+            '<%= proj.browserJs.testOut %>'
           ],
-          '<%= proj.browserJs.noMainOut %>': ['<%= proj.browserJs.noMain %>'],
+          '<%= proj.browserJs.noMainOut %>': [
+            '<%= proj.browserJs.es6PromisePolyfill %>',
+            '<%= proj.browserJs.noMain %>'
+          ],
         }
       },
       production: {
-        files: { 
+        files: {
           '<%= proj.browserJs.srcOut %>': [
+            '<%= proj.browserJs.es6PromisePolyfill %>',
             '<%= proj.browserJs.libraries %>',
             '<%= proj.browserJs.srcFiles %>'
           ],
@@ -264,34 +270,25 @@ module.exports = function(grunt) {
     mochaTest: {
       server: {
         src: 'test/server/{,*/}*.js',
-      },
-    },
-
-    /**
-     * Used to run
-     */
-    connect: {
-      test: {
         options: {
-          base: 'public',
-          timeout: 10000,
-          port: 8080,
-          reporter: 'Nyan'
-        }
-      }
+          reporter: 'spec'
+        },
+      },
     },
 
     /**
      * Client Tests
      * https://github.com/kmiyashiro/grunt-mocha
      */
-    mocha: {
-      client: {
-        options: { 
-          urls: ['http://0.0.0.0:8080/test.html'],
-          log: true, 
+    mocha_phantomjs: {
+      all: {
+        options: {
+          urls: [
+            'http://localhost:3000/test.html',
+          ],
+          reporter: 'spec'
         }
-      },
+      }
     },
 
     /**
@@ -304,7 +301,19 @@ module.exports = function(grunt) {
           expand: true,
           cwd: '<%= proj.fonts %>',
           src: '*',
+          dest: 'public/css/bootstrap/'
+        }, {
+          flatten: true,
+          expand: true,
+          cwd: '<%= proj.fonts %>',
+          src: '*',
           dest: 'public/fonts/bootstrap/'
+        }, {
+          flatten: true,
+          expand: true,
+          cwd: 'assets/vendor/mocha/',
+          src: 'mocha.css',
+          dest: 'public/css/'
         }]
       }
     },
@@ -344,7 +353,10 @@ module.exports = function(grunt) {
      * removes files before and after builds
      */
     clean: {
-      after: 'temp'
+      after: 'temp',
+      fonts: 'public/fonts',
+      css: 'public/css',
+      js: 'public/js'
     }
 
   });
@@ -363,8 +375,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'jshint',
     'mochaTest',
-    'connect',
-    'mocha',
+    'mocha_phantomjs',
   ]);
 
   /**
@@ -375,9 +386,20 @@ module.exports = function(grunt) {
     'sass',
     'cssmin:production',
     'react',
-    'uglify',
-    'concat',
-    'clean:after'
+    'uglify:production',
+    'concat:production',
+  ]);
+
+  /**
+   * will build project once off
+   */
+  grunt.registerTask('travis', [
+    'copy',
+    'sass',
+    'cssmin:dev',
+    'react',
+    'uglify:dev',
+    'concat:dev',
   ]);
 
   grunt.registerTask('heroku', 'build');
