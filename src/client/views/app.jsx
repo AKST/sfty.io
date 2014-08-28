@@ -16,8 +16,8 @@ Sfty.View.App = React.createClass({
   },
 
   getInitialState: function () {
-    return { 
-      building: true,
+    return {
+      data: null,
       graph: null,
       comparison: null,
       constraints: {},
@@ -91,7 +91,7 @@ Sfty.View.App = React.createClass({
    * to the query.
    */
   callback: function (data) {
-
+    this.setState({ data: data });
   },
 
   /**
@@ -107,16 +107,16 @@ Sfty.View.App = React.createClass({
       var Previewer = Sfty.View.QueryPreviewer;
       var GoButton = Sfty.View.GoButton;
 
-      var allowConstraints = !!(this.state.graph && this.state.comparison);
-
-      console.log(this.state);
+      var comparison = !!(this.state.graph && this.state.comparison) ?
+        this.state.comparison :
+        null;
 
       return (
         <section>
 
           <section className="row">
             <Builder className="col-md-6 col-sm-6"
-                     selectConstraints={allowConstraints}
+                     comparison={comparison}
                      updateGraph={this.updateField('graph')}
                      addConstraint={this.addConstraint}
                      updateComparison={this.updateField('comparison')}/>
@@ -127,8 +127,9 @@ Sfty.View.App = React.createClass({
             }, this.state))}
           </section>
 
-          <GoButton 
-              data={this.state.constraints} 
+          <GoButton
+              graph={this.state.graph}
+              constraints={this.state.constraints}
               comparison={this.state.comparison}
               endpoint="/api/aggregate"
               callback={this.callback} />
@@ -137,14 +138,23 @@ Sfty.View.App = React.createClass({
     };
 
     var visualiseView = function () {
-      return <div>Graph?</div>;
+      return Sfty.View.Graphizer({
+        data: this.state.data
+      });
     };
 
     return (
       <section id="outer-app">
         <section id="app">
           <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
-          {this.props.ready ? (this.state.building ? buildView.call(this) : visualiseView.call(this)) : null}
+          {this.props.ready ?
+            // once initialised application
+            (!!this.state.data ?
+              // once data has been loaded from server
+              visualiseView.call(this) :
+              // while forming query
+              buildView.call(this)) :
+            null}
         </section>
       </section>
     );

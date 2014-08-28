@@ -13,24 +13,11 @@ Sfty.View.QueryBuilder = React.createClass({
 
   getDefaultProps: function () {
     return {
-      selectConstraints: false,
+      comparison: null,
       onChange: function () {},
       updateComparison: function () {},
       updateGraph: function () {},
       addConstraint: function () {},
-    };
-  },
-
-
-  /**
-   * constraints: a dictionary object that has keys
-   *   for the constraint parameter & the values as the
-   *   value of parameter.
-   */
-  getInitialState: function () {
-    return { 
-      comparison: null,
-      graph: null
     };
   },
 
@@ -58,9 +45,9 @@ Sfty.View.QueryBuilder = React.createClass({
           </section>
         </section>
 
-        {this.props.selectConstraints ? Sfty.View.ConstraintSelector({
+        {this.props.comparison ? Sfty.View.ConstraintSelector({
           update: this.props.addConstraint,
-          comparison: this.state.comparison
+          comparison: this.props.comparison
         }) : null}
         
       </section>
