@@ -20,7 +20,7 @@
 		var div = document.getElementById("aggregateLegend");
 		
 		var init = Sfty.Config.init().then(function () {
-			$.getJSON("http://localhost:3000/api/aggregate?comparison=cause", function(data){
+			$.getJSON("http://localhost:3000/api/aggregate?comparison=cause&location=46&occupation=31", function(data){
 
 				var colors = ["#FF5A5E", "#FFC870", "#5AD3D1", "#CD5C5C", "#BDB76B", "#6B8E23", "#008000", "#008B8B", "#6A5ACD"];
 
