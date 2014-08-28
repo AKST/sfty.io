@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Pie Chart example</title>
+		<script src="../js/no_main.js"></script>
+		<script src="Chart.js"></script>
+		<script src="jquery-2.1.1.min.js"></script>
+	</head>
+	<body>
+		<!-- Instantiate a canvas first -->
+		<div>
+			<canvas id="aggregateChart" width="500" height="500"></canvas>
+			<div id="aggregateLegend"><h1>Title</h1></div>
+		</div>
+		
+
+		<script>
+		//Get the context of the canvas element we want to select
+		var ctx = document.getElementById("aggregateChart").getContext("2d");
+		var div = document.getElementById("aggregateLegend");
+		
+		var init = Sfty.Config.init().then(function () {
+			$.getJSON("http://localhost:3000/api/aggregate?comparison=cause", function(data){
+
+				var colors = ["#FF5A5E", "#FFC870", "#5AD3D1", "#CD5C5C", "#BDB76B", "#6B8E23", "#008000", "#008B8B", "#6A5ACD"];
+
+
+				var mydata = data.map(function (x, i){
+					return {
+						value: x.total,
+						color: colors[i % colors.length],
+						highlight: "#DDA0DD" ,
+						label: Sfty.Config.lookupId(
+						{
+							id: x._id,
+							category: "cause",
+							property: "name"
+						})
+					}
+				});
+
+				for (x in mydata){
+					div.innerHTML = div.innerHTML + mydata[x].label + "<br>";
+				}
+
+				var options = {
+				    //Boolean - Whether we should show a stroke on each segment
+				    segmentShowStroke : true,
+
+				    //String - The colour of each segment stroke
+				    segmentStrokeColor : "white",
+
+				    //Number - The width of each segment stroke
+				    segmentStrokeWidth : 2,
+
+				    //Number - The percentage of the chart that we cut out of the middle
+				    percentageInnerCutout : 50, // This is 0 for Pie charts
+
+				    //Number - Amount of animation steps
+				    animationSteps : 100,
+
+				    //String - Animation easing effect
+				    animationEasing : "easeOutBounce",
+
+				    //Boolean - Whether we animate the rotation of the Doughnut
+				    animateRotate : true,
+
+				    //Boolean - Whether we animate scaling the Doughnut from the centre
+				    animateScale : false,
+
+				    // Number - Tooltip label font size in pixels
+    				tooltipFontSize: 11,
+
+				    //String - A legend template
+				    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+				}
+
+
+				/*
+				For a pie chart, you must pass in an array of objects with a value and a color property. The value attribute should be a number, Chart.js will total all of the numbers and calculate the relative proportion of each. The color attribute should be a string. Similar to CSS, for this string you can use HEX notation, RGB, RGBA or HSL.*/
+
+				// The type of char you want to draw. This case is a pie chart
+				var myPieChart = new Chart(ctx).Pie(mydata, options);
+			});
+		});
+
+		</script>
+	</body>
+</html>

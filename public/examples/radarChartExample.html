@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Radar Chart example</title>
+		<script src="../js/no_main.js"></script>
+		<script src="Chart.js"></script>
+		<script src="jquery-2.1.1.min.js"></script>
+	</head>
+	<body>
+		<!-- Instantiate a canvas first -->
+		<div>
+			<canvas id="aggregateChart" width="800" height="800"></canvas>
+			<div id="aggregateLegend"><h1>Title</h1></div>
+		</div>
+		
+
+		<script>
+		//Get the context of the canvas element we want to select
+		var ctx = document.getElementById("aggregateChart").getContext("2d");
+		var div = document.getElementById("aggregateLegend");
+		
+		var init = Sfty.Config.init().then(function () {
+			$.getJSON("http://localhost:3000/api/aggregate?comparison=cause", function(data){
+
+				var colors = ["#FF5A5E", "#FFC870", "#5AD3D1", "#CD5C5C", "#BDB76B", "#6B8E23", "#008000", "#008B8B", "#6A5ACD"];
+
+				var mydata = _.shuffle(data.map(function (x, i){
+					return {
+						value: x.total,
+						label: Sfty.Config.lookupId(
+						{
+							id: x._id,
+							category: "cause",
+							property: "name"
+						})
+					}
+				}));
+
+				//Using _.pluck from Underscore.js
+
+				var radarlabels = _.pluck(mydata, 'label');
+				var radardatavalues = _.pluck(mydata, 'value');
+
+				var radarChart = {
+				    labels: radarlabels,
+				    datasets: [
+				        {
+				            label: "Dataset",
+				            fillColor: "blue",
+				            strokeColor: "rgba(220,220,220,1)",
+				            pointColor: "rgba(220,220,220,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(220,220,220,1)",
+				            data: radardatavalues
+				        }
+				    ]
+				};
+
+				
+				var options = {
+					//Boolean - Whether to show lines for each scale point
+					    scaleShowLine : true,
+
+					    //Boolean - Whether we show the angle lines out of the radar
+					    angleShowLineOut : true,
+
+					    //Boolean - Whether to show labels on the scale
+					    scaleShowLabels : false,
+
+					    // Boolean - Whether the scale should begin at zero
+					    scaleBeginAtZero : true,
+
+					    //String - Colour of the angle line
+					    angleLineColor : "rgba(0,0,0,.1)",
+
+					    //Number - Pixel width of the angle line
+					    angleLineWidth : 1,
+
+					    //String - Point label font declaration
+					    pointLabelFontFamily : "'Arial'",
+
+					    //String - Point label font weight
+					    pointLabelFontStyle : "normal",
+
+					    //Number - Point label font size in pixels
+					    pointLabelFontSize : 10,
+
+					    //String - Point label font colour
+					    pointLabelFontColor : "#666",
+
+					    //Boolean - Whether to show a dot for each point
+					    pointDot : true,
+
+					    //Number - Radius of each point dot in pixels
+					    pointDotRadius : 3,
+
+					    //Number - Pixel width of point dot stroke
+					    pointDotStrokeWidth : 1,
+
+					    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+					    pointHitDetectionRadius : 20,
+
+					    //Boolean - Whether to show a stroke for datasets
+					    datasetStroke : true,
+
+					    //Number - Pixel width of dataset stroke
+					    datasetStrokeWidth : 2,
+
+					    //Boolean - Whether to fill the dataset with a colour
+					    datasetFill : true,
+
+					    //String - A legend template
+					    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+				}
+
+				/*
+				For a pie chart, you must pass in an array of objects with a value and a color property. The value attribute should be a number, Chart.js will total all of the numbers and calculate the relative proportion of each. The color attribute should be a string. Similar to CSS, for this string you can use HEX notation, RGB, RGBA or HSL.
+				
+				The type of chart you want to draw. This case it is a bar chart
+				*/
+				var myBarChart = new Chart(ctx).Radar(radarChart, options);
+
+			});
+		});
+
+		</script>
+	</body>
+</html>
