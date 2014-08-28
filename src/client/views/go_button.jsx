@@ -45,6 +45,8 @@ Sfty.View.GoButton = React.createClass({
     // build a es6 promise from an jquery
     // deffered ajax request
 
+    if (!this.props.comparison) { return; }
+
     var promise = Promise.resolve($.ajax({
       url: this.getUrl(),
       dataType: 'json',

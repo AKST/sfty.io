@@ -87,7 +87,7 @@ exportObj._project = project = function (httpQuery, comparison) {
 // Applies http query arguments to the db query
 //
 exportObj._constrain = constrain = function (httpQuery) {
-  var val, application, type, out, path;
+  var val, application, type, path;
 
   var outObject = {};
 
@@ -98,8 +98,6 @@ exportObj._constrain = constrain = function (httpQuery) {
     val = httpQuery[key];
     application = applications[key];
     type = application.type;
-
-    console.log(out);
 
     if (type === 'in') {
       objectUtil.writeP(outObject, key, {

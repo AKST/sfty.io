@@ -32,6 +32,15 @@ Sfty.View.Mixin.Selectize = {
 };
 
 
+/**
+ * Used represent a dropdown selection component
+ *
+ * Has properties
+ *   title [String]: the labels name
+ *   data  [Object Array]: a list of objects to represent the options
+ *     name [String]: what the user sees as the value
+ *     id   [String]: the internal value
+ */
 Sfty.View.Select =  React.createClass({
 
   mixins: [Sfty.View.Mixin.Selectize],

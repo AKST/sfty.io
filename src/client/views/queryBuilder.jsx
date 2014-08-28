@@ -4,13 +4,20 @@
 
 /**
  * interface for builiding query
+ *
+ * Acts as a proxy between the fields, the main application
+ * state, & the selector fields.
  */
 Sfty.View.QueryBuilder = React.createClass({
 
 
   getDefaultProps: function () {
     return {
+      selectConstraints: false,
       onChange: function () {},
+      updateComparison: function () {},
+      updateGraph: function () {},
+      addConstraint: function () {},
     };
   },
 
@@ -23,50 +30,13 @@ Sfty.View.QueryBuilder = React.createClass({
   getInitialState: function () {
     return { 
       comparison: null,
-      graph: null,
-      constraints: {},
+      graph: null
     };
-  },
-
-
-  update: function (field) {
-    return function (value) {
-      this.__update(field, value);
-    }.bind(this);
-  },
-
-
-  addConstraint: function (options) {
-    var constraints = _.extend({}, this.state.constraints); 
-    var key = options.catergory;
-
-    if (options.additive && constraints[key] !== undefined) {
-      var combined = constraints[key].concat(options.__value);
-      constraints[key] = _.uniq(combined);
-    }
-    else {
-      constraints[key] = options.__value;
-    }
-    this.__update('constraints', constraints);
-  },
-
-
-  __update: function (field, value) {
-    var update = {};
-    update[field] = value;
-
-    this.setState(update);
-
-    var newState = _.extend({}, this.state);
-    newState[field] = value;
-
-    this.props.onChange(newState);
   },
 
 
   render: function () {
     var Header = Sfty.View.Type.UnderlinedHeader;
-    var visualChoosen = Boolean(this.state.graph && this.state.comparison);
 
     return (
       <section className={this.props.className}>
@@ -75,21 +45,21 @@ Sfty.View.QueryBuilder = React.createClass({
           <section className="col-md-6">
 
             {Sfty.View.Select(_.extend({ 
-              onChange: this.update('graph') 
+              onChange: this.props.updateGraph
             }, Sfty.Config.fields['graph']))}
           
           </section>
           <section className="col-md-6">
             
             {Sfty.View.Select(_.extend({ 
-              onChange: this.update('comparison') 
+              onChange: this.props.updateComparison
             }, Sfty.Config.fields['comparison']))}
           
           </section>
         </section>
 
-        {visualChoosen ? Sfty.View.ConstraintSelector({
-          update: this.addConstraint, 
+        {this.props.selectConstraints ? Sfty.View.ConstraintSelector({
+          update: this.props.addConstraint,
           comparison: this.state.comparison
         }) : null}
         
