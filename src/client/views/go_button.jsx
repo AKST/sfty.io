@@ -6,7 +6,7 @@ Sfty.View.GoButton = React.createClass({
   
   getDefaultProps: function () {
     return {
-      data: {},
+      constraints: {},
       endpoint: '/',
       callback: function () {},
       comparison: null,
@@ -33,7 +33,7 @@ Sfty.View.GoButton = React.createClass({
       endpoint: this.props.endpoint, 
       params: _.extend({
         comparison: this.props.comparison 
-      }, this.props.data),
+      }, this.props.constraints),
     });
   },
 
