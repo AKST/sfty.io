@@ -22,48 +22,85 @@ Sfty.View.QueryPreviewer = React.createClass({
   },
 
   render: function () {
-    var Header, lookup, makeList, listStyle, header;
-   
-    Header = Sfty.View.Type.UnderlinedHeader;
-    lookup = Sfty.Config.lookupId.bind(Sfty.Config);
+    var Header = Sfty.View.Type.UnderlinedHeader;
+    var lookup = Sfty.Config.lookupId.bind(Sfty.Config);
 
-    makeList = Sfty.View.mkList;
-    header = Sfty.View.header;
+    var makeList = Sfty.View.mkList;
+    var header = Sfty.View.header;
 
-    listStyle = {
+    var outtaListStyle = {
       'list-style': 'none',
       'padding-left': 0 
     };
 
+    var innerListStyle = {
+      'list-style': 'none',
+      'padding-left': '1.5em'
+    };
+
+    //
+    // 
+    //
+    var data = _.pairs(this.props.constraints).map(function (pair) {
+      var constraint = pair[0];
+
+      var elements = pair[1].map(function (id) {
+        var callback = this.props.removeConstraint.bind(null, constraint, id);
+        var text = lookup({
+          category: constraint,
+          property: "name",
+          id: id 
+        });
+        return { 
+          text: text, 
+          callback: callback 
+        };
+      }, this);
+
+      return {
+        elements: elements,
+        constraintT: Sfty.Config.fields[constraint].title,
+        constraintK: constraint+"_contraints",
+      };
+    }, this);
+
+    //
+    // Map data out
+    //
     return (
-      <section className={this.props.className}>
+      <section id="query-preview" className={this.props.className}>
         <Header size="3" text="Query State"/> 
-        {makeList(_.pairs(this.props.constraints), function (pair) {
+
+        {/* constraint category */}
+
+        {makeList(data, function (cs) {
           return (
-            <section key={pair[0] + "_contraints"}>
-              {header(Sfty.Config.fields[pair[0]].title, 4)}
-              {makeList(pair[1], function (id) {
-                var text = lookup({
-                  category: pair[0],
-                  property: "name",
-                  id: id 
-                });
-                var callback = this.props.removeConstraint.bind(null, pair[0], id);
-                return React.DOM.span({ key: pair[0]+"_contraints_"+id }, [
+            <section key={cs.constraintK} className='outer-list-elem'>
+              
+              {header(cs.constraintT, 4)}
+
+              {/* this is the elements for the constraint */}
+
+              {makeList(cs.elements, function (c){
+                return React.DOM.span({ 
+                  className: 'inner-list-elem',
+                  key: cs.constraintK+"_"+c.id 
+                }, [
                   React.DOM.span({
                     className: [
                       "glyphicon",
                       "glyphicon-remove",
                       "remove-constraint-button",
                     ].join(' '),
-                    onClick: callback
+                    onClick: c.callback
                   }),
-                  text,
+                  c.text,
                 ]);
-              }, this, listStyle)}
+              }, null, innerListStyle)}
+
             </section>
           );
-        }, this, listStyle)}
+        }, null, outtaListStyle)}
       </section>
     );
   },

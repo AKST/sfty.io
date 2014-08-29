@@ -63,7 +63,6 @@ Sfty.View.App = React.createClass({
     }
 
     this.setState({ constraints: constraints });
-    console.log(this.state);
   },
 
   /**
@@ -139,7 +138,8 @@ Sfty.View.App = React.createClass({
 
     var visualiseView = function () {
       return Sfty.View.Graphizer({
-        data: this.state.data
+        data: this.state.data,
+        type: this.state.graph,
       });
     };
 

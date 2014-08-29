@@ -68,10 +68,11 @@ Sfty.Config = (function () {
         title: 'Visualisation Type',
         type: 'select',
         data: [
-          { id: 'pie', name: 'donut chart' },
-          { id: 'bar', name: 'bar graph' },
+          { id: 'pie',  name: 'donut chart'},
+          { id: 'bar',  name: 'bar graph'  },
           { id: 'area', name: 'area graph' },
           { id: 'bell', name: 'bell curve' },
+          { id: 'word', name: 'word cloud' },
         ],
       },
 
