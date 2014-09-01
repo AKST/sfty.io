@@ -34,8 +34,18 @@ Sfty.View.Graphizer = (function () {
     },
 
     render: function () {
+      var Header = Sfty.View.Type.UnderlinedHeader;
       return (
-        <canvas id="aggregateChart" width="500" height="500"></canvas>
+        <section className="row">
+          <section className="col-md-6 col-sm-6">
+            <Header size="3" text="TA DAAARR"/> 
+            <canvas id="aggregateChart" width="500" height="500"></canvas>
+          </section>
+          <section className="col-md-6 col-sm-6">
+            <Header size="3" text="Legend"/> 
+            <p>Preview</p>
+          </section>
+        </section>
       );
     }
 
