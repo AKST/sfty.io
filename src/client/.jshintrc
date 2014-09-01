@@ -19,7 +19,7 @@
     "async",
     "$",
     "_",
-
+    "Chart",
     "alert",
     "window",
     "console"
