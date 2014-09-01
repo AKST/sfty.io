@@ -76,6 +76,17 @@ Sfty.View.App = React.createClass({
     var key = options.catergory;
 
     if (options.additive && constraints[key] !== undefined) {
+      var duplicate = constraints[key].some(function (a) {
+        return options.__value.some(function (b) {
+          return a === b;
+        });
+      });
+
+      //
+      // skips duplicates to prevent a crash.
+      //
+      if (duplicate) { return; }
+      
       var combined = constraints[key].concat(options.__value);
       constraints[key] = _.uniq(combined);
     }
