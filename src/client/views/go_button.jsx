@@ -70,3 +70,20 @@ Sfty.View.GoButton = React.createClass({
   },
 
 });
+
+
+Sfty.View.GoBackButton = React.createClass({
+
+  propTypes: {
+    goBack: React.PropTypes.func,
+  },
+
+  render: function () {
+    return (
+      <a className="lanuch-query" onClick={this.props.goBack}>
+        Revise Query
+      </a>
+    );
+  }
+
+});
