@@ -251,6 +251,8 @@ Sfty.Config = (function () {
       var id       = config.id;
       var property = config.property;
 
+      console.log(_);
+
       return _.find(this.fields[category].data, function (e) {
         return e.id === id;
       })[property];
