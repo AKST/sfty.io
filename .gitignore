@@ -4,6 +4,7 @@ public/temp
 public/fonts/bootstrap
 temp
 assets/vendor
+npm-debug.log
 node_modules
 .sass-cache
 Chart.js-master
