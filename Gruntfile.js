@@ -42,6 +42,7 @@ module.exports = function(grunt) {
           'assets/vendor/jquery/dist/jquery.min.js',
           'assets/vendor/sifter/sifter.min.js',
           'assets/vendor/microplugin/src/microplugin.js',
+          'assets/vendor/chartjs/Chart.min.js',
           'assets/vendor/selectize/dist/js/selectize.min.js',
 
           'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.min.js',

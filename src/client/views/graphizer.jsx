@@ -5,16 +5,35 @@
 Sfty.View.Graphizer = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.object,
+    data: React.PropTypes.arrayOf(React.PropTypes.shape({
+      _id: React.PropTypes.number,
+      total: React.PropTypes.number
+    })).isRequired,
+    type: React.PropTypes.oneOf([
+      'bar', 'pie', 'word',
+      'bell', 'area',
+    ]).isRequired,
   },
+
+  getDefaultProps: function(){
+  	return{
+  		type: null;
+  		data: []
+  	};
+  },
+
+  componentDidMount: function(){
+  	return{
+  		switch(this.getDefaultProps.type){
+
+  		}
+  	}
+  }
 
   render: function () {
-
-    console.log(this.props.data);
-
     return (
-      <div>Graph?</div>
+      <canvas id="aggregateChart" width="500" height="500"></canvas>
     );
-  },
+  }
 
 });
