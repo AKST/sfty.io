@@ -9,6 +9,7 @@ Sfty.View.QueryPreviewer = React.createClass({
 
   propTypes: {
     removeConstraint: React.PropTypes.func,
+    constraints: React.PropTypes.object,
   },
 
   getDefaultProps: function () {
@@ -21,51 +22,84 @@ Sfty.View.QueryPreviewer = React.createClass({
     };
   },
 
-  render: function () {
-    var Header, lookup, makeList, listStyle, header;
-   
-    Header = Sfty.View.Type.UnderlinedHeader;
-    lookup = Sfty.Config.lookupId.bind(Sfty.Config);
+  /**
+   * builds callback for
+   */
+  __callbackFor: function (category, id) {
+    var callback;
+    callback = this.props.removeConstraint;
+    callback = callback.bind(null, category, id);
+    return callback;
+  },
 
-    makeList = Sfty.View.mkList;
-    header = Sfty.View.header;
+  //
+  // Generates a data structure like so, built off
+  // the components properties.
+  //
+  __generatePayload: function () {
+    return _.pairs(this.props.constraints).map(function (pair) {
+      var categoryName = pair[0];
+      var elements = pair[1].map(function (id) {
+        return {
+          text: Sfty.Config.lookupId({
+            category: categoryName,
+            property: "name",
+            id: id
+          }),
+          callback: this.__callbackFor(categoryName, id)
+        };
+      }, this);
 
-    listStyle = {
-      'list-style': 'none',
-      'padding-left': 0 
-    };
+      return {
+        elements: elements,
+        constraintT: Sfty.Config.fields[categoryName].title,
+        constraintK: categoryName+"_contraints",
+      };
+    }, this);
+  },
 
-    return (
-      <section className={this.props.className}>
-        <Header size="3" text="Query State"/> 
-        {makeList(_.pairs(this.props.constraints), function (pair) {
-          return (
-            <section key={pair[0] + "_contraints"}>
-              {header(Sfty.Config.fields[pair[0]].title, 4)}
-              {makeList(pair[1], function (id) {
-                var text = lookup({
-                  category: pair[0],
-                  property: "name",
-                  id: id 
-                });
-                var callback = this.props.removeConstraint.bind(null, pair[0], id);
-                return React.DOM.span({ key: pair[0]+"_contraints_"+id }, [
-                  React.DOM.span({
-                    className: [
-                      "glyphicon",
-                      "glyphicon-remove",
-                      "remove-constraint-button",
-                    ].join(' '),
-                    onClick: callback
-                  }),
-                  text,
-                ]);
-              }, this, listStyle)}
-            </section>
-          );
-        }, this, listStyle)}
-      </section>
+  //
+  // Constraint Category Items
+  //
+  renderCategories: function (elems) {
+    var outerKey = elems.constraintK;
+
+    return React.DOM.li({ className: "preview-category", key: outerKey },
+      Sfty.View.header(elems.constraintT, 4),
+      React.DOM.ul({ className: "pv-category-constraints" },
+        elems.elements.map(this.renderConstraint.bind(this, outerKey))
+      )
     );
   },
+
+
+  //
+  // Constraint Item
+  //
+  renderConstraint: function (outerKey, constraint) {
+    var iconClass = "glyphicon glyphicon-remove remove-constraint-button";
+    var innerKey = outerKey + "_" + constraint.id;
+
+    var icon = React.DOM.span({
+      className: iconClass,
+      onClick: constraint.callback
+    });
+
+    return React.DOM.li({ className: "pv-constraint", key: innerKey },
+      icon,
+      constraint.text
+    );
+  },
+
+  render: function () {
+    var data = this.__generatePayload();
+    var categories = data.map(this.renderCategories);
+
+    return React.DOM.section({ id: "pv-query", className: this.props.className },
+      Sfty.View.Type.UnderlinedHeader({ size: 3, text: "Query State" }),
+      React.DOM.ul({ className: "pv-categories" }, categories)
+    );
+  },
+
 
 });

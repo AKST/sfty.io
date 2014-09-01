@@ -21,9 +21,26 @@ Sfty.View.QueryBuilder = React.createClass({
     };
   },
 
+  renderConstraintSelector: function () {
+    var constraintOptions = {
+      update: this.props.addConstraint,
+      comparison: this.props.comparison
+    };
+
+    if (!!this.props.comparison) {
+      return Sfty.View.ConstraintSelector(constraintOptions);
+    }
+    else {
+      return null;
+    }
+  },
 
   render: function () {
     var Header = Sfty.View.Type.UnderlinedHeader;
+    var Select = Sfty.View.Select;
+
+    var graph = Sfty.Config.fields.graph;
+    var comparison = Sfty.Config.fields.comparison;
 
     return (
       <section className={this.props.className}>
@@ -31,24 +48,21 @@ Sfty.View.QueryBuilder = React.createClass({
         <section className="row">
           <section className="col-md-6">
 
-            {Sfty.View.Select(_.extend({ 
-              onChange: this.props.updateGraph
-            }, Sfty.Config.fields['graph']))}
+            <Select title={graph.title}
+                    data={graph.data}
+                    onChange={this.props.updateGraph}/>
           
           </section>
           <section className="col-md-6">
-            
-            {Sfty.View.Select(_.extend({ 
-              onChange: this.props.updateComparison
-            }, Sfty.Config.fields['comparison']))}
+
+            <Select title={comparison.title}
+                    data={comparison.data}
+                    onChange={this.props.updateComparison}/>
           
           </section>
         </section>
 
-        {this.props.comparison ? Sfty.View.ConstraintSelector({
-          update: this.props.addConstraint,
-          comparison: this.props.comparison
-        }) : null}
+         {this.renderConstraintSelector()}
         
       </section>
     );

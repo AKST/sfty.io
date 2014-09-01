@@ -16,19 +16,17 @@ Sfty.View.Graphizer = React.createClass({
   },
 
   getDefaultProps: function(){
-  	return{
-  		type: null;
-  		data: []
-  	};
+    return{
+      type: null;
+      data: [],
+    };
   },
 
   componentDidMount: function(){
-  	return{
-  		switch(this.getDefaultProps.type){
+    switch (this.getDefaultProps.type) {
 
-  		}
-  	}
-  }
+    }
+  },
 
   render: function () {
     return (

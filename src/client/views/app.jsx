@@ -63,7 +63,6 @@ Sfty.View.App = React.createClass({
     }
 
     this.setState({ constraints: constraints });
-    console.log(this.state);
   },
 
   /**
@@ -77,6 +76,17 @@ Sfty.View.App = React.createClass({
     var key = options.catergory;
 
     if (options.additive && constraints[key] !== undefined) {
+      var duplicate = constraints[key].some(function (a) {
+        return options.__value.some(function (b) {
+          return a === b;
+        });
+      });
+
+      //
+      // skips duplicates to prevent a crash.
+      //
+      if (duplicate) { return; }
+      
       var combined = constraints[key].concat(options.__value);
       constraints[key] = _.uniq(combined);
     }
@@ -93,68 +103,67 @@ Sfty.View.App = React.createClass({
   callback: function (data) {
     this.setState({ data: data });
   },
+ 
+  /**
+   * Query building view, this is only built once the
+   * propety `ready` is true. getValue content is blank
+   */
+  renderQueryView: function () {
+    var comparison = !!(this.state.graph && this.state.comparison) ?
+      this.state.comparison :
+      null;
+
+    return React.DOM.section({},
+      React.DOM.section({ className: "row" },
+        Sfty.View.QueryBuilder({
+          className: "col-md-6 col-sm-6",
+          comparison: comparison,
+          updateGraph: this.updateField('graph'),
+          updateComparison: this.updateField('comparison'),
+          addConstraint: this.addConstraint
+        }),
+        Sfty.View.QueryPreviewer({
+          className: "col-md-6 col-sm-6",
+          removeConstraint: this.removeConstraint,
+          constraints: this.state.constraints
+        })
+      ),
+      Sfty.View.GoButton({
+        graph: this.state.graph,
+        constraints: this.state.constraints,
+        comparison: this.state.comparison,
+        endpoint: "/api/aggregate",
+        callback: this.callback
+      })
+    );
+  },
+
+
+  renderVisualisation: function () {
+    return Sfty.View.Graphizer({
+      data: this.state.data,
+      type: this.state.graph,
+    });
+  },
 
   /**
    * Builds main view
    */
   render: function () {
-    /**
-     * Query building view, this is only built once the 
-     * propety `ready` is true. getValue content is blank
-     */
-    var buildView = function () {
-      var Builder = Sfty.View.QueryBuilder;
-      var Previewer = Sfty.View.QueryPreviewer;
-      var GoButton = Sfty.View.GoButton;
+    var mainView =
+      !!this.state.data ?
 
-      var comparison = !!(this.state.graph && this.state.comparison) ?
-        this.state.comparison :
-        null;
+        // once data has been loaded from server
+        this.renderVisualisation :
 
-      return (
-        <section>
-
-          <section className="row">
-            <Builder className="col-md-6 col-sm-6"
-                     comparison={comparison}
-                     updateGraph={this.updateField('graph')}
-                     addConstraint={this.addConstraint}
-                     updateComparison={this.updateField('comparison')}/>
-
-            {Previewer(_.extend({ 
-              className: "col-md-6 col-sm-6",
-              removeConstraint: this.removeConstraint
-            }, this.state))}
-          </section>
-
-          <GoButton
-              graph={this.state.graph}
-              constraints={this.state.constraints}
-              comparison={this.state.comparison}
-              endpoint="/api/aggregate"
-              callback={this.callback} />
-        </section>
-      );
-    };
-
-    var visualiseView = function () {
-      return Sfty.View.Graphizer({
-        data: this.state.data
-      });
-    };
+        // while forming query
+        this.renderQueryView ;
 
     return (
       <section id="outer-app">
         <section id="app">
           <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
-          {this.props.ready ?
-            // once initialised application
-            (!!this.state.data ?
-              // once data has been loaded from server
-              visualiseView.call(this) :
-              // while forming query
-              buildView.call(this)) :
-            null}
+          {this.props.ready ? mainView() : null}
         </section>
       </section>
     );
