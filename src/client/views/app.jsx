@@ -108,6 +108,7 @@ Sfty.View.App = React.createClass({
           className: "col-md-6 col-sm-6",
           comparison: comparison,
           updateGraph: this.updateField('graph'),
+          updateComparison: this.updateField('comparison'),
           addConstraint: this.addConstraint
         }),
         Sfty.View.QueryPreviewer({
