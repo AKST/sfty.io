@@ -24,6 +24,14 @@ Sfty.View.App = React.createClass({
     };
   },
 
+  gotoBuilderView: function () {
+    this.setState({ data: null });
+  },
+
+  /**
+   * Prefferably pass back with the key defined,
+   * and the first parameter passed in.
+   */
   updateField: function (key) {
     return function (value) {
 
@@ -141,6 +149,7 @@ Sfty.View.App = React.createClass({
 
   renderVisualisation: function () {
     return Sfty.View.Graphizer({
+      goBack: this.gotoBuilderView,
       data: this.state.data,
       type: this.state.graph,
     });

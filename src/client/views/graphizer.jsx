@@ -10,6 +10,7 @@ Sfty.View.Graphizer = (function () {
   return React.createClass({
 
     propTypes: {
+      goBack: React.PropTypes.func.isRequired,
       data: React.PropTypes.arrayOf(React.PropTypes.shape({
         _id: React.PropTypes.number,
         total: React.PropTypes.number
@@ -22,6 +23,7 @@ Sfty.View.Graphizer = (function () {
 
     getDefaultProps: function(){
       return{
+        goBack: null,
         type: null,
         data: [],
       };
@@ -34,8 +36,22 @@ Sfty.View.Graphizer = (function () {
     },
 
     render: function () {
+      var Header = Sfty.View.Type.UnderlinedHeader;
+      var Button = Sfty.View.GoBackButton;
+
       return (
-        <canvas id="aggregateChart" width="500" height="500"></canvas>
+        <section>
+          <section className="row">
+            <section className="col-md-6 col-sm-6">
+              <Header size="3" text="TA DAAARR"/> 
+              <canvas id="aggregateChart" width="300" height="300"></canvas>
+            </section>
+            <section className="col-md-6 col-sm-6">
+              <Header size="3" text="Legend"/>
+            </section>
+          </section>
+          <Button goBack={this.props.goBack} />
+        </section>
       );
     }
 
