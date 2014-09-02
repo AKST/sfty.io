@@ -29,6 +29,18 @@ Sfty.Config = (function () {
 
     title: 'Sfty.io',
 
+    calcGraphColor: function (index) {
+      return this.__graphColors[index % this.__graphColors.length];
+    },
+
+    __graphColors: [
+      "#FF5A5E", "#FFC870", 
+      "#5AD3D1", "#CD5C5C", 
+      "#BDB76B", "#6B8E23", 
+      "#008000", "#008B8B", 
+      "#6A5ACD"
+    ],
+
     fieldGroups: {
       visualisation: {
         id: 'visualisation',
@@ -247,7 +259,6 @@ Sfty.Config = (function () {
      *   property: String
      */
     lookupId: function (config) {
-      console.log(config);
       var category = config.category;
       var id       = config.id;
       var property = config.property;

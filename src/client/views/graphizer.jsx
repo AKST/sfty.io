@@ -4,13 +4,6 @@
 
 Sfty.View.Graphizer = (function () {
 
-  var colors = [
-    "#FF5A5E", "#FFC870", 
-    "#5AD3D1", "#CD5C5C", 
-    "#BDB76B", "#6B8E23", 
-    "#008000", "#008B8B", 
-    "#6A5ACD"
-  ];
 
 	var pieChart = function(data, ctx, category){
 		var contx = ctx.getContext("2d");
@@ -18,7 +11,7 @@ Sfty.View.Graphizer = (function () {
 		var mydata = data.map(function (record, index){
 			return {
 				value: record.total,
-				color: colors[index % colors.length],
+				color: Sfty.Config.calcGraphColor(index),
 				highlight: "#DDA0DD" ,
 				label: Sfty.Config.lookupId({
 					id: record._id,

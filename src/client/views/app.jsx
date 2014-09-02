@@ -172,7 +172,9 @@ Sfty.View.App = React.createClass({
     return (
       <section id="outer-app">
         <section id="app">
-          <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
+          <a href='/' className="no-text-decor">
+            <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
+          </a>
           {this.props.ready ? mainView() : null}
         </section>
       </section>

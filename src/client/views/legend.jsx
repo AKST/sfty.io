@@ -14,7 +14,6 @@
   },
 
   renderRow: function (rowData, index, allElems) {
-    //var label = null;
     var label = Sfty.Config.lookupId({
       id: rowData._id,
       category: this.props.category,
