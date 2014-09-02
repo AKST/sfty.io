@@ -11,7 +11,7 @@ var applications = {
   'fatality': { field: 'incident.fatal', type: 'equal' },
   'occupation': { field: 'occupation.occupation', type: 'in' },
   'industry': { field: 'occupation.industry', type: 'in' },
-  'injuries': { field: 'incident.injury', type: 'in' },
+  'injury': { field: 'incident.injury', type: 'in' },
   'location': { field: 'incident.bodyLocation', type: 'in' },
   'cause': { field: 'incident.cause', type: 'in' },
   'gender': { field: 'person.gender', type: 'equal' },
