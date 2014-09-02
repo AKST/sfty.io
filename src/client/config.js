@@ -247,11 +247,10 @@ Sfty.Config = (function () {
      *   property: String
      */
     lookupId: function (config) {
+      console.log(config);
       var category = config.category;
       var id       = config.id;
       var property = config.property;
-
-      console.log(_);
 
       return _.find(this.fields[category].data, function (e) {
         return e.id === id;

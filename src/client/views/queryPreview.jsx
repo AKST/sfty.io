@@ -78,7 +78,7 @@ Sfty.View.QueryPreviewer = React.createClass({
   //
   renderConstraint: function (outerKey, constraint) {
     var iconClass = "glyphicon glyphicon-remove remove-constraint-button";
-    var innerKey = outerKey + "_" + constraint.id;
+    var innerKey = outerKey + "_" + constraint.text.replace(' ', '_');
 
     var icon = React.DOM.span({
       className: iconClass,

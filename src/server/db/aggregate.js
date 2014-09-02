@@ -118,17 +118,6 @@ exportObj._constrain = constrain = function (httpQuery) {
   return outObject;
 };
 
-
-// 
-// simple sorting
-//
-exportObj._sort = sort = function (direction) {
-  return {
-    total: direction || -1
-  };
-};
-
-
 //
 // basic grouping
 //
@@ -139,5 +128,14 @@ exportObj._group = group = function (comparison) {
   };
 };
 
+
+// 
+// simple sorting
+//
+exportObj._sort = sort = function (direction) {
+  return {
+    total: direction || -1
+  };
+};
 
 

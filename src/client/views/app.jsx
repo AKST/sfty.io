@@ -149,6 +149,7 @@ Sfty.View.App = React.createClass({
 
   renderVisualisation: function () {
     return Sfty.View.Graphizer({
+      category: this.state.comparison,
       goBack: this.gotoBuilderView,
       data: this.state.data,
       type: this.state.graph,

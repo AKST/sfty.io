@@ -63,8 +63,13 @@ Sfty.View.GoButton = React.createClass({
 
   render: function () {
     return (
-      <a className="lanuch-query" onClick={this.onClick}>
-        Run Query <i className="glyphicon glyphicon-signal" />
+      <a className="lanuch-query space-below" onClick={this.onClick}>
+        <span className="hidden-xs">
+          Run Query <i className="glyphicon glyphicon-signal" />
+        </span>
+        <span className="visible-xs">
+          <span className="glyphicon glyphicon-signal"></span>
+        </span>
       </a>
     );
   },
@@ -80,8 +85,13 @@ Sfty.View.GoBackButton = React.createClass({
 
   render: function () {
     return (
-      <a className="lanuch-query" onClick={this.props.goBack}>
-        Revise Query
+      <a className="lanuch-query space-below" onClick={this.props.goBack}>
+        <span className="hidden-xs">
+          Revise Query
+        </span>
+        <span className="visible-xs">
+          <span className="glyphicon glyphicon-step-backward"></span>
+        </span>
       </a>
     );
   }
