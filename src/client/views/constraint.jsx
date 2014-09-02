@@ -164,6 +164,32 @@ Sfty.View.ConstraintSelector = (function () {
         });
       }
     },
+
+    selectLabel: function () {
+      return (
+        <span>
+          <span className="hidden-xs">
+            Select
+          </span>
+          <span className="visible-xs">
+            <span className="glyphicon glyphicon-forward"></span>
+          </span>
+        </span>
+      );
+    },
+
+    addLabel: function () {
+      return (
+        <span>
+          <span className="hidden-xs">
+            Add
+          </span>
+          <span className="visible-xs">
+            <span className="glyphicon glyphicon glyphicon-plus"></span>
+          </span>
+        </span>
+      );
+    },
   
     render: function () {
       var catergoryPicked = !!this.state.catergory;
@@ -187,7 +213,7 @@ Sfty.View.ConstraintSelector = (function () {
             className: 't-bump full-width', 
             onClick: this.onClick,
             disabled: disableButton
-          }, !catergoryPicked ? "Select" : "Add")
+          }, (!catergoryPicked ? this.selectLabel : this.addLabel)())
         ]),
 
       ]);
