@@ -176,7 +176,7 @@ Sfty.View.Graphizer = (function () {
       return (
         <section>
           <section className="row">
-            <section className="col-md-6 col-sm-6">
+            <section id="graph-column" className="col-md-6 col-sm-6">
               <Header size="3" text={"Comparing " + this.props.category} />
               <canvas id="aggregateChart" width="300" height="300"></canvas>
             </section>
