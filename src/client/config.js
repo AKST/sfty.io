@@ -33,13 +33,16 @@ Sfty.Config = (function () {
       return this.__graphColors[index % this.__graphColors.length];
     },
 
-    __graphColors: [
-      "#FF5A5E", "#FFC870", 
-      "#5AD3D1", "#CD5C5C", 
-      "#BDB76B", "#6B8E23", 
-      "#008000", "#008B8B", 
-      "#6A5ACD"
-    ],
+
+    __graphColors: ['#000'],
+
+    // __graphColors: [
+    //   "#FF5A5E", "#FFC870", 
+    //   "#5AD3D1", "#CD5C5C", 
+    //   "#BDB76B", "#6B8E23", 
+    //   "#008000", "#008B8B", 
+    //   "#6A5ACD"
+    // ],
 
     fieldGroups: {
       visualisation: {

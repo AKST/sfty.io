@@ -104,14 +104,23 @@ Sfty.View.Graphizer = (function () {
       };
     },
 
+
     componentDidMount: function(){
-    	var ctx = $('#aggregateChart')[0];
       var data = this.props.data;
       var category = this.props.category;
 
+      var canvas = $('#aggregateChart');
+      var width = $('#graph-column').width();
+
+      canvas.attr('width', width);
+      canvas.attr('height', width);
+      
+      var ctx = canvas[0];
+
       switch (this.props.type) {
       	case 'pie':
-      		pieChart(data, ctx, category);
+          pieChart(data, ctx, category);
+          pieChart(data, ctx, category);
       		break;
       	case 'bar':
       		barChart(data, ctx, category);
@@ -129,7 +138,7 @@ Sfty.View.Graphizer = (function () {
       return (
         <section>
           <section className="row">
-            <section className="col-md-6 col-sm-6">
+            <section className="col-md-6 col-sm-6" id="graph-column">
               <Header size="3" text="TA DAAARR"/> 
               <canvas id="aggregateChart" width="300" height="300"></canvas>
             </section>

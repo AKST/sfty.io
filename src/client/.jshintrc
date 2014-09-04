@@ -20,6 +20,7 @@
     "$",
     "_",
     "Chart",
+    "randomColor",
     "alert",
     "window",
     "console"
