@@ -80,6 +80,41 @@ Sfty.View.Graphizer = (function () {
 		var myBarChart = new Chart(contx).Bar(barChart, options);
 	};
 
+	var areaChart = function(data, ctx, category){
+		var contx=document.getElementById("aggregateChart").getContext("2d");
+
+		var mydata = data.map(function (record, index){
+			return {
+				value: record.total,
+				color: Sfty.Config.calcGraphColor(index),
+				highlight: "#DDA0DD" ,
+				label: Sfty.Config.lookupId({
+					id: record._id,
+					category: category,
+					property: "name"
+				})
+			};
+		});
+
+		var options = {
+			scaleShowLabelBackdrop : true,
+			scaleBackdropColor : "rgba(255,255,255,0.75)",
+			scaleBeginAtZero : true,
+			scaleBackdropPaddingY : 2,
+			scaleBackdropPaddingX : 2,
+			scaleShowLine : true,
+			segmentShowStroke : true,
+			segmentStrokeColor : "#fff",
+			segmentStrokeWidth : 2,
+			animationSteps : 100,
+			animationEasing : "easeOutBounce",
+			animateRotate : true,
+			animateScale : false,
+		};
+
+		var myAreaChart = new Chart(contx).PolarArea(mydata, options);
+	};
+
   return React.createClass({
 
     propTypes: {
@@ -125,8 +160,11 @@ Sfty.View.Graphizer = (function () {
       	case 'bar':
       		barChart(data, ctx, category);
       		break;
-      	default:
-      		throw new TypeError(this.props.type+'is not a supported chart.');
+      	case 'area':
+      		areaChart(data, ctx, category);
+      		break;
+      	default: 
+      		throw new TypeError(this.props.type + ' is not a supported chart.');
       }
     },
 
@@ -138,8 +176,13 @@ Sfty.View.Graphizer = (function () {
       return (
         <section>
           <section className="row">
+<<<<<<< HEAD
             <section className="col-md-6 col-sm-6" id="graph-column">
               <Header size="3" text="TA DAAARR"/> 
+=======
+            <section className="col-md-6 col-sm-6">
+              <Header size="3" text={this.props.type} /> 
+>>>>>>> 08f7c876919669745129004d1e3496f13485a631
               <canvas id="aggregateChart" width="300" height="300"></canvas>
             </section>
             <section className="col-md-6 col-sm-6">
