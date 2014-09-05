@@ -8,10 +8,14 @@ Sfty.View.Graphizer = (function () {
 	var pieChart = function(data, ctx, category){
 		var contx = ctx.getContext("2d");
 
+    var colors = Please.make_color({
+      colors_returned: data.length
+    });
+
 		var mydata = data.map(function (record, index){
 			return {
 				value: record.total,
-				color: Sfty.Config.calcGraphColor(index),
+				color: colors[index],
 				highlight: "#DDA0DD" ,
 				label: Sfty.Config.lookupId({
 					id: record._id,
@@ -154,7 +158,6 @@ Sfty.View.Graphizer = (function () {
 
       switch (this.props.type) {
       	case 'pie':
-          pieChart(data, ctx, category);
           pieChart(data, ctx, category);
       		break;
       	case 'bar':
