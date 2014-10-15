@@ -4,6 +4,101 @@
 
 Sfty.View.Graphizer = (function () {
 
+  var randRange = function (min, max) {
+    var r, all = Math.random() * 1000000;
+
+    if (min > 0 && max > 0) {
+      return (all % (max - min)) + min;
+    }
+    else if (min < 0 && max < 0) { 
+      return (-(all % (max - min))) + max;
+    }
+    else if (min < 0) { 
+      return (all % (min - max)) + min;
+    }
+  };
+
+  var cap = function (val, min, max) {
+    if (val > max) return max;
+    if (val < min) return min;
+    return val;
+  };
+
+  var color = function (val, min, max) {
+    
+  };
+
+  var wordCloud = function (data, ctx, category, size) {
+
+    var names = data.map(function (row) {
+      return Sfty.Config.lookupId({
+        id: row._id,
+        category: category,
+        property: "name",
+      });     
+    });
+  
+    var xVelocity = new Float32Array(data.length);
+    var yVelocity = new Float32Array(data.length);
+
+    var xVals = new Float64Array(data.length);
+    var yVals = new Float64Array(data.length);
+
+    var lrOffset = size / 5;
+    var tbOffset = size / 20;
+    var lBoarder = lrOffset;
+    var bBoarder = tbOffset;
+    var rBoarder = size - lrOffset;
+    var tBoarder = size - tbOffset;
+
+
+    var elemSize = 10;
+    var elemHSize = elemSize / 2;
+
+    var lowerest = Infinity;
+    var highest  = -Infinity;
+
+    data.forEach(function (row, index) {
+      if (row.value < lowerest) { lowerest = row.value; }
+      if (row.value > highest) { highest = row.value; }
+      xVelocity[index] = randRange(-1, 1) > 0 ? 0.1 : -0.1; 
+      yVelocity[index] = randRange(-1, 1) > 0 ? 0.1 : -0.1; 
+      xVals[index] = randRange(lBoarder, rBoarder); 
+      yVals[index] = randRange(bBoarder, tBoarder); 
+    });
+
+    data = _.sortBy(data, "value");
+
+		var contx = ctx.getContext("2d");
+
+    contx.textAlign = "center";
+    contx.font = "bold 16px Helvetica";
+
+    var eventLoop = function () {
+      contx.fillStyle = "#fff";
+      contx.fillRect(0, 0, size, size);
+
+      contx.fillStyle = "#000";
+
+      for (var i = 0, elem; i < data.length; i++) {
+        elem = data[i];
+
+        contx.fillText(names[i],
+          xVals[i] - elemHSize, 
+          yVals[i] - elemHSize);
+
+        xVelocity[i] = cap(randRange(-0.05, 0.05) + xVelocity[i], -0.1, 0.1);
+        yVelocity[i] = cap(randRange(-0.05, 0.05) + yVelocity[i], -0.1, 0.1);
+        xVals[i] += xVelocity[i];
+        yVals[i] += yVelocity[i];
+      }
+    };
+
+    eventLoop();
+
+    return setInterval(eventLoop, 1000 / 60);
+  };
+
 
 	var pieChart = function(data, ctx, category){
 		var contx = ctx.getContext("2d");
@@ -123,10 +218,6 @@ Sfty.View.Graphizer = (function () {
         _id: React.PropTypes.number,
         total: React.PropTypes.number
       })).isRequired,
-      type: React.PropTypes.oneOf([
-        'bar', 'pie', 'word',
-        'bell', 'area',
-      ]).isRequired,
       category: React.PropTypes.string,
     },
 
@@ -139,33 +230,36 @@ Sfty.View.Graphizer = (function () {
       };
     },
 
-
     componentDidMount: function(){
       var data = this.props.data;
       var category = this.props.category;
 
-      var canvas = $('#aggregateChart');
+      var pieCxt = $('#pieChart');
+      var wCloud = $('#wordCloud');
       var width = $('#graph-column').width();
 
-      canvas.attr('width', width);
-      canvas.attr('height', width);
-      
-      var ctx = canvas[0];
+      pieCxt.attr('width', width);
+      pieCxt.attr('height', width);
+      wCloud.attr('width', width);
+      wCloud.attr('height', width);
 
-      switch (this.props.type) {
-      	case 'pie':
-          pieChart(data, ctx, category);
-          pieChart(data, ctx, category);
-      		break;
-      	case 'bar':
-      		barChart(data, ctx, category);
-      		break;
-      	case 'area':
-      		areaChart(data, ctx, category);
-      		break;
-      	default: 
-      		throw new TypeError(this.props.type + ' is not a supported chart.');
-      }
+      pieChart(data, pieCxt[0], category);
+      wordCloud(data, wCloud[0], category, width);
+
+      // switch (this.props.type) {
+      // 	case 'pie':
+      //     pieChart(data, ctx, category);
+      //     pieChart(data, ctx, category);
+      // 		break;
+      // 	case 'bar':
+      // 		barChart(data, ctx, category);
+      // 		break;
+      // 	case 'area':
+      // 		areaChart(data, ctx, category);
+      // 		break;
+      // 	default: 
+      // 		throw new TypeError(this.props.type + ' is not a supported chart.');
+      // }
     },
 
     render: function () {
@@ -178,7 +272,8 @@ Sfty.View.Graphizer = (function () {
           <section className="row">
             <section id="graph-column" className="col-md-6 col-sm-6">
               <Header size="3" text={"Comparing " + this.props.category} />
-              <canvas id="aggregateChart" width="300" height="300"></canvas>
+              <canvas id="pieChart" width="300" height="300"></canvas>
+              <canvas id="wordCloud" width="300" height="300"></canvas>
             </section>
             <section className="col-md-6 col-sm-6">
               <Header size="3" text="Legend"/>

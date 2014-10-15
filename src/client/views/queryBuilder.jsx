@@ -45,22 +45,10 @@ Sfty.View.QueryBuilder = React.createClass({
     return (
       <section className={this.props.className}>
         <Header size="3" text="Query Description"/> 
-        <section className="row">
-          <section className="col-md-6">
-
-            <Select title={graph.title}
-                    data={graph.data}
-                    onChange={this.props.updateGraph}/>
-          
-          </section>
-          <section className="col-md-6">
-
-            <Select title={comparison.title}
-                    data={comparison.data}
-                    onChange={this.props.updateComparison}/>
-          
-          </section>
-        </section>
+        <Select 
+          title={comparison.title} 
+          data={comparison.data} 
+          onChange={this.props.updateComparison}/>
 
          {this.renderConstraintSelector()}
         

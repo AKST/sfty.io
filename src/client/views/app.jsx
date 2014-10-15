@@ -18,7 +18,6 @@ Sfty.View.App = React.createClass({
   getInitialState: function () {
     return {
       data: null,
-      graph: null,
       comparison: null,
       constraints: {},
     };
@@ -117,16 +116,13 @@ Sfty.View.App = React.createClass({
    * propety `ready` is true. getValue content is blank
    */
   renderQueryView: function () {
-    var comparison = !!(this.state.graph && this.state.comparison) ?
-      this.state.comparison :
-      null;
+    var comparison = !!this.state.comparison ? this.state.comparison : null;
 
     return React.DOM.section({},
       React.DOM.section({ className: "row" },
         Sfty.View.QueryBuilder({
           className: "col-md-6 col-sm-6",
           comparison: comparison,
-          updateGraph: this.updateField('graph'),
           updateComparison: this.updateField('comparison'),
           addConstraint: this.addConstraint
         }),
@@ -137,7 +133,6 @@ Sfty.View.App = React.createClass({
         })
       ),
       Sfty.View.GoButton({
-        graph: this.state.graph,
         constraints: this.state.constraints,
         comparison: this.state.comparison,
         endpoint: "/api/aggregate",
