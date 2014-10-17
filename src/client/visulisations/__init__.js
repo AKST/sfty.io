@@ -1,0 +1,1 @@
+Sfty.Visualisations = {};

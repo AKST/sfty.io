@@ -4,102 +4,6 @@
 
 Sfty.View.Graphizer = (function () {
 
-  var randRange = function (min, max) {
-    var r, all = Math.random() * 1000000;
-
-    if (min > 0 && max > 0) {
-      return (all % (max - min)) + min;
-    }
-    else if (min < 0 && max < 0) { 
-      return (-(all % (max - min))) + max;
-    }
-    else if (min < 0) { 
-      return (all % (min - max)) + min;
-    }
-  };
-
-  var cap = function (val, min, max) {
-    if (val > max) return max;
-    if (val < min) return min;
-    return val;
-  };
-
-  var color = function (val, min, max) {
-    
-  };
-
-  var wordCloud = function (data, ctx, category, size) {
-
-    var names = data.map(function (row) {
-      return Sfty.Config.lookupId({
-        id: row._id,
-        category: category,
-        property: "name",
-      });     
-    });
-  
-    var xVelocity = new Float32Array(data.length);
-    var yVelocity = new Float32Array(data.length);
-
-    var xVals = new Float64Array(data.length);
-    var yVals = new Float64Array(data.length);
-
-    var lrOffset = size / 5;
-    var tbOffset = size / 20;
-    var lBoarder = lrOffset;
-    var bBoarder = tbOffset;
-    var rBoarder = size - lrOffset;
-    var tBoarder = size - tbOffset;
-
-
-    var elemSize = 10;
-    var elemHSize = elemSize / 2;
-
-    var lowerest = Infinity;
-    var highest  = -Infinity;
-
-    data.forEach(function (row, index) {
-      if (row.value < lowerest) { lowerest = row.value; }
-      if (row.value > highest) { highest = row.value; }
-      xVelocity[index] = randRange(-1, 1) > 0 ? 0.1 : -0.1; 
-      yVelocity[index] = randRange(-1, 1) > 0 ? 0.1 : -0.1; 
-      xVals[index] = randRange(lBoarder, rBoarder); 
-      yVals[index] = randRange(bBoarder, tBoarder); 
-    });
-
-    data = _.sortBy(data, "value");
-
-		var contx = ctx.getContext("2d");
-
-    contx.textAlign = "center";
-    contx.font = "bold 16px Helvetica";
-
-    var eventLoop = function () {
-      contx.fillStyle = "#fff";
-      contx.fillRect(0, 0, size, size);
-
-      contx.fillStyle = "#000";
-
-      for (var i = 0, elem; i < data.length; i++) {
-        elem = data[i];
-
-        contx.fillText(names[i],
-          xVals[i] - elemHSize, 
-          yVals[i] - elemHSize);
-
-        xVelocity[i] = cap(randRange(-0.05, 0.05) + xVelocity[i], -0.1, 0.1);
-        yVelocity[i] = cap(randRange(-0.05, 0.05) + yVelocity[i], -0.1, 0.1);
-        xVals[i] += xVelocity[i];
-        yVals[i] += yVelocity[i];
-      }
-    };
-
-    eventLoop();
-
-    return setInterval(eventLoop, 1000 / 60);
-  };
-
-
 	var pieChart = function(data, ctx, category){
 		var contx = ctx.getContext("2d");
 
@@ -244,7 +148,14 @@ Sfty.View.Graphizer = (function () {
       wCloud.attr('height', width);
 
       pieChart(data, pieCxt[0], category);
-      wordCloud(data, wCloud[0], category, width);
+      // wordCloud(data, wCloud[0], category, width);
+
+      var wc = new Sfty.Visualisations.WordCloud(data, {
+        size: width,                                          
+        type: category
+      }); 
+
+      wc.render(wCloud[0]);
 
       // switch (this.props.type) {
       // 	case 'pie':

@@ -33,7 +33,8 @@ module.exports = function(grunt) {
           'src/client/config.js',
           'src/client/errors/*.{js,jsx}',
           'src/client/util/*.{js,jsx}',
-          'src/client/views/*.{js,jsx}'
+          'src/client/views/*.{js,jsx}',
+          'src/client/visulisations/*.{js,jsx}',
         ],
         testSrc: 'test/client/{,*/}*.js',
         testRun: 'test/client/run.js',
