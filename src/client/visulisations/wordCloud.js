@@ -54,10 +54,10 @@ Sfty.Visualisations.WordCloud = (function () {
 
       this.font = config.font || 'Helvetica';
       this.darkest = config.darkest || 0;
-      this.lightest = config.lightest || 100;
+      this.lightest = config.lightest || 230;
       this.interval = config.interval || 1000 / 60;
       this.minfont = config.minfont || 8;
-      this.maxfont = config.maxfont || 24;
+      this.maxfont = config.maxfont || 28;
 
       this.__data = data;
 
@@ -69,9 +69,12 @@ Sfty.Visualisations.WordCloud = (function () {
       this.__yVel = new Float32Array(data.length);
       this.__zVel = new Float32Array(data.length);
 
+      this.__blur = [];
       this.__text = [];
       this.__fonts = [];
       this.__colors = [];
+
+      this.__shadow = new Float32Array(data.length);
 
       this.__prepared = false;
     },
@@ -92,7 +95,7 @@ Sfty.Visualisations.WordCloud = (function () {
     },
 
     __prepare: function () {
-      this.__data = _.sortBy(this.__data, "total").reverse();
+      this.__data = _.sortBy(this.__data, "total");
 
       var lowest = Infinity;
       var highest = -Infinity;
@@ -124,13 +127,11 @@ Sfty.Visualisations.WordCloud = (function () {
         });
       }, this);
       
-      var fontSize = linearPlot(
-        [lowest, this.minfont], 
-        [highest, this.maxfont]);
+      var fontSize = linearPlot([lowest, this.minfont], [highest, this.maxfont]);
 
-      var greyPlot = linearPlot(
-        [lowest, this.lightest], 
-        [highest, this.darkest]);
+      var greyPlot = linearPlot([lowest, this.lightest], [highest, this.darkest]);
+
+      var shadowP = linearPlot([lowest, 2], [highest, 0]);
 
       // initialise anyt that requires knowledge of min & max
       this.__data.forEach(function (row, i) {
@@ -138,6 +139,7 @@ Sfty.Visualisations.WordCloud = (function () {
         if (size > this.maxfont) { size = this.maxfont; }
         this.__fonts[i] = "bold " + size + "px  " + this.font; 
         this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
+        this.__shadow[i] = shadowP(row.total);
       }, this);
     },
 
@@ -153,7 +155,12 @@ Sfty.Visualisations.WordCloud = (function () {
         contx.fillStyle = this.__colors[i];
         contx.translate(this.__xPos[i], this.__yPos[i]);
         contx.rotate(this.__zPos[i]);
+
+        contx.shadowBlur = this.__shadow[i]; 
+        contx.shadowColor = this.__colors[i];
+
         contx.fillText(this.__text[i], 0, 0);
+
         contx.restore();
 
         this.__xVel[i] += cap(randRange(-0.03, 0.03), -0.1, 0.1);
