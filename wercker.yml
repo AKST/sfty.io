@@ -10,7 +10,8 @@ build:
         code: |
           sudo apt-get update -qq
           sudo apt-get install screen
-          screen -d -m mongod
+          # screen -d -m mongod
+          mongod
     - script:
         name: install tools
         code: |
