@@ -1,11 +1,14 @@
 box: wercker/nodejs
+services:
+  - wercker/mongodb
+  - wercker/ruby
+  - wercker/rvm
 build:
   steps:
     - script:
         name: sets up mongo
         code: |
           sudo apt-get update -qq
-          sudo apt-get install mongodb-org
           sudo apt-get install screen
           screen -d -m mongod
     - script:
