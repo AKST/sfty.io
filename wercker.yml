@@ -20,7 +20,7 @@ build:
     - script:
         name: building project
         code: |
-          npm install
+          sudo npm install
           bower install
           make place-assets
           grunt travis

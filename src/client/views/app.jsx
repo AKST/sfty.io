@@ -151,6 +151,14 @@ Sfty.View.App = React.createClass({
     });
   },
 
+  mainView: function () {
+    if (!!this.state.data) {
+      return this.renderVisualisation.bind(this);
+    } else {
+      return this.renderQueryView.bind(this);
+    }
+  },
+
   /**
    * Builds main view
    */
