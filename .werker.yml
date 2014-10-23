@@ -1,0 +1,28 @@
+box: wercker/nodejs
+build:
+  steps:
+    - script:
+        name: sets up mongo
+        code: |
+          sudo apt-get update -qq
+          sudo apt-get install mongodb-org
+          sudo apt-get install screen
+          screen -d -m mongod
+    - script:
+        name: install tools
+        code: |
+          npm install -g bower
+          npm install -g grunt-cli
+          gem install sass
+    - script:
+        name: install dependencies
+        code: |
+          npm install
+          bower install
+          make place-assets
+          grunt travis
+          screen -d -m npm start
+          sleep 5
+          curl http://localhost:3000
+    - npm-test
+
