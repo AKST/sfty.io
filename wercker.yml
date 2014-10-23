@@ -18,10 +18,10 @@ build:
           sudo npm install -g grunt-cli
           sudo gem install sass
     - script:
-        name: install dependencies
+        name: building project
         code: |
-          npm install
-          bower install
+          sudo npm install
+          sudo bower install
           make place-assets
           grunt travis
           screen -d -m npm start
