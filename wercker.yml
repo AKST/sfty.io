@@ -14,9 +14,9 @@ build:
     - script:
         name: install tools
         code: |
-          npm install -g bower
-          npm install -g grunt-cli
-          gem install sass
+          sudo npm install -g bower
+          sudo npm install -g grunt-cli
+          sudo gem install sass
     - script:
         name: install dependencies
         code: |
