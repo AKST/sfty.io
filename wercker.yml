@@ -23,8 +23,7 @@ build:
           bower install
           make place-assets
           grunt travis
-          # screen -d -m npm start
-          npm start
+          screen -d -m npm start
           sleep 5
           curl http://localhost:3000
     - npm-test

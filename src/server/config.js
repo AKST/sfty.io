@@ -22,3 +22,15 @@ for (key in exports.dbCollections) {
   exports.resourceCollections[key] = value;
 }
 
+exports.MONGO_URL = (function () {
+  if (process.env.MONGOHQ_URL) {
+    return process.env.MONGOHQ_URL;
+  }
+  else if (process.env.WERCKER_MONGODB_HOST) {
+    return 'mongodb://'+process.env.WERCKER_MONGODB_HOST+'/cp3046';
+  }
+  else {
+    return 'mongodb://localhost:27017/cp3046';
+  }
+}());
+

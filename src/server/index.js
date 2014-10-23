@@ -2,7 +2,8 @@
 var express = require('express'),
     connect = require('connect'),
     mongodb = require('mongodb'),
-    routes = require('./routes');
+    routes = require('./routes'),
+    config = require('./config');
 
 
 function startApp(err, db) {
@@ -34,10 +35,5 @@ function startApp(err, db) {
   app.listen(port);
 }
 
-var dbUrl = 
-  process.env.MONGOHQ_URL ||  
-  process.env.WERCKER_MONGODB_HOST ||
-  'mongodb://localhost:27017/cp3046';
-
-mongodb.MongoClient.connect(dbUrl, startApp);
+mongodb.MongoClient.connect(config.MONGO_URL, startApp);
 
