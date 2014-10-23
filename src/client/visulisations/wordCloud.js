@@ -1,24 +1,8 @@
 Sfty.Visualisations.WordCloud = (function () {
 
-  var randRange = function (min, max) {
-    var all = Math.random() * 1000000;
-
-    if (min > 0 && max > 0) {
-      return (all % (max - min)) + min;
-    }
-    else if (min < 0 && max < 0) { 
-      return (-(all % (max - min))) + max;
-    }
-    else if (min < 0) { 
-      return (all % (min - max)) + min;
-    }
-  };
-
-  var cap = function (val, min, max) {
-    if (val > max) return max;
-    if (val < min) return min;
-    return val;
-  };
+  var linearPlot = Sfty.Util.Math.linearPlot;
+  var randRange = Sfty.Util.Math.randRange;
+  var cap = Sfty.Util.Math.cap;
 
   var greyScale = function (v) {
     var hex = v.toString(16);
@@ -27,15 +11,6 @@ Sfty.Visualisations.WordCloud = (function () {
     }
     hex = hex.length === 1 ? "0" + hex : hex;
     return "#" + hex + hex + hex;
-  };
-
-  var linearPlot = function (a, b) {
-    var xa = a[0], ya = a[1]; 
-    var xb = b[0], yb = b[1]; 
-    var m = (yb - ya) / ((xb / xa) || 1.0);
-    return function (x) {
-      return (m * (x - xa)) + ya;   
-    };
   };
 
   /* 
@@ -87,6 +62,7 @@ Sfty.Visualisations.WordCloud = (function () {
 
       var contx = context.getContext("2d");
       contx.textAlign = "center";
+      contx.textBaseline = "middle";
 
       var loop = this.__renderLoop.bind(this, contx);
       loop();
@@ -128,15 +104,16 @@ Sfty.Visualisations.WordCloud = (function () {
       }, this);
       
       var fontSize = linearPlot([lowest, this.minfont], [highest, this.maxfont]);
-
       var greyPlot = linearPlot([lowest, this.lightest], [highest, this.darkest]);
-
-      var shadowP = linearPlot([lowest, 2], [highest, 0]);
+      var shadowP = linearPlot([lowest, 2.5], [highest, 0]);
 
       // initialise anyt that requires knowledge of min & max
       this.__data.forEach(function (row, i) {
         var size = fontSize(row.total);
-        if (size > this.maxfont) { size = this.maxfont; }
+        if (size > this.maxfont) { 
+          console.log([size, this.maxfont], [row.total, highest]);
+          size = this.maxfont; 
+        }
         this.__fonts[i] = "bold " + size + "px  " + this.font; 
         this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
         this.__shadow[i] = shadowP(row.total);
@@ -149,7 +126,6 @@ Sfty.Visualisations.WordCloud = (function () {
       contx.fillStyle = "#000";
 
       for (var i = 0; i < this.__data.length; i++) {
-
         contx.save();
         contx.font = this.__fonts[i];
         contx.fillStyle = this.__colors[i];
@@ -171,11 +147,22 @@ Sfty.Visualisations.WordCloud = (function () {
         this.__yPos[i] += this.__yVel[i];
         this.__zPos[i] += this.__zVel[i];
 
-        // keeps in the bounds of the canvas
-        if (this.__xPos[i] < 0 && this.__xVel[i] < 0) this.__xVel[i] *= -1;
-        if (this.__yPos[i] < 0 && this.__yVel[i] < 0) this.__yVel[i] *= -1;
-        if (this.__xPos[i] > this.size && this.__xVel[i] > 0) this.__xVel[i] *= -1;
-        if (this.__yPos[i] > this.size && this.__yVel[i] > 0) this.__yVel[i] *= -1;
+        // keeps within x axis of canvas
+        if (this.__xPos[i] < 0 && this.__xVel[i] < 0) { 
+          this.__xVel[i] *= -1;
+        } 
+        else if (this.__xPos[i] > this.size && this.__xVel[i] > 0) {
+          this.__xVel[i] *= -1;
+        }
+
+       
+        // keeps within y axis of canvas
+        if (this.__yPos[i] < 0 && this.__yVel[i] < 0) {
+          this.__yVel[i] *= -1;
+        } 
+        else if (this.__yPos[i] > this.size && this.__yVel[i] > 0) {
+          this.__yVel[i] *= -1;
+        }
       }
     },
 
