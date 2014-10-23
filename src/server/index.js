@@ -34,7 +34,9 @@ function startApp(err, db) {
   app.listen(port);
 }
 
-var dbUrl = process.env.MONGOHQ_URL || 
+var dbUrl = 
+  process.env.MONGOHQ_URL ||  
+  process.env.WERCKER_MONGODB_HOST ||
   'mongodb://localhost:27017/cp3046';
 
 mongodb.MongoClient.connect(dbUrl, startApp);
