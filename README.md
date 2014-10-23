@@ -1,9 +1,5 @@
 # Sfty App
 
-
-## Status
-
-
 <a href="https://app.wercker.com/project/bykey/f1c6e4694ac3977f29d70979a9d920be">
   <img src="https://app.wercker.com/status/f1c6e4694ac3977f29d70979a9d920be/m" />
 </a>
