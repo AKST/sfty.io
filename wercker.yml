@@ -20,8 +20,8 @@ build:
     - script:
         name: building project
         code: |
-          sudo npm install
-          sudo bower install
+          npm install
+          bower install
           make place-assets
           grunt travis
           screen -d -m npm start
