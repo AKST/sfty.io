@@ -38,17 +38,18 @@ Sfty.Visualisations.WordCloud = (function () {
 
       this.__xPos = new Float32Array(data.length);
       this.__yPos = new Float32Array(data.length);
-      this.__zPos = new Float32Array(data.length);
+      this.__angle = new Float32Array(data.length);
 
       this.__xVel = new Float32Array(data.length);
       this.__yVel = new Float32Array(data.length);
-      this.__zVel = new Float32Array(data.length);
+      this.__rateOfRotation = new Float32Array(data.length);
 
       this.__blur = [];
       this.__text = [];
       this.__fonts = [];
       this.__colors = [];
 
+      this.__depth = new Float32Array(data.length);
       this.__shadow = new Float32Array(data.length);
 
       this.__prepared = false;
@@ -90,11 +91,11 @@ Sfty.Visualisations.WordCloud = (function () {
 
         this.__xVel[i] = randRange(-1, 1) > 0 ? 0.1 : -0.1;
         this.__yVel[i] = randRange(-1, 1) > 0 ? 0.1 : -0.1;
-        this.__zVel[i] = 0;
+        this.__rateOfRotation[i] = 0;
 
         this.__xPos[i] = randRange(lBoarder, rBoarder);
         this.__yPos[i] = randRange(bBoarder, tBoarder);
-        this.__zPos[i] = randRange(-1, 1);
+        this.__angle[i] = randRange(-1, 1);
 
         this.__text[i] = Sfty.Config.lookupId({
           id: row._id,
@@ -103,9 +104,10 @@ Sfty.Visualisations.WordCloud = (function () {
         });
       }, this);
       
-      var fontSize = linearPlot([lowest, this.minfont], [highest, this.maxfont]);
-      var greyPlot = linearPlot([lowest, this.lightest], [highest, this.darkest]);
-      var shadowP = linearPlot([lowest, 2.5], [highest, 0]);
+      var fontSize  = linearPlot([lowest, this.minfont], [highest, this.maxfont]);
+      var greyPlot  = linearPlot([lowest, this.lightest], [highest, this.darkest]);
+      var depthPlot = linearPlot([lowest, 0.1], [highest, 1]);
+      var shadowP   = linearPlot([lowest, 2.5], [highest, 0]);
 
       // initialise anyt that requires knowledge of min & max
       this.__data.forEach(function (row, i) {
@@ -117,6 +119,7 @@ Sfty.Visualisations.WordCloud = (function () {
         this.__fonts[i] = "bold " + size + "px  " + this.font; 
         this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
         this.__shadow[i] = shadowP(row.total);
+        this.__depth[i] = depthPlot(row.total);
       }, this);
     },
 
@@ -130,7 +133,7 @@ Sfty.Visualisations.WordCloud = (function () {
         contx.font = this.__fonts[i];
         contx.fillStyle = this.__colors[i];
         contx.translate(this.__xPos[i], this.__yPos[i]);
-        contx.rotate(this.__zPos[i]);
+        contx.rotate(this.__angle[i]);
 
         contx.shadowBlur = this.__shadow[i]; 
         contx.shadowColor = this.__colors[i];
@@ -139,13 +142,15 @@ Sfty.Visualisations.WordCloud = (function () {
 
         contx.restore();
 
-        this.__xVel[i] += cap(randRange(-0.03, 0.03), -0.1, 0.1);
-        this.__yVel[i] += cap(randRange(-0.03, 0.03), -0.1, 0.1);
-        this.__zVel[i] += cap(randRange(-0.0001, 0.0001), -0.003, 0.003);
+        this.__xVel[i] += randRange(-0.03, 0.03);
+        this.__yVel[i] += randRange(-0.03, 0.03);
+        this.__rateOfRotation[i] += randRange(-0.0001, 0.0001);
 
-        this.__xPos[i] += this.__xVel[i];
-        this.__yPos[i] += this.__yVel[i];
-        this.__zPos[i] += this.__zVel[i];
+        // speed up movement in relation to depth
+        this.__xPos[i] += this.__xVel[i] * this.__depth[i];
+        this.__yPos[i] += this.__yVel[i] * this.__depth[i];
+
+        this.__angle[i] += this.__rateOfRotation[i];
 
         // keeps within x axis of canvas
         if (this.__xPos[i] < 0 && this.__xVel[i] < 0) { 
