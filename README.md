@@ -1,14 +1,12 @@
-<div style="margin-bottom: 8em">
-  <h1 style="float: left">Sfty App</h1>
-  <div style="float: right">
-    <a href="https://app.wercker.com/project/bykey/f1c6e4694ac3977f29d70979a9d920be">
-      <img src="https://app.wercker.com/status/f1c6e4694ac3977f29d70979a9d920be/m" />
-    </a>
-  </div>
-</div>
+# Sfty App
 
 
-To get started go [here](https://github.com/AKST/cp3046/wiki/Getting-Started).
+## Status
+
+
+<a href="https://app.wercker.com/project/bykey/f1c6e4694ac3977f29d70979a9d920be">
+  <img src="https://app.wercker.com/status/f1c6e4694ac3977f29d70979a9d920be/m" />
+</a>
 
 
 ## Dataflow
