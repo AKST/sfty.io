@@ -1,10 +1,14 @@
-Sfty App ![ci](https://magnum.travis-ci.com/AKST/project-management.svg?token=qwEs2cF3FRPkzqLsZAfx)
-=======
-
+<div style="margin-bottom: 8em">
+  <h1 style="float: left">Sfty App</h1>
+  <div style="float: right">
+    <a href="https://app.wercker.com/project/bykey/f1c6e4694ac3977f29d70979a9d920be">
+      <img src="https://app.wercker.com/status/f1c6e4694ac3977f29d70979a9d920be/m" />
+    </a>
+  </div>
+</div>
 
 
 To get started go [here](https://github.com/AKST/cp3046/wiki/Getting-Started).
-
 
 
 ## Dataflow
