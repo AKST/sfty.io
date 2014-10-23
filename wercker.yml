@@ -6,6 +6,11 @@ services:
 build:
   steps:
     - script:
+        name: install screen
+        code: |
+          sudo apt-get update -qq
+          sudo apt-get install screen
+    - script:
         name: install tools
         code: |
           sudo npm install -g bower
