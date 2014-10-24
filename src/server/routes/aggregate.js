@@ -21,6 +21,11 @@ var parseArguments = function (elems) {
 var id = function (a) { return a; };
 var boolParse = function (b) { return b === "true"; };
 var intParse = function (a) { return parseInt(a, 10); };
+var parseWorkload = function (wl) {
+  if (wl === 'full-time') return "FULL TIME";
+  if (wl === 'part-time') return "PART TIME";
+  throw new Error(wl + " is not a valid workload");
+};
 
 
 //
@@ -35,7 +40,7 @@ var sanitizeLookup = {
   'location': intParse,
   'cause': intParse,
   'gender': id,
-  'workload': id,
+  'workload': parseWorkload,
   'age': intParse,
 };
 
