@@ -103,6 +103,10 @@ Sfty.Visualisations.WordCloud = (function () {
           property: "name",
         });
       }, this);
+
+      if (highest === lowest) {
+        lowest = lowest - 1;
+      }
       
       var fontSize  = linearPlot([lowest, this.minfont], [highest, this.maxfont]);
       var greyPlot  = linearPlot([lowest, this.lightest], [highest, this.darkest]);
