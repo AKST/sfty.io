@@ -122,21 +122,21 @@ Sfty.View.App = React.createClass({
       React.DOM.section({ className: "row" },
         Sfty.View.QueryBuilder({
           className: "col-md-6 col-sm-6",
-          comparison: comparison,
+          comparison: this.state.comparison,
           updateComparison: this.updateField('comparison'),
-          addConstraint: this.addConstraint
+          addConstraint: this.addConstraint,
         }),
         Sfty.View.QueryPreviewer({
           className: "col-md-6 col-sm-6",
           removeConstraint: this.removeConstraint,
-          constraints: this.state.constraints
+          constraints: this.state.constraints,
         })
       ),
       Sfty.View.GoButton({
         constraints: this.state.constraints,
         comparison: this.state.comparison,
         endpoint: "/api/aggregate",
-        callback: this.callback
+        callback: this.callback,
       })
     );
   },
@@ -151,18 +151,10 @@ Sfty.View.App = React.createClass({
     });
   },
 
-  mainView: function () {
-    if (!!this.state.data) {
-      return this.renderVisualisation.bind(this);
-    } else {
-      return this.renderQueryView.bind(this);
-    }
-  },
-
   /**
    * Builds main view
    */
-  render: function () {
+  render: Sfty.Util.Debug.skip("render app", function () {
     var mainView =
       !!this.state.data ?
 
@@ -182,7 +174,7 @@ Sfty.View.App = React.createClass({
         </section>
       </section>
     );
-  }
+  })
 
 });
 

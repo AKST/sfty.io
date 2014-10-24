@@ -49,12 +49,12 @@ Sfty.View.Select =  React.createClass({
     return {
       id: Sfty.Util.Rand.uid('dropdown'),
       title: 'Untitled',
+      start: null,
       data: [],
     };
   },
 
   selectizeOptions: function () {
-
     return {
       onChange: this.props.onChange,
     };
@@ -64,28 +64,54 @@ Sfty.View.Select =  React.createClass({
     this.selectize();
   },
 
-  render: function () { 
-    var Input;
+  render: Sfty.Util.Debug.skip("select", function () { 
 
-    Input = ReactBootstrap.Input;
+    return React.DOM.section({ className:"query-field" }, 
+      React.DOM.label({ htmlFor: this.props.id },
+        React.DOM.b(null,this.props.title)
+      ),
+      // React.DOM.select.apply(null, (function () {
+      //   var elems = [];
 
-    return (
-      <section className="query-field"> 
-        <label htmlFor={this.props.id}>
-          <b>{this.props.title}</b>
-        </label>
-        <select id={this.props.id}>
-          <option></option>
-          {this.props.data.map(function (item, index) {
-            return (
-              <option value={item.id} key={index}>
-                {Sfty.Util.Str.captialize(item.name)}
-              </option>
-            );
-          })}
-        </select>
-      </section>
+      //   elems.unshift({ id: this.props.id, defaultValue: this.props.start || undefined });
+      //   elems.unshift(<option>select an option</option>);
+
+      //   this.props.data.forEach(function (item) {
+      //     elems.push(React.DOM.option({ value: item.id },
+      //       Sfty.Util.Str.captialize(item.name)
+      //     )); 
+      //   }, this);
+
+      //   return elems;
+      // }).call(this))
+      React.DOM.select({ id: this.props.id, defaultValue: this.props.start || undefined },
+        <option value={null}><i>Select an option</i></option>,
+        this.props.data.map(function (item, index) {
+          var state = { 
+            value: item.id, 
+            key: this.props.title+"_"+index, 
+          };
+          console.log(state.key, this.props.start);
+          return React.DOM.option(state,
+            Sfty.Util.Str.captialize(item.name)
+          );
+        }, this)
+      )
+
+      // <select id={this.props.id} defaultValue={this.props.start}>
+      //   <option>select an option</option>
+      //   {this.props.data.map(function (item, index) {
+      //     var state = { 
+      //       value: item.id, 
+      //       key: this.props.title+"_"+index, 
+      //     };
+      //     console.log(state.key, this.props.start);
+      //     return React.DOM.option(state,
+      //       Sfty.Util.Str.captialize(item.name)
+      //     );
+      //   }, this)}
+      // </select>
     );
-  }
+  })
 
 });
