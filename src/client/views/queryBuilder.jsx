@@ -42,8 +42,6 @@ Sfty.View.QueryBuilder = React.createClass({
     var graph = Sfty.Config.fields.graph;
     var comparison = Sfty.Config.fields.comparison;
 
-    console.log(this.props.comparison);
-
     return (
       <section className={this.props.className}>
         <Header size="3" text="Query Description"/> 
@@ -53,7 +51,7 @@ Sfty.View.QueryBuilder = React.createClass({
           start={this.props.comparison}
           onChange={this.props.updateComparison}/>
 
-         {this.renderConstraintSelector()}
+        {this.renderConstraintSelector()}
         
       </section>
     );

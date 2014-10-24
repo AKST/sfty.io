@@ -8,9 +8,12 @@
  */
 Sfty.View.App = React.createClass({
 
+  mixins: [ReactBootstrap.OverlayMixin],
+
   getDefaultProps: function () {
     return {
       ready: false,
+      modal: null,
       title: Sfty.Config.title,
     };
   },
@@ -108,7 +111,21 @@ Sfty.View.App = React.createClass({
    * to the query.
    */
   callback: function (data) {
-    this.setState({ data: data });
+    if (data.length) {
+      this.setState({ data: data });
+    }
+    else {
+      this.setState({ 
+        modal: {
+          title: "No dice!",
+          body: "There were no incidents that matched your query!"
+        }
+      });
+    }
+  },
+
+  closeModal: function () {
+    this.setState({ modal: null });
   },
  
   /**
@@ -140,7 +157,6 @@ Sfty.View.App = React.createClass({
       })
     );
   },
-
 
   renderVisualisation: function () {
     return Sfty.View.Graphizer({
@@ -174,7 +190,23 @@ Sfty.View.App = React.createClass({
         </section>
       </section>
     );
-  })
+  }),
+
+  renderOverlay: function () {
+    if (!this.state.modal) {
+      return <span/>;
+    }
+
+    var Modal = ReactBootstrap.Modal;
+
+    return (
+      <Modal title={this.state.modal.title} onRequestHide={this.closeModal}>
+        <div className="modal-body">
+          {this.state.modal.body}
+        </div>
+      </Modal>
+    );
+  }
 
 });
 

@@ -67,50 +67,24 @@ Sfty.View.Select =  React.createClass({
   render: Sfty.Util.Debug.skip("select", function () { 
 
     return React.DOM.section({ className:"query-field" }, 
-      React.DOM.label({ htmlFor: this.props.id },
-        React.DOM.b(null,this.props.title)
-      ),
-      // React.DOM.select.apply(null, (function () {
-      //   var elems = [];
 
-      //   elems.unshift({ id: this.props.id, defaultValue: this.props.start || undefined });
-      //   elems.unshift(<option>select an option</option>);
+      <label htmlFor={this.props.id}>
+        <b>{this.props.title}</b>
+      </label>,
 
-      //   this.props.data.forEach(function (item) {
-      //     elems.push(React.DOM.option({ value: item.id },
-      //       Sfty.Util.Str.captialize(item.name)
-      //     )); 
-      //   }, this);
+      React.DOM.select.apply(null, (function () {
 
-      //   return elems;
-      // }).call(this))
-      React.DOM.select({ id: this.props.id, defaultValue: this.props.start || undefined },
-        <option value={null}><i>Select an option</i></option>,
-        this.props.data.map(function (item, index) {
-          var state = { 
-            value: item.id, 
-            key: this.props.title+"_"+index, 
-          };
-          console.log(state.key, this.props.start);
-          return React.DOM.option(state,
+        var elems = this.props.data.map(function (item) {
+          return React.DOM.option({ value: item.id },
             Sfty.Util.Str.captialize(item.name)
-          );
-        }, this)
-      )
+          ); 
+        });
 
-      // <select id={this.props.id} defaultValue={this.props.start}>
-      //   <option>select an option</option>
-      //   {this.props.data.map(function (item, index) {
-      //     var state = { 
-      //       value: item.id, 
-      //       key: this.props.title+"_"+index, 
-      //     };
-      //     console.log(state.key, this.props.start);
-      //     return React.DOM.option(state,
-      //       Sfty.Util.Str.captialize(item.name)
-      //     );
-      //   }, this)}
-      // </select>
+        elems.unshift(<option>select an option</option>);
+        elems.unshift({ id: this.props.id, defaultValue: this.props.start || undefined });
+
+        return elems;
+      }).call(this))
     );
   })
 
