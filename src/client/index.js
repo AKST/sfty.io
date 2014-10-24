@@ -1,4 +1,5 @@
 $('body').ready(function () {
+
   document.title = Sfty.Config.title;
 
   // while initialisation is taking place
