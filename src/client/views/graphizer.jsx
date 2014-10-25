@@ -6,11 +6,12 @@ Sfty.View.Graphizer = (function () {
 
 	return React.createClass({
 
+    lastRecordedWidth: null,
+
     wordcloudTimeoutTime: 1800,
     wordcloudTimeout: null,
     wordCloudInterval: null,
     resizeTimeout: null,
-    
 
     propTypes: {
       goBack: React.PropTypes.func.isRequired,
@@ -30,6 +31,35 @@ Sfty.View.Graphizer = (function () {
         type: null,
         data: []
       };
+    },
+
+    componentDidMount: function () {
+      this.renderGraph({ fancy: true }); 
+      this.lastRecordedWidth = this.componentSize();
+      $(window).on('resize', this.handleResize);
+    },
+
+    componentWillUnmount: function () {
+      if (this.wordCloudInterval) {
+        clearInterval(this.wordCloudInterval); 
+      }
+      $(window).off('resize', this.handleResize);
+    },
+
+    handleResize: function () {
+      if (this.componentSize() === this.lastRecordedWidth) { return; }
+      if (this.resizeTimeout) { clearTimeout(this.resizeTimeout); }
+
+      this.lastRecordedWidth = this.componentSize();
+      
+      this.resizeTimeout = setTimeout(function () {
+        if (this.wordCloudInterval) { clearInterval(this.wordCloudInterval); }
+        this.renderGraph({ fancy: false }); 
+      }.bind(this), 300);
+    },
+
+    componentSize: function () {
+      return $(this.refs.self.getDOMNode()).width();
     },
 
     renderGraph: function (options) {
@@ -69,34 +99,13 @@ Sfty.View.Graphizer = (function () {
       }
     },
 
-    componentDidMount: function () {
-      this.renderGraph({ fancy: true }); 
-      $(window).on('resize', this.handleResize);
-    },
-
-    componentWillUnmount: function () {
-      if (this.wordCloudInterval) {
-        clearInterval(this.wordCloudInterval); 
-      }
-      $(window).off('resize', this.handleResize);
-    },
-
-    handleResize: function () {
-      if (this.resizeTimeout) { clearTimeout(this.resizeTimeout); }
-      
-      this.resizeTimeout = setTimeout(function () {
-        if (this.wordCloudInterval) { clearInterval(this.wordCloudInterval); }
-        this.renderGraph({ fancy: false }); 
-      }.bind(this), 300);
-    },
-
     render: function () {
       var Header = Sfty.View.Type.UnderlinedHeader;
       var Button = Sfty.View.GoBackButton;
       var Legend = Sfty.View.Legend;
 
       return (
-        <section id={this.props.id}>
+        <section id={this.props.id} ref="self">
           <section className="row">
             <section id="graph-column" className="col-md-6 col-sm-6">
               <Header size="3" text={"Comparing " + this.props.category} />
