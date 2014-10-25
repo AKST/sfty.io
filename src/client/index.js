@@ -1,5 +1,9 @@
 $('body').ready(function () {
 
+  (Chart.defaults = {}).global = {
+    responsive: true
+  };
+
   document.title = Sfty.Config.title;
 
   // while initialisation is taking place

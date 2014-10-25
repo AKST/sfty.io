@@ -2,7 +2,7 @@
  * @jsx React.DOM
  */
 
-Sfty.Visualisations.pieChart = function(data, ctx, category){
+Sfty.Visualisations.pieChart = function(data, ctx, options){
 	var contx = ctx.getContext("2d");
 
 	var mydata = data.map(function (record, index){
@@ -12,26 +12,29 @@ Sfty.Visualisations.pieChart = function(data, ctx, category){
 			highlight: "#DDA0DD" ,
 			label: Sfty.Config.lookupId({
 				id: record._id,
-				category: category,
+				category: options.category,
 				property: "name"
 			})
 		};
 	});
 
-	var options = {
+  var graphOptions = {
     segmentShowStroke : true,
     segmentStrokeColor : "white",
     segmentStrokeWidth : 2,
     percentageInnerCutout : 50,
-    animationSteps : 100,
-    animationEasing : "easeOutBounce",
-    animateRotate : true,
-    animateScale : false,
 		tooltipFontSize: 11,
 	};
 
+  if (options.fancy) {
+    graphOptions.animationEasing = "easeOutBounce";
+    graphOptions.animationSteps = 100;
+    graphOptions.animateRotate = true;
+    graphOptions.animateScale = false;
+  }
+
 	// The type of char you want to draw. This case is a pie chart
-	var myPieChart = new Chart(contx).Pie(mydata, options);
+	var myPieChart = new Chart(contx).Pie(mydata, graphOptions);
 };
 
 Sfty.Visualisations.barChart = function(data, ctx, category){

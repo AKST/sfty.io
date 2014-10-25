@@ -317,6 +317,12 @@ module.exports = function(grunt) {
           cwd: 'assets/vendor/mocha/',
           src: 'mocha.css',
           dest: 'public/css/'
+        }, {
+          flatten: true,
+          expand: true,
+          cwd: 'assets/vendor/jquery/dist/',
+          src: 'jquery.min.map',
+          dest: 'public/js/' 
         }]
       }
     },

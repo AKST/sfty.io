@@ -6,6 +6,12 @@ Sfty.View.Graphizer = (function () {
 
 	return React.createClass({
 
+    wordcloudTimeoutTime: 1800,
+    wordcloudTimeout: null,
+    wordCloudInterval: null,
+    resizeTimeout: null,
+    
+
     propTypes: {
       goBack: React.PropTypes.func.isRequired,
       data: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -17,6 +23,8 @@ Sfty.View.Graphizer = (function () {
 
     getDefaultProps: function() {
       return {
+        interval: null,
+        id: Date.now().toString(),
         category: null,
         goBack: null,
         type: null,
@@ -24,7 +32,7 @@ Sfty.View.Graphizer = (function () {
       };
     },
 
-    componentDidMount: function() {
+    renderGraph: function (options) {
       var data = this.props.data;
       var category = this.props.category;
 
@@ -34,20 +42,52 @@ Sfty.View.Graphizer = (function () {
       pieCxt.attr('width', width);
       pieCxt.attr('height', width);
 
-      Sfty.Visualisations.pieChart(data, pieCxt[0], category);
-
-      var wCloud = $('#wordCloud');
+      Sfty.Visualisations.pieChart(data, pieCxt[0], {
+        category: category,
+        fancy: options.fancy        
+      });
 
       if (!Sfty.Util.isTabletOrSmaller()) {
+        var wCloud = $('#wordCloud');
         wCloud.attr('width', width);
         wCloud.attr('height', width);
+        wCloud.hide();
 
-        var wc = new Sfty.Visualisations.WordCloud(data, { size: width, type: category }); 
-        wc.render(wCloud[0]);
+        var wc = new Sfty.Visualisations.WordCloud(data, {
+          size: width, 
+          type: category 
+        }); 
+        if (this.wordcloudTimeout) return;
+        setTimeout(function () {
+          this.wordcloudTimeout = null;
+          this.wordCloudInterval = wc.render(wCloud[0]);
+          wCloud.fadeIn({ duration: 600 });
+        }.bind(this), this.wordcloudTimeoutTime);
       }
       else {
-        wCloud.remove();
+        $('#wordCloud').remove();
       }
+    },
+
+    componentDidMount: function () {
+      this.renderGraph({ fancy: true }); 
+      $(window).on('resize', this.handleResize);
+    },
+
+    componentWillUnmount: function () {
+      if (this.wordCloudInterval) {
+        clearInterval(this.wordCloudInterval); 
+      }
+      $(window).off('resize', this.handleResize);
+    },
+
+    handleResize: function () {
+      if (this.resizeTimeout) { clearTimeout(this.resizeTimeout); }
+      
+      this.resizeTimeout = setTimeout(function () {
+        if (this.wordCloudInterval) { clearInterval(this.wordCloudInterval); }
+        this.renderGraph({ fancy: false }); 
+      }.bind(this), 300);
     },
 
     render: function () {
@@ -56,7 +96,7 @@ Sfty.View.Graphizer = (function () {
       var Legend = Sfty.View.Legend;
 
       return (
-        <section>
+        <section id={this.props.id}>
           <section className="row">
             <section id="graph-column" className="col-md-6 col-sm-6">
               <Header size="3" text={"Comparing " + this.props.category} />
