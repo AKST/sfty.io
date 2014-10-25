@@ -111,7 +111,7 @@ Sfty.View.App = React.createClass({
    * to the query.
    */
   callback: function (data) {
-    if (data.length) {
+    if (data.main.length) {
       this.setState({ data: data });
     }
     else {
@@ -184,7 +184,10 @@ Sfty.View.App = React.createClass({
       <section id="outer-app">
         <section id="app">
           <a href='/' className="no-text-decor">
-            <h1>{this.props.title} <i className="glyphicon glyphicon-signal" /></h1>
+            <h1>
+              {this.props.title} 
+              {/*<i className="glyphicon glyphicon-signal" />*/}
+            </h1>
           </a>
           {this.props.ready ? mainView() : null}
         </section>

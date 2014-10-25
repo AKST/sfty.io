@@ -27,7 +27,7 @@ Sfty.Config = (function () {
 
   return {
 
-    title: 'Sfty.io',
+    title: 'Sfty.io',//'What happened?',
 
     calcGraphColor: function (index) {
       return this.__graphColors[index % this.__graphColors.length];

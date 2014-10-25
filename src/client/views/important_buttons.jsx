@@ -28,13 +28,27 @@ Sfty.View.GoButton = React.createClass({
    *  - '/data?a=1,2,3&b=hello'
    *
    */
-  getUrl: function () {
+  getUrl: function (custom) { 
     return Sfty.Util.Str.generateUrlParams({
       endpoint: this.props.endpoint, 
-      params: _.extend({
-        comparison: this.props.comparison 
-      }, this.props.constraints),
+      params: _.extend({ 
+        comparison: this.props.comparison,
+      }, this.props.constraints, custom || undefined),
     });
+  },
+
+  getMale: function () {
+    return this.getUrl({
+      comparison: this.props.comparison, 
+      gender: ['M'] 
+    }, this.props.constraints);
+  },
+
+  getFemale: function () {
+    return this.getUrl({
+      comparison: this.props.comparison, 
+      gender: ['F'] 
+    }, this.props.constraints);
   },
 
   /**
@@ -47,18 +61,28 @@ Sfty.View.GoButton = React.createClass({
 
     if (!this.props.comparison) { return; }
 
-    var promise = Promise.resolve($.ajax({
-      url: this.getUrl(),
-      dataType: 'json',
-      type: 'GET',
-    }));
+    var urls = [this.getUrl()];
 
-    promise.then(
-      // on request success
-      this.props.callback, 
-      // on request failure
-      this.props.onFailure
-    );
+    // if (!('gender' in this.props.constraints)) {
+    //   urls.push(this.getMale());
+    //   urls.push(this.getFemale());
+    // }
+
+    urls = urls.map(function requestUrl (url) {
+      return $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+      });
+    });
+
+    Promise.all(urls).then(function (responses) {
+      this.props.callback({
+        main: responses[0],
+        male: responses[1],
+        female: responses[2],
+      });
+    }.bind(this), this.props.onFailure);
   },
 
   render: function () {
