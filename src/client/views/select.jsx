@@ -2,35 +2,6 @@
  * @jsx React.DOM 
  */
 
-/**
- * Adds selectize support to select component
- */
-Sfty.View.Mixin.Selectize = {
-
-  __selectize_object: function () {
-    return $('#'+this.props.id);
-  },
-
-  /**
-   * If selectizeOptions is implemented on the
-   * object implementing the Selectize mixin,
-   * that will be called, getValue the options
-   * will just be an empty object.
-   */
-  __getOptions: function () {
-    var options = this.selectizeOptions ? 
-      this.selectizeOptions() : {};
-
-    return _.extend(options);
-  },
-
-  selectize: function () {
-    var obj = this.__selectize_object();
-    obj.selectize(this.__getOptions());
-  },
-
-};
-
 
 /**
  * Used represent a dropdown selection component
@@ -43,8 +14,6 @@ Sfty.View.Mixin.Selectize = {
  */
 Sfty.View.Select =  React.createClass({
 
-  mixins: [Sfty.View.Mixin.Selectize],
-
   getDefaultProps: function () {
     return {
       id: Sfty.Util.Rand.uid('dropdown'),
@@ -54,18 +23,14 @@ Sfty.View.Select =  React.createClass({
     };
   },
 
-  selectizeOptions: function () {
-    return {
-      onChange: this.props.onChange,
-    };
-  },
-
   componentDidMount: function () {
-    this.selectize();
+    var obj = $(this.refs.selector.getDOMNode());
+    obj.selectize({
+      onChange: this.props.onChange,
+    });
   },
 
-  render: Sfty.Util.Debug.skip("select", function () { 
-
+  render: function () { 
     return React.DOM.section({ className:"query-field" }, 
 
       <label htmlFor={this.props.id}>
@@ -81,11 +46,15 @@ Sfty.View.Select =  React.createClass({
         });
 
         elems.unshift(<option>select an option</option>);
-        elems.unshift({ id: this.props.id, defaultValue: this.props.start || undefined });
+        elems.unshift({ 
+          id: this.props.id, 
+          ref: "selector",
+          defaultValue: this.props.start || undefined 
+        });
 
         return elems;
       }).call(this))
     );
-  })
+  }
 
 });
