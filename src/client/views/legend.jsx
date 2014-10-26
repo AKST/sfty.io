@@ -26,8 +26,6 @@
       backgroundColor: this.props.color(index).toCSS(),
     };
 
-    console.log(style);
-
     return (
       <tr key={"legend_entry_"+index} className="row">
         <td className="col-md-9 col-sm-8 hide-excess">{label}</td>

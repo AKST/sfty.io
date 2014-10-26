@@ -63,10 +63,10 @@ Sfty.View.GoButton = React.createClass({
 
     var urls = [this.getUrl()];
 
-    // if (!('gender' in this.props.constraints)) {
-    //   urls.push(this.getMale());
-    //   urls.push(this.getFemale());
-    // }
+    if (!('gender' in this.props.constraints)) {
+      urls.push(this.getMale());
+      urls.push(this.getFemale());
+    }
 
     urls = urls.map(function requestUrl (url) {
       return $.ajax({
@@ -77,10 +77,33 @@ Sfty.View.GoButton = React.createClass({
     });
 
     Promise.all(urls).then(function (responses) {
+      var a;
+      var mObject = Sfty.Util.Arrays.toObject(responses[1], "_id", "total");
+      var fObject = Sfty.Util.Arrays.toObject(responses[2], "_id", "total");
+
+      for (a in mObject) { 
+        if (!(a in fObject)) { fObject[a] = 0; }
+      }
+
+      for (a in fObject) { 
+        if (!(a in mObject)) { mObject[a] = 0; }
+      }
+
+      console.log(mObject, fObject);
+
+      var mArray = _.sortBy(Sfty.Util.Arrays.fromObject(mObject, "_id", "total"), function (row) {
+        return -row.total;                                                                        
+      });
+      var fArray = _.sortBy(Sfty.Util.Arrays.fromObject(fObject, "_id", "total"), function (row) {
+        return -row.total;                                                                        
+      });
+
+      console.log(mArray, fArray);
+
       this.props.callback({
         main: responses[0],
-        male: responses[1],
-        female: responses[2],
+        male: mArray,
+        female: fArray,
       });
     }.bind(this), this.props.onFailure);
   },

@@ -50,11 +50,8 @@ Sfty.View.Graphizer = React.createClass({
 
   getDefaultProps: function() {
     return {
-      interval: null,
-      id: Date.now().toString(),
       category: null,
       goBack: null,
-      type: null,
       data: []
     };
   },
@@ -89,33 +86,41 @@ Sfty.View.Graphizer = React.createClass({
   },
 
   renderGraph: function (options) {
+    var width = $(this.refs.graphColumn.getDOMNode()).width();
     var data = this.props.data.main;
     var category = this.props.category;
 
-    var pieCxt = $('#pieChart');
-    var width = $('#graph-column').width();
+    var pieCxt = $(this.refs.pieChart.getDOMNode())
+      .attr('width', width)
+      .attr('height', width)[0];
 
-    pieCxt.attr('width', width);
-    pieCxt.attr('height', width);
+    var barCxt = $(this.refs.barChart.getDOMNode())
+      .attr('width', width)
+      .attr('height', width)[0];
 
-    Sfty.Visualisations.pieChart(data, pieCxt[0], {
+    Sfty.Visualisations.pieChart(data, pieCxt, {
       category: category,
       fancy: options.fancy,        
       color: this.getColor(), 
     });
 
-    if (!Sfty.Util.isTabletOrSmaller()) {
-      var wCloud = $('#wordCloud');
-      wCloud.attr('width', width);
-      wCloud.attr('height', width);
-      wCloud.hide();
+    Sfty.Visualisations.barChart([
+      ["Male",  "#2949FF", this.props.data.male],  
+      ["Female", "#FF1CE1", this.props.data.female],  
+    ], barCxt, {
+      category: category
+    });
 
-      var wc = new Sfty.Visualisations.WordCloud(data, {
-        //color: this.getColor(),
-        size: width, 
-        type: category 
-      }); 
+    if (!Sfty.Util.isTabletOrSmaller()) {
+      var wCloud = $(this.refs.wordCloud.getDOMNode())
+        .attr('width', width)
+        .attr('height', width)
+        .hide();
+
+      var wc = new Sfty.Visualisations.WordCloud(data, { size: width, type: category }); 
+
       if (this.wordcloudTimeout) return;
+
       setTimeout(function () {
         this.wordcloudTimeout = null;
         this.wordCloudInterval = wc.render(wCloud[0]);
@@ -123,7 +128,7 @@ Sfty.View.Graphizer = React.createClass({
       }.bind(this), this.wordcloudTimeoutTime);
     }
     else {
-      $('#wordCloud').remove();
+      $(this.refs.wordCloud.getDOMNode()).remove();
     }
   },
 
@@ -133,12 +138,13 @@ Sfty.View.Graphizer = React.createClass({
     var Legend = Sfty.View.Legend;
 
     return (
-      <section id={this.props.id} ref="self">
+      <section ref="self">
         <section className="row">
-          <section id="graph-column" className="col-md-6 col-sm-6">
+          <section ref="graphColumn" className="col-md-6 col-sm-6">
             <Header size="3" text={"Comparing " + this.props.category} />
-            <canvas id="pieChart" width="300" height="300"></canvas>
-            <canvas id="wordCloud" width="300" height="300"></canvas>
+            <canvas ref="pieChart" width="300" height="300"></canvas>
+            <canvas ref="barChart" width="300" height="300"></canvas>
+            <canvas ref="wordCloud" width="300" height="300"></canvas>
           </section>
           <section className="col-md-6 col-sm-6">
             <Header size="3" text="Legend"/>

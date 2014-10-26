@@ -2,9 +2,8 @@
  * @jsx React.DOM
  */
 
-Sfty.Visualisations.pieChart = function(data, ctx, options){
+Sfty.Visualisations.pieChart = function (data, ctx, options){
   "use strict";
-
 	var contx = ctx.getContext("2d");
 
 	var mydata = data.map(function (record, i){
@@ -31,53 +30,37 @@ Sfty.Visualisations.pieChart = function(data, ctx, options){
   }
 
 	// The type of char you want to draw. This case is a pie chart
-	var myPieChart = new Chart(contx).Pie(mydata, graphOptions);
+	new Chart(contx).Pie(mydata, graphOptions);
 };
 
-Sfty.Visualisations.barChart = function(data, ctx, category){
-	var contx = document.getElementById("aggregateChart").getContext("2d");
+/*
+ * data: [(Name, Color, {String: Num})]
+ * ctx:  <canvas DomElement>
+ * options: { category: String }
+ */
+Sfty.Visualisations.barChart = function (data, ctx, options){
+  "use strict";
+	var contx = ctx.getContext("2d");
 
-	var mydata = data.map(function (record){
-		return {
-			value: record.total,
-			label: Sfty.Config.lookupId({
-				id: record._id,
-				category: category,
-				property: "name"
-			})
-		};
-	});
+  var labels = data[0][2].map(function (record, index) {
+    return ' ';
+  });
 
-	var barlabels = _.pluck(mydata, 'label');
-	var bardatavalues = _.pluck(mydata, 'value');
+  var values = data.map(function (set) {
+    return {
+      label: set[0],
+      fillColor: set[1],
+      data: _.pluck(set[2], "total"),
+    };
+  });
 
-	var barChart = {
-    labels: barlabels,
-    datasets: [{
-      label: "My First dataset",
-      fillColor: "blue",
-      strokeColor: "rgba(220,220,220,0.8)",
-      highlightFill: "rgba(220,220,220,0.75)",
-      highlightStroke: "rgba(220,220,220,1)",
-      data: bardatavalues
-	  }]
-	};
-
-	
-	var options = {
-    scaleBeginAtZero : true,
-    scaleShowGridLines : true,
-    scaleGridLineColor : "rgba(0,0,0,.05)",
-    scaleGridLineWidth : 1,
-    barShowStroke : true,
-    barStrokeWidth : 2,
-    barValueSpacing : 5,
-    barDatasetSpacing : 1,
-	};
-	var myBarChart = new Chart(contx).Bar(barChart, options);
+  new Chart(contx).Bar({
+    labels: labels,
+    datasets: values,
+  }, {});
 };
 
-Sfty.Visualisations.areaChart = function(data, ctx, category){
+Sfty.Visualisations.areaChart = function (data, ctx, category){
 	var contx = document.getElementById("aggregateChart").getContext("2d");
 
 	var mydata = data.map(function (record, index){
