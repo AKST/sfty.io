@@ -17,18 +17,16 @@ Sfty.View.Graphizer = React.createClass({
     if (this.__color !== null) { return this.__color; }
 
     var data = this.props.data.main;
-
-    var mPlot = Sfty.Util.Math.multiLinearPlot.bind(Sfty.Util.Math);
-
     var tenth = (data.length-1) / 10;
 
-    var r = mPlot([[0, 255], [tenth*2, 69],  [tenth*9, 246]]);
-    var g = mPlot([[0, 8],   [tenth*2, 243], [tenth*9, 255]]);
-    var b = mPlot([[0, 119], [tenth*2, 255], [tenth*9, 0]]);
-
-    this.__color = function (i) {
-      return new net.brehaut.Color([r(i), g(i), b(i)]);
-    };
+    this.__color = Sfty.Util.Color.colorCurve([
+      [0,         [255, 8,   119]],
+      [tenth*0.5, [255, 0,   255]],
+      [tenth*1.7, [69,  243, 255]],
+      [tenth*3,   [81,  252, 87 ]],
+      [tenth*5,   [246, 255, 0  ]],
+      [tenth*10,  [245, 160, 69 ]],
+    ]);
 
     return this.__color;
   },
@@ -113,7 +111,7 @@ Sfty.View.Graphizer = React.createClass({
       wCloud.hide();
 
       var wc = new Sfty.Visualisations.WordCloud(data, {
-        color: this.getColor(),
+        //color: this.getColor(),
         size: width, 
         type: category 
       }); 

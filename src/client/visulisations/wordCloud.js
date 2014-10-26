@@ -123,11 +123,7 @@ Sfty.Visualisations.WordCloud = (function () {
           size = this.maxfont; 
         }
         this.__fonts[i] = "bold " + size + "px  " + this.font; 
-        if (this.__colorPicker === null) {
-          this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
-        } else {
-          this.__colors[i] = this.__colorPicker(this.__data.length-i).toCSS();
-        }
+        this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
         this.__shadow[i] = shadowP(row.total);
         this.__depth[i] = depthPlot(row.total);
       }, this);
