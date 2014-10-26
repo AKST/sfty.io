@@ -22,10 +22,10 @@ Sfty.View.Graphizer = React.createClass({
     this.__color = Sfty.Util.Color.colorCurve([
       [0,         [255, 8,   119]],
       [tenth*0.5, [255, 0,   255]],
-      [tenth*1.7, [69,  243, 255]],
-      [tenth*3,   [81,  252, 87 ]],
-      [tenth*5,   [246, 255, 0  ]],
-      [tenth*10,  [245, 160, 69 ]],
+      [tenth*1,   [69,  243, 255]],
+      [tenth*1.7, [81,  252, 87 ]],
+      [tenth*3,   [246, 255, 0  ]],
+      [tenth*9,   [255, 113, 13 ]],
     ]);
 
     return this.__color;
