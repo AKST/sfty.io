@@ -10,6 +10,28 @@ Sfty.View.Graphizer = React.createClass({
   wordcloudTimeout: null,
   wordCloudInterval: null,
   resizeTimeout: null,
+  
+  __color: null,
+
+  getColor: function () { 
+    if (this.__color !== null) { return this.__color; }
+
+    var data = this.props.data.main;
+
+    var mPlot = Sfty.Util.Math.multiLinearPlot.bind(Sfty.Util.Math);
+
+    var tenth = (data.length-1) / 10;
+
+    var r = mPlot([[0, 255], [tenth*2, 69],  [tenth*9, 246]]);
+    var g = mPlot([[0, 8],   [tenth*2, 243], [tenth*9, 255]]);
+    var b = mPlot([[0, 119], [tenth*2, 255], [tenth*9, 0]]);
+
+    this.__color = function (i) {
+      return new net.brehaut.Color([r(i), g(i), b(i)]);
+    };
+
+    return this.__color;
+  },
 
   propTypes: (function () {
     var data = React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -80,7 +102,8 @@ Sfty.View.Graphizer = React.createClass({
 
     Sfty.Visualisations.pieChart(data, pieCxt[0], {
       category: category,
-      fancy: options.fancy        
+      fancy: options.fancy,        
+      color: this.getColor(), 
     });
 
     if (!Sfty.Util.isTabletOrSmaller()) {
@@ -90,6 +113,7 @@ Sfty.View.Graphizer = React.createClass({
       wCloud.hide();
 
       var wc = new Sfty.Visualisations.WordCloud(data, {
+        color: this.getColor(),
         size: width, 
         type: category 
       }); 
@@ -120,7 +144,7 @@ Sfty.View.Graphizer = React.createClass({
           </section>
           <section className="col-md-6 col-sm-6">
             <Header size="3" text="Legend"/>
-            <Legend data={this.props.data.main} category={this.props.category}/>
+            <Legend data={this.props.data.main} category={this.props.category} color={this.getColor()}/>
           </section>
         </section>
         <Button goBack={this.props.goBack} />

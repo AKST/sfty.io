@@ -44,8 +44,8 @@ module.exports = function(grunt) {
           'assets/vendor/sifter/sifter.min.js',
           'assets/vendor/microplugin/src/microplugin.js',
           'assets/vendor/chartjs/Chart.min.js',
-          'assets/vendor/randomColor/randomColor.js',
           'assets/vendor/selectize/dist/js/selectize.min.js',
+          'assets/vendor/color-js/color.js',
 
           'assets/vendor/bootstrap-sass-official/assets/javascripts/bootstrap.min.js',
           'assets/vendor/react/react.js',

@@ -17,6 +17,7 @@
     "ReactBootstrap",
     "Promise",
     "async",
+    "net",
     "$",
     "_",
     "Chart",

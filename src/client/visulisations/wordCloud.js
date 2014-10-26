@@ -44,6 +44,8 @@ Sfty.Visualisations.WordCloud = (function () {
       this.__yVel = new Float32Array(data.length);
       this.__rateOfRotation = new Float32Array(data.length);
 
+      this.__colorPicker = config.color || null;
+
       this.__blur = [];
       this.__text = [];
       this.__fonts = [];
@@ -121,7 +123,11 @@ Sfty.Visualisations.WordCloud = (function () {
           size = this.maxfont; 
         }
         this.__fonts[i] = "bold " + size + "px  " + this.font; 
-        this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
+        if (this.__colorPicker === null) {
+          this.__colors[i] = greyScale(Math.round(greyPlot(row.total)));
+        } else {
+          this.__colors[i] = this.__colorPicker(this.__data.length-i).toCSS();
+        }
         this.__shadow[i] = shadowP(row.total);
         this.__depth[i] = depthPlot(row.total);
       }, this);

@@ -10,7 +10,8 @@
       _id: React.PropTypes.number,
       total: React.PropTypes.number,
     })).isRequired,
-    category: React.PropTypes.string
+    category: React.PropTypes.string,
+    color: React.PropTypes.func,
   },
 
   renderRow: function (rowData, index, allElems) {
@@ -20,11 +21,18 @@
       property: "name",
     });
 
+    var style = { 
+      background: "linear-gradient("+this.props.color(index-1).toCSS()+","+this.props.color(index).toCSS()+")",
+      backgroundColor: this.props.color(index).toCSS(),
+    };
+
+    console.log(style);
+
     return (
       <tr key={"legend_entry_"+index} className="row">
-        <td className="col-md-1 col-sm-1">{index + 1}</td>
-        <td className="col-md-8 col-sm-8 hide-excess">{label}</td>
-        <td className="col-md-3 col-sm-3">{rowData.total}</td>
+        <td className="col-md-9 col-sm-8 hide-excess">{label}</td>
+        <td className="col-md-2 col-sm-3">{rowData.total}</td>
+        <td className="col-md-1 col-sm-1 legend-index" style={style}>{index + 1}</td>
       </tr>
     );
   },
@@ -36,11 +44,9 @@
       <Table responsive>
         <thead>
           <tr className="row">
+            <th className="col-md-9 col-sm-8">Name</th>
+            <th className="col-md-2 col-sm-3"><span className="hidden-xs">Value</span></th>
             <th className="col-md-1 col-sm-1">No.</th>
-            <th className="col-md-8 col-sm-8">Name</th>
-            <th className="col-md-3 col-sm-3">
-              <span className="hidden-xs">Value</span>
-            </th>
           </tr>
         </thead>
         <tbody>

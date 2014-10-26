@@ -3,18 +3,15 @@
  */
 
 Sfty.Visualisations.pieChart = function(data, ctx, options){
+  "use strict";
+
 	var contx = ctx.getContext("2d");
 
-	var mydata = data.map(function (record, index){
+	var mydata = data.map(function (record, i){
 		return {
 			value: record.total,
-			color: Sfty.Config.calcGraphColor(index),
-			highlight: "#DDA0DD" ,
-			label: Sfty.Config.lookupId({
-				id: record._id,
-				category: options.category,
-				property: "name"
-			})
+      color: options.color(i).toCSS(), //Sfty.Config.calcGraphColor(i),
+      //label: Sfty.Config.lookupId({ id: record._id, category: options.category, property: "name" })
 		};
 	});
 
