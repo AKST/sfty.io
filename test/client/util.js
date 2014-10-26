@@ -91,6 +91,33 @@ describe("Util", function () {
       });
     });
 
+    describe("::multiLinearPlot", function () {
+      var mLinearPlot = Sfty.Util.Math.multiLinearPlot.bind(Sfty.Util.Math);  
+
+      it("inits", function () {
+        var plot = mLinearPlot([[0,0], [10, 10], [20, 5]]);
+      });
+
+      describe("(0,0) -> (2,2) -> (4, 8)", function () {
+        var y = mLinearPlot([[0,0], [2, 2], [4, 8]]);
+        
+        it("x=3 ~ y=5", function () {
+          assert(y(3) === 5);
+        });
+
+        it("x=2 ~ y=2", function () {
+          assert(y(2) === 2);
+        });
+
+        it("x=-2 ~ y =-2 (out of scale)", function () {
+          assert(y(-2) === -2);
+        });
+
+        it("x=5 ~ y =11 (out of scale)", function () {
+          assert(y(5) === 11);
+        });
+      });
+    });
 
     describe("::randomrange", function () {
       var withRandom = function (min, max, n, fn) {

@@ -28,5 +28,41 @@ Sfty.Util.Math = {
       return (m * (x - xa)) + ya;   
     };
   },
+
+  multiLinearPlot: function (lines) {
+    var equations = []; // [(min, max, equation)] 
+    var left, right, eq;
+
+    var lastIndex = lines.length-2;
+
+    var min = lines[0][0];
+    var max = lines[lastIndex][0];
+
+    for (var i = 0; i < lines.length-1; i++) {
+      left  = lines[i]; 
+      right = lines[i+1]; 
+      eq    = this.linearPlot(left, right); 
+
+      equations.push([left[0], right[0], eq]);
+    }
+
+    return function (x) {
+      if (x >= min && max >= x) {
+        var i, eq;
+        for (i in equations) {
+          eq = equations[i]; 
+          if (!(x >= eq[0] && eq[1] >= x)) { continue; } 
+          return eq[2](x);
+        }
+      }
+      else if (x < min) {
+        return equations[0][2](x);        
+      }
+      else if (x > max) {
+        return equations[lastIndex][2](x);        
+      }
+    };
+  },
+
 };
 
