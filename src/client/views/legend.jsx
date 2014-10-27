@@ -43,7 +43,7 @@
         <thead>
           <tr className="row">
             <th className="col-md-9 col-sm-8">Name</th>
-            <th className="col-md-2 col-sm-3"><span className="hidden-xs">Value</span></th>
+            <th className="col-md-2 col-sm-3"><span className="hidden-xs">Total</span></th>
             <th className="col-md-1 col-sm-1">No.</th>
           </tr>
         </thead>
