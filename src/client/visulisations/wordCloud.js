@@ -30,7 +30,7 @@ Sfty.Visualisations.WordCloud = (function () {
       this.font = config.font || 'Helvetica';
       this.darkest = config.darkest || 0;
       this.lightest = config.lightest || 230;
-      this.interval = config.interval || 1000 / 30;
+      this.interval = config.interval || 1000 / 25;
       this.minfont = config.minfont || 8;
       this.maxfont = config.maxfont || 28;
 
