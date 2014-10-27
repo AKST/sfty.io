@@ -14,6 +14,12 @@ Sfty.View.GoButton = React.createClass({
     };
   },
 
+  getInitialState: function () {
+    return {
+      loading: false
+    };
+  },
+
   /**
    * url is a computed property.
    *
@@ -61,61 +67,64 @@ Sfty.View.GoButton = React.createClass({
 
     if (!this.props.comparison) { return; }
 
-    var urls = [this.getUrl()];
+    setTimeout(function () {
+      var urls = [this.getUrl()];
 
-    if (!('gender' in this.props.constraints)) {
-      urls.push(this.getMale());
-      urls.push(this.getFemale());
-    }
-
-    urls = urls.map(function requestUrl (url) {
-      return $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-      });
-    });
-
-    Promise.all(urls).then(function (responses) {
-      var a;
-      var mObject = Sfty.Util.Arrays.toObject(responses[1], "_id", "total");
-      var fObject = Sfty.Util.Arrays.toObject(responses[2], "_id", "total");
-
-      for (a in mObject) { 
-        if (!(a in fObject)) { fObject[a] = 0; }
+      if (!('gender' in this.props.constraints)) {
+        urls.push(this.getMale());
+        urls.push(this.getFemale());
       }
 
-      for (a in fObject) { 
-        if (!(a in mObject)) { mObject[a] = 0; }
-      }
-
-      console.log(mObject, fObject);
-
-      var mArray = _.sortBy(Sfty.Util.Arrays.fromObject(mObject, "_id", "total"), function (row) {
-        return -row.total;                                                                        
-      });
-      var fArray = _.sortBy(Sfty.Util.Arrays.fromObject(fObject, "_id", "total"), function (row) {
-        return -row.total;                                                                        
+      urls = urls.map(function requestUrl (url) {
+        return $.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json',
+        });
       });
 
-      console.log(mArray, fArray);
+      Promise.all(urls).then(function (responses) {
+        var a;
+        var mObject = Sfty.Util.Arrays.toObject(responses[1], "_id", "total");
+        var fObject = Sfty.Util.Arrays.toObject(responses[2], "_id", "total");
 
-      this.props.callback({
-        main: responses[0],
-        male: mArray,
-        female: fArray,
-      });
-    }.bind(this), this.props.onFailure);
+        for (a in mObject) { 
+          if (!(a in fObject)) { fObject[a] = 0; }
+        }
+
+        for (a in fObject) { 
+          if (!(a in mObject)) { mObject[a] = 0; }
+        }
+
+        var mArray = _.sortBy(Sfty.Util.Arrays.fromObject(mObject, "_id", "total"), function (row) {
+          return -row.total;                                                                        
+        });
+        var fArray = _.sortBy(Sfty.Util.Arrays.fromObject(fObject, "_id", "total"), function (row) {
+          return -row.total;                                                                        
+        });
+
+        this.props.callback({
+          main: responses[0],
+          male: mArray,
+          female: fArray,
+        });
+      }.bind(this), this.props.onFailure);
+    }.bind(this), 0);
+
+    this.setState({ loading: true });
   },
 
   render: function () {
+    var iconClass = this.state.loading ? "loading glyphicon-cog"  : "glyphicon-signal";
+    var text      = this.state.loading ? "Loading" : "Run Query";
+
     return (
       <a className="lanuch-query space-below" onClick={this.onClick}>
         <span className="hidden-xs">
-          Run Query <i className="glyphicon glyphicon-signal" />
+          {text} <i className={"glyphicon " + iconClass} />
         </span>
         <span className="visible-xs">
-          <span className="glyphicon glyphicon-signal"></span>
+          <span className={"glyphicon " + iconClass}></span>
         </span>
       </a>
     );

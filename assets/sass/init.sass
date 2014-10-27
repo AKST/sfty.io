@@ -6,6 +6,16 @@ $color-2: #333
 $color-1: #222
 $color-0: #fff
 
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
 @import "bootstrap"
 @import "main"
 @import "buttons"

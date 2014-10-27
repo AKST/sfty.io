@@ -119,7 +119,6 @@ Sfty.Visualisations.WordCloud = (function () {
       this.__data.forEach(function (row, i) {
         var size = fontSize(row.total);
         if (size > this.maxfont) { 
-          console.log([size, this.maxfont], [row.total, highest]);
           size = this.maxfont; 
         }
         this.__fonts[i] = "bold " + size + "px  " + this.font; 

@@ -96,7 +96,7 @@ Sfty.View.QueryPreviewer = React.createClass({
     var categories = data.map(this.renderCategories);
 
     return React.DOM.section({ id: "pv-query", className: this.props.className },
-      Sfty.View.Type.UnderlinedHeader({ size: 3, text: "Query State" }),
+      Sfty.View.Type.UnderlinedHeader({ size: 3, text: "Search By" }),
       React.DOM.ul({ className: "pv-categories" }, categories)
     );
   },
