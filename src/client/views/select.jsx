@@ -25,9 +25,7 @@ Sfty.View.Select =  React.createClass({
 
   componentDidMount: function () {
     var obj = $(this.refs.selector.getDOMNode());
-    obj.selectize({
-      onChange: this.props.onChange,
-    });
+    obj.selectize({ onChange: this.props.onChange });
   },
 
   render: function () { 

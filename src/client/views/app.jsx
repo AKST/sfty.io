@@ -200,7 +200,7 @@ Sfty.View.App = React.createClass({
         <section id="app">
           <section id="top">
             <span className="about-link">
-              <a onClick={about}>
+              <a onClick={about} onTouchEnd={about}>
                 <i className="glyphicon glyphicon-info-sign"></i>
               </a>
             </span>
