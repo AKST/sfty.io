@@ -52,7 +52,7 @@ Sfty.View.Graphizer = React.createClass({
     return {
       category: null,
       goBack: null,
-      data: []
+      data: null,
     };
   },
 

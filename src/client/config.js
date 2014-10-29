@@ -139,8 +139,8 @@ Sfty.Config = (function () {
         title: 'workload',
         type: 'toggle',
         data: [
-          { id: 'full-time', name: 'Full time' },
-          { id: 'part-time', name: 'Part time' },
+          { id: 'FULL TIME', name: 'Full time' },
+          { id: 'PART TIME', name: 'Part time' },
         ],
       },
       gender: {
