@@ -180,15 +180,37 @@ Sfty.View.App = React.createClass({
         // while forming query
         this.renderQueryView ;
 
+    var about = function () {
+      this.setState({ modal: {
+        title: 'About that data',
+        body: (
+          <div className="modal-body">
+            <p style={{ "font-weight": 300}}>
+              This data has been sourced from the <a href="https://data.qld.gov.au">queensland governments open
+              data initiative</a>, and has been modified in ways to more easily fit into a database, but the
+              meaning and actual values of the data have not been modified in any way. 
+            </p>
+          </div> 
+        ),
+      }});
+    }.bind(this);
+
     return (
       <section id="outer-app">
         <section id="app">
-          <a href='/' className="no-text-decor">
-            <h1>
-              {this.props.title} 
-              {/*<i className="glyphicon glyphicon-signal" />*/}
+          <section id="top">
+            <span className="about-link">
+              <a onClick={about}>
+                <i className="glyphicon glyphicon-info-sign"></i>
+              </a>
+            </span>
+            <h1 className="heading">
+              <a href='/' className="no-text-decor">
+                {this.props.title} 
+                {/*<i className="glyphicon glyphicon-signal" />*/}
+              </a>
             </h1>
-          </a>
+          </section>
           {this.props.ready ? mainView() : null}
         </section>
       </section>
@@ -204,7 +226,7 @@ Sfty.View.App = React.createClass({
 
     return (
       <Modal title={this.state.modal.title} onRequestHide={this.closeModal}>
-        <div className="modal-body">
+        <div className="modal-body modal-text">
           {this.state.modal.body}
         </div>
       </Modal>
