@@ -5,6 +5,8 @@ $('body').ready(function () {
   };
 
   document.title = Sfty.Config.title;
+  
+  React.initializeTouchEvents(true);
 
   // while initialisation is taking place
   React.renderComponent(Sfty.View.App({
