@@ -3,6 +3,8 @@
  */
 
 Sfty.View.GoButton = React.createClass({
+
+  mixins: [ReactBootstrap.OverlayMixin],
   
   getDefaultProps: function () {
     return {
@@ -67,6 +69,15 @@ Sfty.View.GoButton = React.createClass({
 
     if (!this.props.comparison) { return; }
 
+    if (this.props.constraints[this.props.comparison]) {
+      this.setState({ modal: {
+        title: "Invalid Search",
+        body: "You can't compare by a metric " +
+          "in which you're using as a constraint",
+      }});
+      return;
+    }
+
     setTimeout(function () {
       var urls = [this.getUrl()];
 
@@ -129,6 +140,27 @@ Sfty.View.GoButton = React.createClass({
       </a>
     );
   },
+
+
+  renderOverlay: function () {
+    if (!this.state.modal) {
+      return <span/>;
+    }
+
+    var Modal = ReactBootstrap.Modal;
+  
+    var closeModal = function () {
+      this.setState({ modal: null });
+    }.bind(this);
+
+    return (
+      <Modal title={this.state.modal.title} onRequestHide={closeModal}>
+        <div className="modal-body">
+          {this.state.modal.body}
+        </div>
+      </Modal>
+    );
+  }
 
 });
 

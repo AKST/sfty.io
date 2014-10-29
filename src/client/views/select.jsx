@@ -16,7 +16,6 @@ Sfty.View.Select =  React.createClass({
 
   getDefaultProps: function () {
     return {
-      id: Sfty.Util.Rand.uid('dropdown'),
       title: 'Untitled',
       start: null,
       data: [],
@@ -33,21 +32,19 @@ Sfty.View.Select =  React.createClass({
   render: function () { 
     return React.DOM.section({ className:"query-field" }, 
 
-      <label htmlFor={this.props.id}>
-        <b>{this.props.title}</b>
-      </label>,
+      <label><b>{this.props.title}</b></label>,
 
       React.DOM.select.apply(null, (function () {
-
-        var elems = this.props.data.map(function (item) {
-          return React.DOM.option({ value: item.id },
-            Sfty.Util.Str.captialize(item.name)
-          ); 
-        });
+        var elem, name, elems = [];
+        
+        for (var i in this.props.data) {
+          elem = this.props.data[i];
+          name = Sfty.Util.Str.captialize(elem.name);
+          elems.push(<option value={elem.id}>{name}</option>);
+        }
 
         elems.unshift(<option>select an option</option>);
         elems.unshift({ 
-          id: this.props.id, 
           ref: "selector",
           defaultValue: this.props.start || undefined 
         });

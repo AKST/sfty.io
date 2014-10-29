@@ -30,9 +30,7 @@ Sfty.View.ConstraintSelector = (function () {
     render: function () {
       return Sfty.View.Select(_.defaults({
         onChange: this.onChange,
-        data: this.props.data.filter(function (field) {
-          return field.id !== this.props.comparison;                    
-        }, this)
+        data: this.props.data
       }, this.props));
     } 
 

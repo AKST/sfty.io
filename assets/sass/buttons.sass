@@ -2,6 +2,19 @@
 .btn.btn-primary
   color: white
 
+=strobe($color-a, $color-b, $rate, $n)
+  +keyframes(OVERHERE)
+    0%
+      color: $color-b 
+      background: $color-a 
+    50%
+      color: $color-a
+      background: $color-b
+    100%
+      color: $color-b
+      background: $color-a
+
+  animation: OVERHERE $rate $n
 
 +keyframes(SPIN-ANIMATION)
   from
@@ -15,6 +28,8 @@
     -moz-transform: rotate(360deg)
     -webkit-transform: rotate(360deg)
 
+.flash
+  +strobe(#fff, #000, .25, 4)
 
 .hidden-xs .loading
   margin-left: .5em
